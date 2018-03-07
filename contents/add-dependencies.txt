@@ -1,0 +1,25 @@
+public static function dependancy_info() {
+  $return = array();
+  $return['log'] = 'template_dep';
+  $return['progress_file'] = '/tmp/template_dep';
+  $packageDependencyToFind = '/usr/bin/XXX';
+  $scriptDependencyToFind = '/usr/sbin/XXX.sh';
+  $return['progress_file'] = '/tmp/template_dep';
+  if (is_file($packageDependencyToFind) && is_file($scriptDependencyToFind)) {
+    $return['state'] = 'ok';
+  } else {
+      if (!is_file($packageDependencyToFind)) {
+        exec('echo XXX binary dependency not found : '. $packageDependencyToFind . ' > ' . log::getPathToLog('template_log') . ' 2>&1 &');
+      } else {
+        exec('echo XXX script dependency not found : '. $scriptDependencyToFind . ' > ' . log::getPathToLog('template_log') . ' 2>&1 &');
+      }
+    $return['state'] = 'nok';
+  }
+  return $return;
+}
+
+public static function dependancy_install() {
+  log::add('template','info','Installation des dépéndances XXX et XXX');
+  $resource_path = realpath(dirname(__FILE__) . '/../../3rdparty');
+  passthru('/bin/bash ' . $resource_path . '/install.sh ' . $resource_path . ' > ' . log::getPathToLog('template_dep') . ' 2>&1 &');
+}

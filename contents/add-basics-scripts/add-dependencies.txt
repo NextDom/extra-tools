@@ -1,0 +1,8 @@
+echo "############################################################################"
+echo "# Update repository packages and install dependencies"
+echo "############################################################################"
+echo 5 > /tmp/Template_dep
+$sudo_prefix apt-get update
+echo 25 > /tmp/Template_dep
+$sudo_prefix apt-get -y install XXX
+echo 50 > /tmp/Template_dep

@@ -1,0 +1,9 @@
+apacheDirectory=/var/www/html/core
+nginxDirectory=/usr/share/nginx/www/jeedom
+echo "############################################################################"
+echo "# Symbolic links for Apache"
+echo "############################################################################"
+if [ -d "$apacheDirectory" ]; then
+  $sudo_prefix chmod 655 $(dirname "$0")/addsymblinkstoapache.sh
+  $sudo_prefix $(dirname "$0")/addsymblinkstoapache.sh
+fi

@@ -1,0 +1,5 @@
+echo "############################################################################"
+echo "# Linking scripts"
+echo "############################################################################"
+$sudo_prefix ln -s $(dirname "$0")/Template.sh /usr/sbin/Template.sh
+$sudo_prefix chmod 655 $(dirname "$0")/Template.sh
