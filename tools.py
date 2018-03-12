@@ -37,6 +37,7 @@ class MethodData:
     method_name = ''
     method_visibility = 'public'
     method_is_static = False
+    method_comment = ''
 
     def get_method_declaration(self):
         """Obtenir la déclaration de la classe dans le fichier
@@ -46,7 +47,10 @@ class MethodData:
     def get_method_func(self):
         """Obtenir la déclaration de la méthode données
         """
-        output = '    '+self.method_visibility+' '
+        output = ''
+        if self.method_comment != '':
+            output += '    /**\n     * '+self.method_comment+'\n     */\n'
+        output += '    '+self.method_visibility+' '
         if self.method_is_static:
             output += 'static '
         output += 'function '+self.method_name+'() {\n\n    }\n'
@@ -54,6 +58,7 @@ class MethodData:
 
 
 class BaseMenu:
+    title = None
     menu = []
 
     def print_error(self, msg):
@@ -63,16 +68,26 @@ class BaseMenu:
         """
         print('/!\\ '+msg)
 
+    def print_success(self, msg):
+        """Affiche un message de confirmation
+        :params msg: Message à afficher
+        :type msg:   str
+        """
+        print('v '+msg)
+
     def show_menu(self, menu, show_cancel=True):
         """Afficher un menu
         :params menu: Tableau des choix à afficher
         :type menu:   array
         """
         print('')
+        if self.title is not None:
+            print('-=| '+self.title+' |=-')
+            print('')
         for index, menu_item in enumerate(menu):
-            print(str(index + 1)+'. '+menu_item)
+            print('  '+str(index + 1)+'. '+menu_item)
         if show_cancel:
-            print('0. '+cancel_menu)
+            print('  0. '+cancel_menu)
 
     def get_menu_choice(self, menu):
         """Demande à l'utilisateur de faire un choix dans un menu
@@ -145,6 +160,7 @@ class BaseMenu:
 
 
 class InfoMenu(BaseMenu):
+    title = 'Modifier les informations du plugin'
     menu = ['Modifier le nom affiché dans les menus',
             'Modifier la description',
             'Modifier la licence',
@@ -156,24 +172,28 @@ class InfoMenu(BaseMenu):
         """
         name = self.get_user_input('Nouveau nom : ')
         self.replace_info('name', name)
+        self.print_success('Le nom du plugin a été modifié')
 
     def action_2(self):
         """Modifier la description
         """
         description = self.get_user_input('Nouvelle description : ')
         self.replace_info('description', description)
+        self.print_success('La description du plugin a été modifiée')
 
     def action_3(self):
         """Modifier la licence
         """
         licence = self.get_user_input('Nouvelle licence : ')
         self.replace_info('licence', licence)
+        self.print_success('La licence du plugin a été modifiée')
 
     def action_4(self):
         """Modifier l'auteur
         """
         author = self.get_user_input('Nouvel auteur : ')
         self.replace_info('author', author)
+        self.print_success('L\'auteur du plugin a été modifié')
 
     def action_5(self):
         """Modifier la catégorie
@@ -197,6 +217,7 @@ class InfoMenu(BaseMenu):
         category = self.get_menu_choice(categories)
         if category >= 0:
             self.replace_info('category', categories[category])
+        self.print_success('La catégorie du plugin a été modifiée')
 
     def replace_info(self, key, new_value):
         os.system(sed_replace.format(
@@ -207,6 +228,7 @@ class InfoMenu(BaseMenu):
 
 
 class FonctionnalitiesMenu(BaseMenu):
+    title = 'Ajouter des fonctionnalités'
     menu = ['Ajouter une méthode cron']
 
     def action_1(self):
@@ -232,20 +254,25 @@ class FonctionnalitiesMenu(BaseMenu):
             method_data.class_name = plugin_name
             method_data.method_name = crons[keys[choice]]
             method_data.method_is_static = True
-            self.add_method(method_data)
+            method_data.method_comment = keys[choice]
+            if self.add_method(method_data):
+                self.print_success('La méthode ' + method_data.method_name +
+                                   ' a été ajoutée')
 
     def add_method(self, method_data):
         """Ajoute la méthode à la classe
         :params method_data: Données de la méthode
         :type method_data:   MethodData
         """
+        result = False
         if self.check_class(method_data):
             if self.check_if_method_exists(method_data):
-                self.write_method_in_class(method_data)
+                result = self.write_method_in_class(method_data)
             else:
                 self.print_error('La méthode existe déjà')
         else:
             self.print_error('Le fichier n\'existe pas')
+        return result
 
     def check_class(self, method_data):
         """Test si la classe existe
@@ -301,9 +328,11 @@ class FonctionnalitiesMenu(BaseMenu):
         with open(method_data.class_file_path, 'w') as class_file_content:
             for line in output:
                 class_file_content.write(line)
+        return method_added
 
 
 class RootMenu(BaseMenu):
+    title = 'Outil de gestion d\'un plugin'
     menu = ['Télécharger le plugin Template',
             'Modifier l\'identifiant du plugin',
             'Modifier les informations du plugin',
@@ -317,6 +346,7 @@ class RootMenu(BaseMenu):
         plugin_name = 'template'
         os.system('git clone '+plugin_template_repo)
         write_current_plugin_name()
+        self.print_success('Le plugin '+plugin_name+' a été téléchargé')
 
     def action_2(self):
         """Renomme le plugin
@@ -327,11 +357,16 @@ class RootMenu(BaseMenu):
 
         if 'plugin-'+plugin_name in os.listdir('.'):
             new_name = self.get_user_input('Nouveau nom du plugin : ')
-            # Renomme le répertoire racine du plugin
-            os.rename('plugin-'+plugin_name, 'plugin-'+new_name)
-            self.rename_plugin(
-                'plugin-'+new_name, plugin_name, new_name)
-            plugin_name = new_name
+            if 'plugin-'+new_name not in os.listdir('.'):
+                # Renomme le répertoire racine du plugin
+                os.rename('plugin-'+plugin_name, 'plugin-'+new_name)
+                self.rename_plugin(
+                    'plugin-'+new_name, plugin_name, new_name)
+                self.print_success('Le plugin ' + plugin_name +
+                                   ' a été renommé en ' + new_name)
+                plugin_name = new_name
+            else:
+                self.print_error('Un plugin '+new_name+' existe déjà')
         else:
             self.print_error('Le plugin '+plugin_name+' n\'a pas été trouvé')
 
@@ -452,9 +487,9 @@ def write_current_plugin_name():
 def show_help():
     """Affiche l'aide
     """
-    print(sys.argv[0]+' [--plugin-name PLUGIN-NAME] [--help]')
-    print('  --help :        Affiche de menu.')
-    print('  --plugin-name : Indiquer le nom du plugin à modifier.')
+    print(sys.argv[0]+' [PLUGIN-NAME] [--help]')
+    print('  --help :      Affiche de menu.')
+    print('  PLUGIN-NAME : Indiquer le nom du plugin à modifier.')
 
 
 def parse_args():
@@ -462,7 +497,7 @@ def parse_args():
     """
     if '--help' in sys.argv:
         show_help()
-    if len(sys.argv) > 1:
+    elif len(sys.argv) > 1:
         global plugin_name
         plugin_name = sys.argv[1]
     else:
@@ -473,5 +508,6 @@ def parse_args():
 if __name__ == '__main__':
     parse_args()
 
+    print('\nPlugin en cours de modification : '+plugin_name+'\n')
     root_menu = RootMenu()
     root_menu.start()
