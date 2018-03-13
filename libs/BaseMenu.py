@@ -97,7 +97,7 @@ class BaseMenu(object):
         return result
 
     def start(self):
-        """Démarre l'affiche du menu
+        """Démarre l'affichage du menu
         """
         loop = True
         while loop:
@@ -116,13 +116,6 @@ class BaseMenu(object):
         :type replacement:   str
         :type target_file:   str
         """
-        print(regexp)
-        print(replacement)
-        print(target_file)
-        print(self.sed_replace_pattern.format(
-            regexp,
-            replacement,
-            target_file))
         os.system(self.sed_replace_pattern.format(
             regexp,
             replacement,
@@ -138,10 +131,13 @@ class BaseMenu(object):
         return_value = None
         method = None
         method_name = 'action_' + str(number)
-        try:
-            method = getattr(self, method_name)
-            return_value = method()
-        except AttributeError:
-            self.print_error(self.bad_command)
-            return_value = False
+        # Debug
+        method = getattr(self, method_name)
+        return_value = method()
+#        try:
+#            method = getattr(self, method_name)
+#            return_value = method()
+#        except AttributeError:
+#            self.print_error(self.bad_command)
+#            return_value = False
         return return_value

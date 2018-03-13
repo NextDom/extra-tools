@@ -14,8 +14,9 @@ class FonctionnalitiesMenu(BaseMenu):
             'Ajouter la classe des commandes',
             'Ajouter une méthode cron']
     plugin_name = ''
+    plugin_path = ''
 
-    def __init__(self, plugin_name):
+    def __init__(self, plugin_path, plugin_name):
         """Constructeur
         """
         if sys.version_info[0] < 3:
@@ -23,11 +24,12 @@ class FonctionnalitiesMenu(BaseMenu):
         else:
             super().__init__()
         self.plugin_name = plugin_name
+        self.plugin_path = plugin_path
 
     def action_1(self):
         """Créer la classe principale
         """
-        class_file_path = os.path.join('plugin-'+self.plugin_name,
+        class_file_path = os.path.join(self.plugin_path,
                                        'core',
                                        'class',
                                        self.plugin_name+'.class.php')
@@ -36,7 +38,7 @@ class FonctionnalitiesMenu(BaseMenu):
     def action_2(self):
         """Créer la classe de gestion des commandes
         """
-        class_file_path = os.path.join('plugin-'+self.plugin_name,
+        class_file_path = os.path.join(self.plugin_path,
                                        'core',
                                        'class',
                                        self.plugin_name+'.class.php')
@@ -58,7 +60,7 @@ class FonctionnalitiesMenu(BaseMenu):
         if choice >= 0:
             method_data = MethodData()
             method_data.class_file_path = os.path.join(
-                'plugin-'+self.plugin_name,
+                self.plugin_path,
                 'core',
                 'class',
                 self.plugin_name+'.class.php')

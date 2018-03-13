@@ -15,8 +15,9 @@ class InfoMenu(BaseMenu):
             'Modifier l\'auteur',
             'Modifier la catégorie']
     plugin_name = ''
+    plugin_path = ''
 
-    def __init__(self, plugin_name):
+    def __init__(self, plugin_path, plugin_name):
         """Constructeur
         :params plugin_name: Nom du plugin
         :type plugin_name:   str
@@ -25,6 +26,7 @@ class InfoMenu(BaseMenu):
             super(InfoMenu, self).__init__()
         else:
             super().__init__()
+        self.plugin_path = plugin_path
         self.plugin_name = plugin_name
 
     def action_1(self):
@@ -89,7 +91,7 @@ class InfoMenu(BaseMenu):
         self.sed_replace(
             '\("'+key+'" : "\).*\(",\)',
             '\\1'+new_value+'\\2',
-            os.path.join('plugin-'+self.plugin_name,
+            os.path.join(self.plugin_path,
                          'plugin_info',
                          'info.json')
                          )
