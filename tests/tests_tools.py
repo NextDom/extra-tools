@@ -1,4 +1,3 @@
-import shutil
 import unittest
 import tempfile
 from unittest.mock import patch
