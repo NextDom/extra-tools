@@ -2,9 +2,10 @@
 
 import os
 import sys
+
 from BaseMenu import BaseMenu
-from InfoMenu import InfoMenu
 from FonctionnalitiesMenu import FonctionnalitiesMenu
+from InfoMenu import InfoMenu
 
 
 class RootMenu(BaseMenu):
@@ -39,17 +40,17 @@ class RootMenu(BaseMenu):
         """
         if self.plugin_path in os.listdir('.'):
             new_name = self.get_user_input('Nouveau nom du plugin : ')
-            if 'plugin-'+new_name not in os.listdir('.'):
+            if 'plugin-' + new_name not in os.listdir('.'):
                 # Renomme le répertoire racine du plugin
-                os.rename(self.plugin_path, 'plugin-'+new_name)
+                os.rename(self.plugin_path, 'plugin-' + new_name)
                 # Renomme le contenu du plugin
                 self.rename_plugin(
-                    'plugin-'+new_name, self.plugin_name, new_name)
+                    'plugin-' + new_name, self.plugin_name, new_name)
 
-                self.plugin_name = new_name
-                self.plugin_path = 'plugin-'+new_name
                 self.print_success('Le plugin ' + self.plugin_name +
                                    ' a été renommé en ' + new_name)
+                self.plugin_name = new_name
+                self.plugin_path = 'plugin-' + new_name
             else:
                 self.print_error('Le répertoire  plugin-' + new_name +
                                  ' existe déjà')
@@ -86,18 +87,18 @@ class RootMenu(BaseMenu):
             for item in os.listdir(current_path):
                 # A enlever quand plugin-template sera renommé plugin-Template
                 if 'core/template':
-                    item = self.rename_item(current_path+os.sep,
+                    item = self.rename_item(current_path + os.sep,
                                             item,
                                             old_name,
                                             new_name)
-                if os.path.isdir(current_path+os.sep+item):
-                    self.rename_plugin(current_path+os.sep+item,
+                if os.path.isdir(current_path + os.sep + item):
+                    self.rename_plugin(current_path + os.sep + item,
                                        old_name,
                                        new_name)
                 else:
                     # Remplacement des occurences dans le fichier
                     self.replace_in_file(
-                        current_path+os.sep+item, old_name, new_name)
+                        current_path + os.sep + item, old_name, new_name)
 
     def replace_in_file(self, target_file, old_name, new_name):
         """Remplace l'ancien nom par le nouveau
@@ -131,13 +132,13 @@ class RootMenu(BaseMenu):
         # Cas simple
         if old_name in item:
             result = item.replace(old_name, new_name)
-            os.rename(path+item, path+result)
+            os.rename(path + item, path + result)
         # En majuscule
         elif old_name.upper() in item:
             result = item.replace(old_name.upper(), new_name.upper())
-            os.rename(path+item, path+result)
+            os.rename(path + item, path + result)
         # Avec une majuscule au début
         elif old_name.capitalize() in item:
             result = item.replace(old_name.capitalize(), new_name.capitalize())
-            os.rename(path+item, path+result)
+            os.rename(path + item, path + result)
         return result

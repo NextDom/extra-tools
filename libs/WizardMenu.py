@@ -2,9 +2,21 @@
 
 import os
 import sys
-from pprint import pprint
+
 from BaseMenu import BaseMenu
+from InfoMenu import InfoMenu
 from RootMenu import RootMenu
+
+PHP_INCLUDE_CORE_3 = "" \
+     "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
+PHP_INCLUDE_CORE_4 = "" \
+     "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
+PHP_HEADER = "<?php\n\n"
+PHP_CHECK_USER_CONNECT = "" \
+                 "include_file('core', 'authentification', 'php');\n\n" \
+                 "if (!isConnect('admin')) {\n" \
+                 "    throw new Exception('{{401 - Refused access}}');\n" \
+                 "}\n"
 
 
 class WizardMenu(BaseMenu):
@@ -12,12 +24,17 @@ class WizardMenu(BaseMenu):
     actions = []
     plugin_template_repo = \
         'https://github.com/Jeedom-Plugins-Extra/plugin-template.git'
+    default_package_name = 'Exemple'
+    default_changelog_url = \
+        'https://jeedom.github.io/plugin-%s/#language#/changelog'
+    default_documentation_url = \
+        'https://jeedom.github.io/plugin-%s/#language#/'
 
     def __init__(self, plugins_list):
         """Constructeur
         Initialise le chemin vers le fichier qui stocke le nom du plugin.
-        :params plugin_list:           Liste des plugins disponibles
-        :type plugin_list:             str
+        :params plugins_list:  Liste des plugins disponibles
+        :type plugins_list:    List
         """
         if sys.version_info[0] < 3:
             super(WizardMenu, self).__init__()
@@ -39,13 +56,14 @@ class WizardMenu(BaseMenu):
             self.actions.append([self.git_template, None])
         # Ajout de la liste des plugins dans le répertoire
         for plugin in plugins_list:
-            self.menu.append('Modifier le plugin '+plugin[1])
+            self.menu.append('Modifier le plugin ' + plugin[1])
             self.actions.append([self.start_tools, plugin])
 
     def start(self):
         """Démarre l'affichage du menu
         """
         loop = True
+        return_value = False
         while loop:
             user_choice = self.get_menu_choice(self.menu)
             if user_choice == -1:
@@ -54,19 +72,28 @@ class WizardMenu(BaseMenu):
                 # Debug
                 return_value = self.actions[user_choice][0](
                     self.actions[user_choice][1])
-#                try:
-#                    return_value = self.actions[user_choice][0](
-#                        self.actions[user_choice][1])
-#                except AttributeError:
-#                    self.print_error(self.bad_command)
-#                    return_value = False
+                loop = False
+        #                try:
+        #                    return_value = self.actions[user_choice][0](
+        #                        self.actions[user_choice][1])
+        #                except AttributeError:
+        #                    self.print_error(self.bad_command)
+        #                    return_value = False
         return return_value
 
     def start_wizard(self, data):
         """Lance l'assistant
         :params data: Inutilisé
         """
-        print("Assistant")
+        plugin_data = self.ask_plugin_informations()
+        if plugin_data is not None:
+            self.create_folder_struct(plugin_data)
+            self.gen_info_json(plugin_data)
+            self.gen_installation_php(plugin_data)
+            self.gen_configuration(plugin_data)
+            self.gen_desktop_php(plugin_data)
+            self.gen_core_php(plugin_data)
+            self.start_tools(['plugin-'+plugin_data['id'], plugin_data['id']])
 
     def git_template(self, data):
         """Télécharge une copie du plugin Template
@@ -83,7 +110,233 @@ class WizardMenu(BaseMenu):
     def start_tools(self, plugin_data):
         """Lance l'outil
         :params plugin_data: Tableau contenant le chemin et le nom du plugin
-        :type plugin_data:   str
+        :type plugin_data:   List[str]
         """
         root_menu = RootMenu(plugin_data[0], plugin_data[1])
         root_menu.start()
+
+    def ask_plugin_informations(self):
+        """Obtenir les informations pour le futur plugin.
+        :return: Informations compilées
+        :rtype:  dict
+        """
+        data = {}
+
+        print(' - Le nom apparait dans l\'interface de Jeedom')
+        data['name'] = self.ask_with_default('Nom',
+                                             self.default_package_name)
+        plugin_id = data['name'].lower().replace(' ', '_').capitalize()
+
+        print(' - L\'identifiant différencie le plugin des autres.')
+        data['id'] = self.ask_with_default('ID', plugin_id)
+
+        # Test si le répertoire existe à ce niveau pour éviter la suite du
+        # questionnaire
+        if os.path.exists('plugin-' + data['id']):
+            self.print_error('Le répertoire du plugin existe déjà')
+            data = None
+        else:
+            data['description'] = self.get_user_input(
+                'Description (optional) : ')
+            data['license'] = self.ask_with_default('Licence', 'GPL')
+            data['author'] = self.get_user_input('Auteur (optionnal) : ')
+            data['require'] = self.ask_with_default('Version requise de Jeedom',
+                                                    '3.0')
+            data['version'] = self.ask_with_default('Version du plugin', '1.0')
+            category_choice = self.get_menu_choice(InfoMenu.categories, False)
+            data['category'] = InfoMenu.categories[category_choice]
+
+            configuration = None
+
+            if self.ask_y_n('Générer la page de configuration ?', 'o') == 'o':
+                configuration = []
+                loop = True
+                menu = ['Champ texte',
+                        'Case à cocher']
+                values = ['text',
+                          'checkbox']
+                while loop:
+                    print('Ajouter un champ ?')
+                    result = self.get_menu_choice(menu)
+                    if result == -1:
+                        loop = False
+                    else:
+                        label = self.get_user_input('Label : ')
+                        code = self.get_user_input('Code : ')
+                        configuration.append({
+                            'type': values[result],
+                            'label': label,
+                            'code': code})
+            data['configuration'] = configuration
+
+            # Generate shortcuts
+            plugin_path = 'plugin-' + data['id']
+            data['plugin_info_path'] = plugin_path + os.sep + \
+                                      'plugin_info' + os.sep
+            data['core_path'] = plugin_path + os.sep + 'core' + os.sep
+            data['desktop_path'] = plugin_path + os.sep + 'desktop' + os.sep
+            data['documentation_language'] = self.ask_with_default(
+                'Langue de la documentation (fr_FR, en_US)', 'fr_FR')
+
+        return data
+
+    def create_folder_struct(self, plugin_data):
+        """Créé la structure de répertoires
+        :param plugin_data: Données du plugin
+        :type plugin_data:  dict
+        """
+        subfolders = [
+            'core',
+            'desktop',
+            'docs',
+            'plugin_info'
+        ]
+        core_subfolders = [
+            'ajax',
+            'class',
+            'php',
+        ]
+        desktop_subfolders = [
+            'css',
+            'js',
+            'modal',
+            'php'
+        ]
+        # Parent folder
+        plugin_dir = 'plugin-' + plugin_data['id']
+        os.mkdir(plugin_dir)
+        # First level subfolders
+        for subfolder in subfolders:
+            os.mkdir(plugin_dir + os.sep + subfolder)
+        # Desktop subfolders
+        for desktop_subfolder in desktop_subfolders:
+            os.mkdir(
+                plugin_dir + os.sep + 'desktop' + os.sep + desktop_subfolder)
+        # Core subfolders
+        for core_subfolder in core_subfolders:
+            os.mkdir(plugin_dir + os.sep + 'core' + os.sep + core_subfolder)
+        # license file
+        license_file = open(plugin_dir + os.sep + 'LICENSE', 'w')
+        license_file.close()
+        # Documentation folder
+        os.mkdir(plugin_dir + os.sep + 'docs' + os.sep +
+                 plugin_data['documentation_language'])
+
+    def gen_info_json(self, plugin_data):
+        """Ecrit le fichier d'information du plugin
+        :param plugin_data: Données du plugin
+        :type plugin_data:  dict
+        """
+        with open(plugin_data['plugin_info_path'] + 'info.json', 'w') as dest:
+            dest.write(
+                '{\n'
+                '  "id" : "%s",\n'
+                '  "name": "%s",\n'
+                '  "licence": "%s",\n'
+                '  "require": "%s",\n'
+                '  "version": "%s",\n'
+                '  "category": "%s",\n'
+                '  "hasDependency": false,\n'
+                '  "hasOwnDaemon": false,\n'
+                '  "maxDependancyInstallTime": 0,\n'
+                '  "documentation": "%s",\n'
+                '  "changelog": "%s"' % (
+                    plugin_data['id'],
+                    plugin_data['name'],
+                    plugin_data['license'],
+                    plugin_data['require'],
+                    plugin_data['version'],
+                    plugin_data['category'],
+                    self.default_documentation_url % (plugin_data['id']),
+                    self.default_changelog_url % (plugin_data['id'])
+                )
+            )
+            if plugin_data['description'] != '':
+                dest.write(
+                    ',\n  "description": "%s"' % (plugin_data['description']))
+            if plugin_data['author'] != '':
+                dest.write(',\n  "author": "%s"' % (plugin_data['author']))
+            dest.write('\n}\n')
+            dest.close()
+
+    def gen_installation_php(self, plugin_data):
+        """Ecrit la classe d'installation du plugin dans plugin_info
+        :param plugin_data: Données du plugin
+        :type plugin_data:  dict
+        """
+        funcs = ['install', 'update', 'remove']
+
+        with open(plugin_data['plugin_info_path'] + 'installation.php',
+                  'w') as dest:
+            dest.write(PHP_HEADER + PHP_INCLUDE_CORE_3)
+            for func in funcs:
+                dest.write('function ' + plugin_data['id'] +
+                           '_' + func + '()\n    {\n\n    }\n\n')
+
+    def gen_configuration(self, plugin_data):
+        """Ecrit le formulaire de configuration du plugin dans plugin_info
+        :param plugin_data: Données du plugin
+        :type plugin_data:  dict
+        """
+        if plugin_data['configuration']:
+            with open(plugin_data['plugin_info_path'] + 'configuration.php',
+                      'w') as dest:
+                dest.write(PHP_HEADER)
+                dest.write(PHP_INCLUDE_CORE_3)
+                dest.write(PHP_CHECK_USER_CONNECT)
+                dest.write("?>\n")
+                dest.write('<form class="form-horizontal">\n  <fieldset>\n')
+                for item in plugin_data['configuration']:
+                    dest.write('    <div class="form-group">\n'
+                               '      <label class="col-sm-3 control-label">\n'
+                               '        {{%s}}\n'
+                               '      </label>\n'
+                               '      <div class="col-sm-9">\n'
+                               '        <input class="configKey form-control" '
+                               '' % (item['label']))
+                    if item['type'] == 'checkbox':
+                        dest.write('type="checkbox" ')
+                    dest.write('data-l1key="%s" />\n'
+                               '      </div>\n'
+                               '    </div>\n'
+                               '' % (item['code']))
+                dest.write('  </fieldset>\n</form>\n')
+
+    def gen_desktop_php(self, plugin_data):
+        """Ecrit le fichier PHP du desktop pour le rendu
+        :param plugin_data: Données du plugin
+        :type plugin_data:  dict
+        """
+        with open(plugin_data['desktop_path'] + 'php' + os.sep + plugin_data[
+            'id'] + '.php',
+                  'w') as dest:
+            dest.write('<?php\n')
+            dest.write(PHP_CHECK_USER_CONNECT + "?>\n")
+            dest.close()
+
+    def gen_core_php(self, plugin_data):
+        """Ecrit le fichier PHP du core
+        :param plugin_data: Données du plugin
+        :type plugin_data:  dict
+        """
+        with open(plugin_data['core_path'] + 'class' + os.sep + plugin_data[
+            'id'] + '.class.php',
+                  'w') as dest:
+            dest.write(PHP_HEADER + PHP_INCLUDE_CORE_4)
+            dest.write(''
+                       'class %s extends eqLogic\n{\n\n'
+                       '    /*************** Attributs ***************/\n\n'
+                       '    /************* Static methods ************/\n\n'
+                       '    /**************** Methods ****************/\n\n'
+                       '    /********** Getters and setters **********/\n\n'
+                       '}\n\n'
+                       'class %sCmd extends cmd\n{\n\n'
+                       '    /*************** Attributs ***************/\n\n'
+                       '    /************* Static methods ************/\n\n'
+                       '    /**************** Methods ****************/\n\n'
+                       '    public function execute($_options = array())\n'
+                       '    {\n\n'
+                       '    }\n\n'
+                       '    /********** Getters and setters **********/\n\n'
+                       '}\n' % (plugin_data['id'], plugin_data['id']))
+            dest.close()

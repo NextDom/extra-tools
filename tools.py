@@ -1,21 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
-import os
 import json
-from libs.MethodData import MethodData
-from libs.BaseMenu import BaseMenu
-from libs.RootMenu import RootMenu
+import os
+import sys
+
 from libs.WizardMenu import WizardMenu
+
+
 # Pour le debug
-from pprint import pprint
 
 
 def show_help():
     """Affiche l'aide
     """
-    print(sys.argv[0]+' [PLUGIN-NAME] [--help]')
+    print(sys.argv[0] + ' [PLUGIN-NAME] [--help]')
     print('  --help :      Affiche de menu.')
     print('  PLUGIN-NAME : Indiquer le nom du plugin à modifier.')
 

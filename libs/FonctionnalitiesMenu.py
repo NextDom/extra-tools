@@ -2,6 +2,7 @@
 
 import os
 import sys
+
 from BaseMenu import BaseMenu
 from MethodData import MethodData
 
@@ -32,7 +33,7 @@ class FonctionnalitiesMenu(BaseMenu):
         class_file_path = os.path.join(self.plugin_path,
                                        'core',
                                        'class',
-                                       self.plugin_name+'.class.php')
+                                       self.plugin_name + '.class.php')
         self.start_write_class(class_file_path, self.plugin_name, 'eqLogic')
 
     def action_2(self):
@@ -41,8 +42,8 @@ class FonctionnalitiesMenu(BaseMenu):
         class_file_path = os.path.join(self.plugin_path,
                                        'core',
                                        'class',
-                                       self.plugin_name+'.class.php')
-        self.start_write_class(class_file_path, self.plugin_name+'Cmd', 'cmd')
+                                       self.plugin_name + '.class.php')
+        self.start_write_class(class_file_path, self.plugin_name + 'Cmd', 'cmd')
 
     def action_3(self):
         """Modifier le nom affiché dans les menus
@@ -63,7 +64,7 @@ class FonctionnalitiesMenu(BaseMenu):
                 self.plugin_path,
                 'core',
                 'class',
-                self.plugin_name+'.class.php')
+                self.plugin_name + '.class.php')
             method_data.class_name = self.plugin_name
             method_data.method_name = crons[keys[choice]]
             method_data.method_is_static = True
@@ -153,7 +154,7 @@ class FonctionnalitiesMenu(BaseMenu):
         with open(file_path, 'a') as php_file:
             if add_php_tag:
                 php_file.write('<?php\n')
-            class_declaration = '\n\nclass '+class_name
+            class_declaration = '\n\nclass ' + class_name
             if extends is not None:
                 class_declaration += ' extends ' + extends + '\n{\n\n}\n'
             php_file.write(class_declaration)
@@ -170,7 +171,7 @@ class FonctionnalitiesMenu(BaseMenu):
         start_bracket_count = False
         method_added = False
         content = None
-        class_declaration = 'class '+method_data.class_name+' '
+        class_declaration = 'class ' + method_data.class_name + ' '
         with open(method_data.class_file_path, 'r') as class_file_content:
             content = class_file_content.readlines()
         # Recherche de la dernière accolade de la classe

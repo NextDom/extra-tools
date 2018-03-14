@@ -2,6 +2,7 @@
 
 import os
 import sys
+
 from BaseMenu import BaseMenu
 
 
@@ -14,6 +15,22 @@ class InfoMenu(BaseMenu):
             'Modifier la licence',
             'Modifier l\'auteur',
             'Modifier la catégorie']
+    categories = [
+        'security',
+        'automation protocol',
+        'programming',
+        'organization',
+        'weather',
+        'communication',
+        'devicecommunication',
+        'multimedia',
+        'wellness',
+        'monitoring',
+        'health',
+        'nature',
+        'automatisation',
+        'energy'
+    ]
     plugin_name = ''
     plugin_path = ''
 
@@ -60,25 +77,9 @@ class InfoMenu(BaseMenu):
     def action_5(self):
         """Modifier la catégorie
         """
-        categories = [
-            'security',
-            'automation protocol',
-            'programming',
-            'organization',
-            'weather',
-            'communication',
-            'devicecommunication',
-            'multimedia',
-            'wellness',
-            'monitoring',
-            'health',
-            'nature',
-            'automatisation',
-            'energy'
-        ]
-        category = self.get_menu_choice(categories)
+        category = self.get_menu_choice(self.categories)
         if category >= 0:
-            self.replace_info('category', categories[category])
+            self.replace_info('category', self.categories[category])
         self.print_success('La catégorie du plugin a été modifiée')
 
     def replace_info(self, key, new_value):
@@ -89,9 +90,9 @@ class InfoMenu(BaseMenu):
         :type new_value:   str
         """
         self.sed_replace(
-            '\("'+key+'" : "\).*\(",\)',
-            '\\1'+new_value+'\\2',
+            '\("' + key + '" : "\).*\(",\)',
+            '\\1' + new_value + '\\2',
             os.path.join(self.plugin_path,
                          'plugin_info',
                          'info.json')
-                         )
+        )
