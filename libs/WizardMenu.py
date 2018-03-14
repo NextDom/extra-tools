@@ -3,9 +3,9 @@
 import os
 import sys
 
-from BaseMenu import BaseMenu
-from InfoMenu import InfoMenu
-from RootMenu import RootMenu
+from .BaseMenu import BaseMenu
+from .InfoMenu import InfoMenu
+from .RootMenu import RootMenu
 
 PHP_INCLUDE_CORE_3 = "" \
      "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
@@ -271,7 +271,7 @@ class WizardMenu(BaseMenu):
             dest.write(PHP_HEADER + PHP_INCLUDE_CORE_3)
             for func in funcs:
                 dest.write('function ' + plugin_data['id'] +
-                           '_' + func + '()\n    {\n\n    }\n\n')
+                           '_' + func + '()\n{\n\n}\n\n')
 
     def gen_configuration(self, plugin_data):
         """Ecrit le formulaire de configuration du plugin dans plugin_info
@@ -311,7 +311,7 @@ class WizardMenu(BaseMenu):
             'id'] + '.php',
                   'w') as dest:
             dest.write('<?php\n')
-            dest.write(PHP_CHECK_USER_CONNECT + "?>\n")
+            dest.write(PHP_CHECK_USER_CONNECT+'\n')
             dest.close()
 
     def gen_core_php(self, plugin_data):

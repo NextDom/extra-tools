@@ -3,8 +3,8 @@
 import os
 import sys
 
-from BaseMenu import BaseMenu
-from MethodData import MethodData
+from .BaseMenu import BaseMenu
+from .MethodData import MethodData
 
 
 class FonctionnalitiesMenu(BaseMenu):
@@ -34,7 +34,13 @@ class FonctionnalitiesMenu(BaseMenu):
                                        'core',
                                        'class',
                                        self.plugin_name + '.class.php')
-        self.start_write_class(class_file_path, self.plugin_name, 'eqLogic')
+        if os.path.exists(class_file_path):
+            if not self.check_class(class_file_path, self.plugin_name):
+                self.start_write_class(class_file_path,
+                                       self.plugin_name, 'eqLogic')
+                self.print_success('La classe '+self.plugin_name+' a été créée')
+            else:
+                self.print_error('La classe '+self.plugin_name+' existe déjà')
 
     def action_2(self):
         """Créer la classe de gestion des commandes
@@ -43,7 +49,15 @@ class FonctionnalitiesMenu(BaseMenu):
                                        'core',
                                        'class',
                                        self.plugin_name + '.class.php')
-        self.start_write_class(class_file_path, self.plugin_name + 'Cmd', 'cmd')
+        if os.path.exists(class_file_path):
+            if not self.check_class(class_file_path, self.plugin_name):
+                self.start_write_class(class_file_path,
+                                       self.plugin_name + 'Cmd', 'cmd')
+                self.print_success('La classe '+self.plugin_name+
+                                   'Cmd a été créée')
+            else:
+                self.print_error('La classe '+self.plugin_name+
+                                 'Cmd existe déjà')
 
     def action_3(self):
         """Modifier le nom affiché dans les menus
@@ -79,8 +93,9 @@ class FonctionnalitiesMenu(BaseMenu):
         :type method_data:   MethodData
         """
         result = False
-        if self.check_class_file(method_data):
-            if self.check_class(method_data):
+        if os.path.exists(method_data.class_file_path):
+            if self.check_class(method_data.class_file_path,
+                                method_data.class_name):
                 if not self.check_if_method_exists(method_data):
                     result = self.write_method_in_class(method_data)
                 else:
@@ -91,24 +106,14 @@ class FonctionnalitiesMenu(BaseMenu):
             self.print_error('Le fichier n\'existe pas')
         return result
 
-    def check_class_file(self, method_data):
+    def check_class(self, class_file_path, class_name):
         """Test si la classe existe
         :params method_data: Données de la méthode
         :type method_data:   MethodData
         """
         result = False
-        if os.path.exists(method_data.class_file_path):
-            result = True
-        return result
-
-    def check_class(self, method_data):
-        """Test si la classe existe
-        :params method_data: Données de la méthode
-        :type method_data:   MethodData
-        """
-        result = False
-        with open(method_data.class_file_path) as file_content:
-            if method_data.class_name in file_content.read():
+        with open(class_file_path) as file_content:
+            if class_name in file_content.read():
                 result = True
         return result
 

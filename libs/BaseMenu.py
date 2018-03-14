@@ -38,6 +38,18 @@ class BaseMenu(object):
         """
         print('v ' + msg)
 
+    def is_string(self, obj):
+        """Test si une variable est une chaine de caractères
+        :params obj: Objet à tester
+        :return:     True si l'object est une chaine de caractères
+        :rtype:      bool
+        """
+        str_type = str
+
+        if sys.version_info[0] < 3:
+            str_type = basestring
+        return isinstance(obj, str_type)
+
     def show_menu(self, menu, show_cancel=True):
         """Afficher un menu
         :params menu:        Tableau des choix à afficher
@@ -63,27 +75,30 @@ class BaseMenu(object):
         :rtype:              int
         """
         loop = True
-        user_choice = 999
+        user_choice = 9999
         menu_choice_length = len(menu)
 
         while loop:
             self.show_menu(menu, show_cancel)
             try:
-                user_choice = int(self.get_user_input(self.choice_prompt))
+                raw_user_choice = self.get_user_input(self.choice_prompt)
+                user_choice = int(raw_user_choice)
             except NameError:
-                user_choice = 999
+                user_choice = 9999
             except ValueError:
+                user_choice = 9999
+                # Sortir si l'utilisateur appuie sur Enter
                 if show_cancel:
-                    user_choice = 0
-                else:
-                    user_choice = 999
+                    if self.is_string(raw_user_choice) and \
+                       raw_user_choice == "":
+                        user_choice = 0
             if user_choice < menu_choice_length + 1:
                 # Choix de l'utilisateur -1 pour retrouver l'index du tableau
-                # et -1 si l'utilisateur a choisi 0
+                # et -1 si l'utilisateur a choisi 0 (Sortir)
                 user_choice -= 1
                 loop = False
-                # TODO a améliorer
-                if user_choice == 0 and not show_cancel:
+                # Si l'utilisateur doit répondre, la boucle continue
+                if user_choice == -1 and not show_cancel:
                     loop = True
             else:
                 self.print_error(self.bad_choice)

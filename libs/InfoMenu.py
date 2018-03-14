@@ -3,7 +3,7 @@
 import os
 import sys
 
-from BaseMenu import BaseMenu
+from .BaseMenu import BaseMenu
 
 
 class InfoMenu(BaseMenu):

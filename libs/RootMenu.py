@@ -3,9 +3,9 @@
 import os
 import sys
 
-from BaseMenu import BaseMenu
-from FonctionnalitiesMenu import FonctionnalitiesMenu
-from InfoMenu import InfoMenu
+from .BaseMenu import BaseMenu
+from .FonctionnalitiesMenu import FonctionnalitiesMenu
+from .InfoMenu import InfoMenu
 
 
 class RootMenu(BaseMenu):

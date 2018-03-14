@@ -8,9 +8,6 @@ import sys
 from libs.WizardMenu import WizardMenu
 
 
-# Pour le debug
-
-
 def show_help():
     """Affiche l'aide
     """
