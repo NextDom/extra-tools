@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 import tempfile
 from unittest.mock import patch
 from unittest import mock
 import os
 import tools
+import shutil
 
 INFO_JSON_CONTENT = "{" + \
       "\"id\": \"PluginId\"," + \

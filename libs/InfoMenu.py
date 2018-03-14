@@ -90,7 +90,7 @@ class InfoMenu(BaseMenu):
         :type new_value:   str
         """
         self.sed_replace(
-            '\("' + key + '" : "\).*\(",\)',
+            '\("' + key + '"[ ]\{0,1\}: "\).*\("\)',
             '\\1' + new_value + '\\2',
             os.path.join(self.plugin_path,
                          'plugin_info',
