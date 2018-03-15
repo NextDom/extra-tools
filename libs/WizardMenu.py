@@ -44,6 +44,7 @@ class WizardMenu(BaseMenu):
         # Configuration du menu
         # Premier choix : Assistant
         self.plugins_list = plugins_list
+        self.menu = []
         self.menu.append('Démarrer l\'assistant')
         self.actions.append([self.start_wizard, None])
         # Recherche si le plugin template existe déjà
@@ -145,7 +146,6 @@ class WizardMenu(BaseMenu):
             data['version'] = self.ask_with_default('Version du plugin', '1.0')
             category_choice = self.get_menu_choice(InfoMenu.categories, False)
             data['category'] = InfoMenu.categories[category_choice]
-
             configuration = None
 
             if self.ask_y_n('Générer la page de configuration ?', 'o') == 'o':
@@ -168,6 +168,8 @@ class WizardMenu(BaseMenu):
                             'label': label,
                             'code': code})
             data['configuration'] = configuration
+            data['documentation_language'] = self.ask_with_default(
+                'Langue de la documentation (fr_FR, en_US)', 'fr_FR')
 
             # Generate shortcuts
             plugin_path = 'plugin-' + data['id']
@@ -175,8 +177,6 @@ class WizardMenu(BaseMenu):
                                       'plugin_info' + os.sep
             data['core_path'] = plugin_path + os.sep + 'core' + os.sep
             data['desktop_path'] = plugin_path + os.sep + 'desktop' + os.sep
-            data['documentation_language'] = self.ask_with_default(
-                'Langue de la documentation (fr_FR, en_US)', 'fr_FR')
 
         return data
 
@@ -191,16 +191,16 @@ class WizardMenu(BaseMenu):
             'docs',
             'plugin_info'
         ]
-        core_subfolders = [
-            'ajax',
-            'class',
-            'php',
-        ]
         desktop_subfolders = [
             'css',
             'js',
             'modal',
             'php'
+        ]
+        core_subfolders = [
+            'ajax',
+            'class',
+            'php',
         ]
         # Parent folder
         plugin_dir = 'plugin-' + plugin_data['id']
