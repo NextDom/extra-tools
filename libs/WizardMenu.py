@@ -268,6 +268,7 @@ class WizardMenu(BaseMenu):
 
         with open(plugin_data['plugin_info_path'] + 'installation.php',
                   'w') as dest:
+            print('coucou')
             dest.write(PHP_HEADER + PHP_INCLUDE_CORE_3)
             for func in funcs:
                 dest.write('function ' + plugin_data['id'] +

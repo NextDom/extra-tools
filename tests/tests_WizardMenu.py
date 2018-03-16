@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-
+import json
 import os
 import shutil
 import tempfile
 import unittest
 
-from unittest.mock import patch
 from unittest.mock import call
+from unittest.mock import patch
 
 from libs.WizardMenu import WizardMenu
 
@@ -57,14 +57,14 @@ PLUGIN_CONFIGURATION = {'author': '',
                             {'code': 'name', 'label': 'Name', 'type': 'text'},
                             {'code': 'valid', 'label': 'Valid ?',
                              'type': 'checkbox'}],
-                        'core_path': 'plugin-PluginName/core/',
+                        'core_path': 'plugin-PluginName' + os.sep + 'core' + os.sep,
                         'description': '',
-                        'desktop_path': 'plugin-PluginName/desktop/',
+                        'desktop_path': 'plugin-PluginName' + os.sep + 'desktop' + os.sep,
                         'documentation_language': 'fr_FR',
                         'id': 'PluginName',
                         'license': 'GPL',
                         'name': 'Plugin Name',
-                        'plugin_info_path': 'plugin-PluginName/plugin_info/',
+                        'plugin_info_path': 'plugin-PluginName' + os.sep + 'plugin_info' + os.sep,
                         'require': '3.0',
                         'version': '1.0'}
 
@@ -72,11 +72,26 @@ PLUGIN_CONFIGURATION = {'author': '',
 class TestWizardMenu(unittest.TestCase):
     test_dir = None
     wizard_menu = None
+    plugin_data = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
         self.wizard_menu = WizardMenu([['plugin-alpha', 'Alpha'],
                                        ['plugin-beta', 'Beta']])
+
+        self.plugin_data = PLUGIN_CONFIGURATION.copy()
+        self.plugin_data['core_path'] = self.plugin_data['core_path'].replace(
+            'plugin-PluginName', self.test_dir)
+        self.plugin_data['desktop_path'] = self.plugin_data[
+            'desktop_path'].replace(
+            'plugin-PluginName', self.test_dir)
+        self.plugin_data['plugin_info_path'] = self.plugin_data[
+            'plugin_info_path'].replace('plugin-PluginName', self.test_dir)
+        os.mkdir(self.test_dir + os.sep + 'plugin_info')
+        os.mkdir(self.test_dir + os.sep + 'core')
+        os.mkdir(self.test_dir + os.sep + 'core' + os.sep + 'class')
+        os.mkdir(self.test_dir + os.sep + 'desktop')
+        os.mkdir(self.test_dir + os.sep + 'desktop' + os.sep + 'php')
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
@@ -87,7 +102,6 @@ class TestWizardMenu(unittest.TestCase):
                           'Télécharger le plugin Template',
                           'Modifier le plugin Alpha',
                           'Modifier le plugin Beta'])
-        pass
 
     def test_constructor_with_template(self):
         self.wizard_menu = WizardMenu([['plugin-alpha', 'Alpha'],
@@ -98,7 +112,6 @@ class TestWizardMenu(unittest.TestCase):
                           'Modifier le plugin Alpha',
                           'Modifier le plugin Beta',
                           'Modifier le plugin Template'])
-        pass
 
     @patch('builtins.input', side_effect=WIZARD_ANSWERS)
     def test_ask_plugin_informations(self, side_effect):
@@ -150,18 +163,89 @@ class TestWizardMenu(unittest.TestCase):
     def test_create_folder_struct(self, mocked_open, mocked_mkdir):
         self.wizard_menu.create_folder_struct(PLUGIN_CONFIGURATION)
         mkdir_calls = [call('plugin-PluginName'),
-                       call('plugin-PluginName'+os.sep+'core'),
-                       call('plugin-PluginName'+os.sep+'desktop'),
-                       call('plugin-PluginName'+os.sep+'docs'),
-                       call('plugin-PluginName'+os.sep+'plugin_info'),
-                       call('plugin-PluginName'+os.sep+'desktop'+os.sep+'css'),
-                       call('plugin-PluginName'+os.sep+'desktop'+os.sep+'js'),
-                       call('plugin-PluginName'+os.sep+'desktop'+os.sep+'modal'),
-                       call('plugin-PluginName'+os.sep+'desktop'+os.sep+'php'),
-                       call('plugin-PluginName'+os.sep+'core'+os.sep+'ajax'),
-                       call('plugin-PluginName'+os.sep+'core'+os.sep+'class'),
-                       call('plugin-PluginName'+os.sep+'core'+os.sep+'php'),
-                       call('plugin-PluginName'+os.sep+'docs'+os.sep+'fr_FR')
+                       call('plugin-PluginName' + os.sep + 'core'),
+                       call('plugin-PluginName' + os.sep + 'desktop'),
+                       call('plugin-PluginName' + os.sep + 'docs'),
+                       call('plugin-PluginName' + os.sep + 'plugin_info'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'css'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'js'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'modal'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'php'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'core' + os.sep + 'ajax'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'core' + os.sep + 'class'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'core' + os.sep + 'php'),
+                       call(
+                           'plugin-PluginName' + os.sep + 'docs' + os.sep + 'fr_FR')
                        ]
         mocked_mkdir.assert_has_calls(mkdir_calls)
-        pass
+        open_calls = [call('plugin-PluginName' + os.sep + 'LICENSE', 'w'),
+                      call().close()]
+        mocked_open.assert_has_calls(open_calls)
+
+    def test_gen_info_json(self):
+        self.plugin_data['author'] = 'Me'
+        self.plugin_data['description'] = 'A small description'
+
+        self.wizard_menu.gen_info_json(self.plugin_data)
+
+        with open(self.plugin_data['plugin_info_path'] + 'info.json',
+                  'r') as info:
+            json_info = json.loads(info.read())
+            self.assertEqual(json_info['author'], 'Me')
+            self.assertEqual(json_info['category'], 'weather')
+            self.assertEqual(json_info['description'], 'A small description')
+            self.assertEqual(json_info['id'], 'PluginName')
+            self.assertEqual(json_info['licence'], 'GPL')
+            self.assertEqual(json_info['require'], '3.0')
+            self.assertEqual(json_info['version'], '1.0')
+
+    def test_gen_installation_php(self):
+        self.wizard_menu.gen_installation_php(self.plugin_data)
+
+        with open(self.plugin_data['plugin_info_path'] + 'installation.php',
+                  'r') as configuration:
+            content = configuration.read()
+            self.assertIn('function PluginName_install', content)
+            self.assertIn('function PluginName_update', content)
+            self.assertIn('function PluginName_remove', content)
+
+    def test_gen_configuration(self):
+        self.wizard_menu.gen_configuration(self.plugin_data)
+
+        with open(self.plugin_data['plugin_info_path'] + 'configuration.php',
+                  'r') as configuration:
+            content = configuration.read()
+            self.assertIn(
+                '<input class="configKey form-control" data-l1key="name" />',
+                content)
+            self.assertIn(
+                '<input class="configKey form-control" type="checkbox" '
+                'data-l1key="valid" />', content)
+
+    def test_gen_desktop_php(self):
+        self.wizard_menu.gen_desktop_php(self.plugin_data)
+
+        with open(os.path.join(self.plugin_data['desktop_path'], 'php',
+                               'PluginName.php'),
+                  'r') as desktop:
+            content = desktop.read()
+        self.assertIn('<?php', content)
+
+
+    def test_gen_core_php(self):
+        self.wizard_menu.gen_core_php(self.plugin_data)
+
+        with open(os.path.join(self.plugin_data['core_path'], 'class',
+                               'PluginName.class.php'),
+                  'r') as desktop:
+            content = desktop.read()
+            self.assertIn('class PluginName extends eqLogic', content)
+            self.assertIn('class PluginNameCmd extends cmd', content)
+            self.assertIn('function execute(', content)
