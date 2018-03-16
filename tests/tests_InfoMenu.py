@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-import tempfile
 import os
 import shutil
+import tempfile
+import unittest
+
 from libs.InfoMenu import InfoMenu
 
 INFO_JSON_CONTENT = "{" + \
-      "\"id\": \"PluginId\"," + \
-      "\"name\": \"PluginName\"," + \
-      "\"data\": \"useless\"" + \
-    "}"
+                    "\"id\": \"PluginId\"," + \
+                    "\"name\": \"PluginName\"," + \
+                    "\"data\": \"useless\"" + \
+                    "}"
+
 
 class TestTools(unittest.TestCase):
     test_dir = None
@@ -19,7 +21,7 @@ class TestTools(unittest.TestCase):
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
-        os.mkdir(self.test_dir+os.sep+'plugin_info')
+        os.mkdir(self.test_dir + os.sep + 'plugin_info')
         self.test_json = os.path.join(self.test_dir, 'plugin_info', 'info.json')
         with open(self.test_json, 'w') as file_content:
             file_content.write(INFO_JSON_CONTENT)

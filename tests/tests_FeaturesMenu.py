@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-from libs.FeaturesMenu import FeaturesMenu
-from libs.MethodData import MethodData
+import os
 import shutil
 import tempfile
-import os
+import unittest
+
+from libs.FeaturesMenu import FeaturesMenu
+from libs.MethodData import MethodData
+
 
 class TestFonctionnalitiesMenu(unittest.TestCase):
     test_dir = None
@@ -18,10 +20,10 @@ class TestFonctionnalitiesMenu(unittest.TestCase):
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
-        self.empty_file_path = self.test_dir+os.sep+'empty.php'
-        self.empty_class_file_path = self.test_dir+os.sep+'empty_class.php'
-        self.class_file_path = self.test_dir+os.sep+'class.php'
-        self.no_file_path = self.test_dir+os.sep+'no_file.php'
+        self.empty_file_path = self.test_dir + os.sep + 'empty.php'
+        self.empty_class_file_path = self.test_dir + os.sep + 'empty_class.php'
+        self.class_file_path = self.test_dir + os.sep + 'class.php'
+        self.no_file_path = self.test_dir + os.sep + 'no_file.php'
         with open(self.class_file_path, 'w') as class_file:
             class_file.write('<?php\n\n');
             class_file.write('class TestClass\n{\n');
@@ -159,4 +161,3 @@ class TestFonctionnalitiesMenu(unittest.TestCase):
             content = file_content.read()
         self.assertTrue(result)
         self.assertIn('protected static function testMethod2', content)
-

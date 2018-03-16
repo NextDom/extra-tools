@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-from unittest.mock import patch
-from unittest import mock
-from libs.BaseMenu import BaseMenu
+import os
 import shutil
 import tempfile
-import os
+import unittest
+
+from unittest.mock import patch
+
+from libs.BaseMenu import BaseMenu
 
 SIMPLE_MENU = ['First choice',
                'Second choice']
+
+
 class TestBaseMenu(unittest.TestCase):
     test_dir = None
     base_menu = None

@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 
-import unittest
-import tempfile
-from unittest.mock import patch
-from unittest import mock
 import os
-import tools
 import shutil
+import tempfile
+import unittest
+from unittest import mock
+
+from unittest.mock import patch
+
+import tools
 
 INFO_JSON_CONTENT = "{" + \
-      "\"id\": \"PluginId\"," + \
-      "\"name\": \"PluginName\"" + \
-    "}"
+                    "\"id\": \"PluginId\"," + \
+                    "\"name\": \"PluginName\"" + \
+                    "}"
+
 
 class TestTools(unittest.TestCase):
     test_dir = None
@@ -53,13 +56,13 @@ class TestTools(unittest.TestCase):
         self.assertFalse(tools.is_plugin_dir('.'))
 
     @patch('builtins.open', new_callable=mock.mock_open,
-                            read_data=INFO_JSON_CONTENT)
+           read_data=INFO_JSON_CONTENT)
     def test_get_plugin_data_good_data(self, mock_file):
         result = tools.get_plugin_data('PluginIdPath')
         self.assertEqual(result, ['PluginIdPath', 'PluginId'])
 
     @patch('builtins.open', new_callable=mock.mock_open,
-                            read_data="")
+           read_data="")
     def test_get_plugin_data_no_data(self, mock_file):
         result = tools.get_plugin_data('PluginIdPath')
         self.assertIsNone(result)

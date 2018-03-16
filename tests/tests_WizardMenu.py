@@ -238,7 +238,6 @@ class TestWizardMenu(unittest.TestCase):
             content = desktop.read()
         self.assertIn('<?php', content)
 
-
     def test_gen_core_php(self):
         self.wizard_menu.gen_core_php(self.plugin_data)
 
