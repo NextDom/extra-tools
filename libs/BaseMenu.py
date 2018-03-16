@@ -90,7 +90,7 @@ class BaseMenu(object):
                 # Sortir si l'utilisateur appuie sur Enter
                 if show_cancel:
                     if self.is_string(raw_user_choice) and \
-                       raw_user_choice == "":
+                            raw_user_choice == "":
                         user_choice = 0
             if user_choice < menu_choice_length + 1:
                 # Choix de l'utilisateur -1 pour retrouver l'index du tableau

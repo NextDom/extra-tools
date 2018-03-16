@@ -8,15 +8,15 @@ from .InfoMenu import InfoMenu
 from .RootMenu import RootMenu
 
 PHP_INCLUDE_CORE_3 = "" \
-     "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
+                     "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
 PHP_INCLUDE_CORE_4 = "" \
-     "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
+                     "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
 PHP_HEADER = "<?php\n\n"
 PHP_CHECK_USER_CONNECT = "" \
-                 "include_file('core', 'authentification', 'php');\n\n" \
-                 "if (!isConnect('admin')) {\n" \
-                 "    throw new Exception('{{401 - Refused access}}');\n" \
-                 "}\n"
+                         "include_file('core', 'authentification', 'php');\n\n" \
+                         "if (!isConnect('admin')) {\n" \
+                         "    throw new Exception('{{401 - Refused access}}');\n" \
+                         "}\n"
 
 
 class WizardMenu(BaseMenu):
@@ -94,7 +94,7 @@ class WizardMenu(BaseMenu):
             self.gen_configuration(plugin_data)
             self.gen_desktop_php(plugin_data)
             self.gen_core_php(plugin_data)
-            self.start_tools(['plugin-'+plugin_data['id'], plugin_data['id']])
+            self.start_tools(['plugin-' + plugin_data['id'], plugin_data['id']])
 
     def git_template(self, data):
         """Télécharge une copie du plugin Template
@@ -174,7 +174,7 @@ class WizardMenu(BaseMenu):
             # Generate shortcuts
             plugin_path = 'plugin-' + data['id']
             data['plugin_info_path'] = plugin_path + os.sep + \
-                                      'plugin_info' + os.sep
+                                       'plugin_info' + os.sep
             data['core_path'] = plugin_path + os.sep + 'core' + os.sep
             data['desktop_path'] = plugin_path + os.sep + 'desktop' + os.sep
 
@@ -312,7 +312,7 @@ class WizardMenu(BaseMenu):
             'id'] + '.php',
                   'w') as dest:
             dest.write('<?php\n')
-            dest.write(PHP_CHECK_USER_CONNECT+'\n')
+            dest.write(PHP_CHECK_USER_CONNECT + '\n')
             dest.close()
 
     def gen_core_php(self, plugin_data):

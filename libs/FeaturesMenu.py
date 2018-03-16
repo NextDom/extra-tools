@@ -5,7 +5,6 @@ import sys
 
 from .BaseMenu import BaseMenu
 from .MethodData import MethodData
-from pprint import pprint
 
 
 class FeaturesMenu(BaseMenu):
@@ -39,9 +38,11 @@ class FeaturesMenu(BaseMenu):
             if not self.check_class(class_file_path, self.plugin_name):
                 self.check_and_write_class(class_file_path,
                                            self.plugin_name, 'eqLogic')
-                self.print_success('La classe '+self.plugin_name+' a été créée')
+                self.print_success(
+                    'La classe ' + self.plugin_name + ' a été créée')
             else:
-                self.print_error('La classe '+self.plugin_name+' existe déjà')
+                self.print_error(
+                    'La classe ' + self.plugin_name + ' existe déjà')
 
     def action_2(self):
         """Créer la classe de gestion des commandes
@@ -54,10 +55,10 @@ class FeaturesMenu(BaseMenu):
             if not self.check_class(class_file_path, self.plugin_name):
                 self.check_and_write_class(class_file_path,
                                            self.plugin_name + 'Cmd', 'cmd')
-                self.print_success('La classe '+self.plugin_name+
+                self.print_success('La classe ' + self.plugin_name +
                                    'Cmd a été créée')
             else:
-                self.print_error('La classe '+self.plugin_name+
+                self.print_error('La classe ' + self.plugin_name +
                                  'Cmd existe déjà')
 
     def action_3(self):
