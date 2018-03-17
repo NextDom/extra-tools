@@ -4,9 +4,13 @@
 import json
 import os
 import sys
+from pprint import pprint
 
 from libs.WizardMenu import WizardMenu
 
+# Gestion des accents pour python 2
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 def show_help():
     """Affiche l'aide
