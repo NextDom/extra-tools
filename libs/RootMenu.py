@@ -4,7 +4,7 @@ import os
 import sys
 
 from .BaseMenu import BaseMenu
-from .FonctionnalitiesMenu import FonctionnalitiesMenu
+from .FeaturesMenu import FeaturesMenu
 from .InfoMenu import InfoMenu
 
 
@@ -67,8 +67,8 @@ class RootMenu(BaseMenu):
     def action_3(self):
         """Lance le menu de modification des informations
         """
-        fonctionnalities_menu = FonctionnalitiesMenu(self.plugin_path,
-                                                     self.plugin_name)
+        fonctionnalities_menu = FeaturesMenu(self.plugin_path,
+                                             self.plugin_name)
         fonctionnalities_menu.start()
 
     def rename_plugin(self, current_path, old_name, new_name):
@@ -81,12 +81,14 @@ class RootMenu(BaseMenu):
         :type old_name:      str
         :type new_name:      str
         """
+        core_template_test = 'core' + os.sep + 'template'
         if old_name != '' and new_name != '':
             # Remplacement des occurences dans les noms des fichiers et
             # des répertoires
             for item in os.listdir(current_path):
+                item_path = os.path.join(current_path, item)
                 # A enlever quand plugin-template sera renommé plugin-Template
-                if 'core/template':
+                if not item_path.endswith(core_template_test):
                     item = self.rename_item(current_path + os.sep,
                                             item,
                                             old_name,
@@ -110,6 +112,7 @@ class RootMenu(BaseMenu):
         :type new_name:     str
         """
         self.sed_replace(old_name, new_name, target_file)
+        self.sed_replace(old_name.lower(), new_name.lower(), target_file)
         self.sed_replace(old_name.upper(), new_name.upper(), target_file)
         self.sed_replace(old_name.capitalize(),
                          new_name.capitalize(),
@@ -136,6 +139,10 @@ class RootMenu(BaseMenu):
         # En majuscule
         elif old_name.upper() in item:
             result = item.replace(old_name.upper(), new_name.upper())
+            os.rename(path + item, path + result)
+        # En minuscule
+        elif old_name.lower() in item:
+            result = item.replace(old_name.lower(), new_name.lower())
             os.rename(path + item, path + result)
         # Avec une majuscule au début
         elif old_name.capitalize() in item:

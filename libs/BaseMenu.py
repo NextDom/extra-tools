@@ -90,7 +90,7 @@ class BaseMenu(object):
                 # Sortir si l'utilisateur appuie sur Enter
                 if show_cancel:
                     if self.is_string(raw_user_choice) and \
-                       raw_user_choice == "":
+                            raw_user_choice == "":
                         user_choice = 0
             if user_choice < menu_choice_length + 1:
                 # Choix de l'utilisateur -1 pour retrouver l'index du tableau
@@ -119,14 +119,13 @@ class BaseMenu(object):
             result = input(msg)
         return result
 
-    def ask_y_n(self, question, default='y'):
-        """Ask a question whose answer is yes or no.
-
-        :param question: Question to display
-        :param default:  Default answer (y or n). y by default.
+    def ask_y_n(self, question, default='o'):
+        """Afficher une question dont la réponse est oui ou non
+        :param question: Question à afficher
+        :param default:  Réponse par défaut. o par défaut
         :type question:  str
         :type default:   str
-        :return:         User answer
+        :return:         Réponse de l'utilisateur
         :rtype:          str
         """
         choices = 'O/n'
@@ -137,17 +136,16 @@ class BaseMenu(object):
             return default
         return choice
 
-    def ask_with_default(self, message, default):
-        """Ask for user input with a default value is user hit enter.abs
-
-        :param message: Message to display
-        :param default: Default answer
+    def ask_with_default(self, question, default):
+        """Affiche une question avec une réponse par défaut
+        :param message: Question à afficher
+        :param default: Réponse par défaut
         :type message:  str
         :type default:  str
-        :return:        User answer
+        :return:        Réponse de l'utilisateur
         :rtype:         str
         """
-        answer = self.get_user_input('%s [%s] : ' % (message, default))
+        answer = self.get_user_input('%s [%s] : ' % (question, default))
         if answer == '':
             answer = default
         return answer

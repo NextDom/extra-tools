@@ -7,7 +7,7 @@ from .BaseMenu import BaseMenu
 from .MethodData import MethodData
 
 
-class FonctionnalitiesMenu(BaseMenu):
+class FeaturesMenu(BaseMenu):
     """Classe du menu permettant d'ajouter des fonctionnalités.
     """
     title = 'Ajouter des fonctionnalités'
@@ -21,7 +21,7 @@ class FonctionnalitiesMenu(BaseMenu):
         """Constructeur
         """
         if sys.version_info[0] < 3:
-            super(FonctionnalitiesMenu, self).__init__()
+            super(FeaturesMenu, self).__init__()
         else:
             super().__init__()
         self.plugin_name = plugin_name
@@ -36,11 +36,13 @@ class FonctionnalitiesMenu(BaseMenu):
                                        self.plugin_name + '.class.php')
         if os.path.exists(class_file_path):
             if not self.check_class(class_file_path, self.plugin_name):
-                self.start_write_class(class_file_path,
-                                       self.plugin_name, 'eqLogic')
-                self.print_success('La classe '+self.plugin_name+' a été créée')
+                self.check_and_write_class(class_file_path,
+                                           self.plugin_name, 'eqLogic')
+                self.print_success(
+                    'La classe ' + self.plugin_name + ' a été créée')
             else:
-                self.print_error('La classe '+self.plugin_name+' existe déjà')
+                self.print_error(
+                    'La classe ' + self.plugin_name + ' existe déjà')
 
     def action_2(self):
         """Créer la classe de gestion des commandes
@@ -51,12 +53,12 @@ class FonctionnalitiesMenu(BaseMenu):
                                        self.plugin_name + '.class.php')
         if os.path.exists(class_file_path):
             if not self.check_class(class_file_path, self.plugin_name):
-                self.start_write_class(class_file_path,
-                                       self.plugin_name + 'Cmd', 'cmd')
-                self.print_success('La classe '+self.plugin_name+
+                self.check_and_write_class(class_file_path,
+                                           self.plugin_name + 'Cmd', 'cmd')
+                self.print_success('La classe ' + self.plugin_name +
                                    'Cmd a été créée')
             else:
-                self.print_error('La classe '+self.plugin_name+
+                self.print_error('La classe ' + self.plugin_name +
                                  'Cmd existe déjà')
 
     def action_3(self):
@@ -96,7 +98,8 @@ class FonctionnalitiesMenu(BaseMenu):
         if os.path.exists(method_data.class_file_path):
             if self.check_class(method_data.class_file_path,
                                 method_data.class_name):
-                if not self.check_if_method_exists(method_data):
+                if not self.check_if_method_exists(method_data.class_file_path,
+                                                   method_data.class_name):
                     result = self.write_method_in_class(method_data)
                 else:
                     self.print_error('La méthode existe déjà')
@@ -112,23 +115,26 @@ class FonctionnalitiesMenu(BaseMenu):
         :type method_data:   MethodData
         """
         result = False
-        with open(class_file_path) as file_content:
-            if class_name in file_content.read():
-                result = True
+        try:
+            with open(class_file_path) as file_content:
+                if class_name in file_content.read():
+                    result = True
+        except FileNotFoundError:
+            pass
         return result
 
-    def check_if_method_exists(self, method_data):
+    def check_if_method_exists(self, class_file_path, method_name):
         """Test si la méthode existe déjà
         :params method_data: Données de la méthode
         :type method_data:   MethodData
         """
         result = False
-        with open(method_data.class_file_path) as file_content:
-            if method_data.method_name in file_content.read():
+        with open(class_file_path) as file_content:
+            if method_name in file_content.read():
                 result = True
         return result
 
-    def start_write_class(self, file_path, class_name, extends=None):
+    def check_and_write_class(self, file_path, class_name, extends=None):
         """Lancer l'écriture d'une nouvelle classe
         :params file_path:  Chemin du fichier devant contenir la classe
         :params class_name: Nom de la classe à créer
@@ -176,25 +182,30 @@ class FonctionnalitiesMenu(BaseMenu):
         start_bracket_count = False
         method_added = False
         content = None
-        class_declaration = 'class ' + method_data.class_name + ' '
-        with open(method_data.class_file_path, 'r') as class_file_content:
-            content = class_file_content.readlines()
-        # Recherche de la dernière accolade de la classe
-        for line in content:
-            if not start_bracket_count and class_declaration in line:
-                start_bracket_count = True
-            if not method_added and start_bracket_count:
-                if '{' in line:
-                    bracket_count += 1
-                if '}' in line:
-                    bracket_count -= 1
-                    # Dernière accolade de la classe
-                    if bracket_count == 0:
-                        output.append(method_data.get_method_func())
-                        method_added = True
-            output.append(line)
-        # Réécrit le fichier
-        with open(method_data.class_file_path, 'w') as class_file_content:
-            for line in output:
-                class_file_content.write(line)
+        class_declaration = 'class ' + method_data.class_name
+        try:
+            with open(method_data.class_file_path, 'r') as class_file_content:
+                content = class_file_content.readlines()
+            # Recherche de la dernière accolade de la classe
+            for line in content:
+                if not start_bracket_count and (
+                        class_declaration in line or
+                        class_declaration == line):
+                    start_bracket_count = True
+                if not method_added and start_bracket_count:
+                    if '{' in line:
+                        bracket_count += 1
+                    if '}' in line:
+                        bracket_count -= 1
+                        # Dernière accolade de la classe
+                        if bracket_count == 0:
+                            output.append(method_data.get_method_func())
+                            method_added = True
+                output.append(line)
+            # Réécrit le fichier
+            with open(method_data.class_file_path, 'w') as class_file_content:
+                for line in output:
+                    class_file_content.write(line)
+        except FileNotFoundError:
+            pass
         return method_added
