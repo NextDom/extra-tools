@@ -111,8 +111,12 @@ class FeaturesMenu(BaseMenu):
 
     def check_class(self, class_file_path, class_name):
         """Test si la classe existe
-        :params method_data: Données de la méthode
-        :type method_data:   MethodData
+        :params class_file_path: Répertoire de la classe
+        :params class_name:      Nom de la classe
+        :type class_file_path:   str
+        :type class_name:        str
+        :return:                 True si la classe existe
+        :rtype:                  bool
         """
         result = False
         try:
@@ -124,9 +128,13 @@ class FeaturesMenu(BaseMenu):
         return result
 
     def check_if_method_exists(self, class_file_path, method_name):
-        """Test si la méthode existe déjà
-        :params method_data: Données de la méthode
-        :type method_data:   MethodData
+        """Test si la classe existe
+        :params class_file_path: Répertoire de la classe
+        :params method_name:     Nom de la méthode
+        :type class_file_path:   str
+        :type method_name:       str
+        :return:                 True si la méthode existe
+        :rtype:                  bool
         """
         result = False
         with open(class_file_path) as file_content:

@@ -8,15 +8,15 @@ from .InfoMenu import InfoMenu
 from .RootMenu import RootMenu
 
 PHP_INCLUDE_CORE_3 = "" \
-                     "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
+     "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
 PHP_INCLUDE_CORE_4 = "" \
-                     "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
+     "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
 PHP_HEADER = "<?php\n\n"
 PHP_CHECK_USER_CONNECT = "" \
-                         "include_file('core', 'authentification', 'php');\n\n" \
-                         "if (!isConnect('admin')) {\n" \
-                         "    throw new Exception('{{401 - Refused access}}');\n" \
-                         "}\n"
+     "include_file('core', 'authentification', 'php');\n\n" \
+     "if (!isConnect('admin')) {\n" \
+     "    throw new Exception('{{401 - Refused access}}');\n" \
+     "}\n"
 
 
 class WizardMenu(BaseMenu):
@@ -70,16 +70,12 @@ class WizardMenu(BaseMenu):
             if user_choice == -1:
                 loop = False
             else:
-                # Debug
-                return_value = self.actions[user_choice][0](
-                    self.actions[user_choice][1])
-                loop = False
-        #                try:
-        #                    return_value = self.actions[user_choice][0](
-        #                        self.actions[user_choice][1])
-        #                except AttributeError:
-        #                    self.print_error(self.bad_command)
-        #                    return_value = False
+                try:
+                    return_value = self.actions[user_choice][0](
+                        self.actions[user_choice][1])
+                except AttributeError:
+                    self.print_error(self.bad_command)
+                    return_value = False
         return return_value
 
     def start_wizard(self, data):

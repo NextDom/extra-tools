@@ -138,12 +138,12 @@ class BaseMenu(object):
 
     def ask_with_default(self, question, default):
         """Affiche une question avec une réponse par défaut
-        :param message: Question à afficher
-        :param default: Réponse par défaut
-        :type message:  str
-        :type default:  str
-        :return:        Réponse de l'utilisateur
-        :rtype:         str
+        :param question: Question à afficher
+        :param default:  Réponse par défaut
+        :type question:  str
+        :type default:   str
+        :return:         Réponse de l'utilisateur
+        :rtype:          str
         """
         answer = self.get_user_input('%s [%s] : ' % (question, default))
         if answer == '':
@@ -184,13 +184,10 @@ class BaseMenu(object):
         """
         return_value = None
         method_name = 'action_' + str(number)
-        # Debug
-        method = getattr(self, method_name)
-        return_value = method()
-        #        try:
-        #            method = getattr(self, method_name)
-        #            return_value = method()
-        #        except AttributeError:
-        #            self.print_error(self.bad_command)
-        #            return_value = False
+        try:
+            method = getattr(self, method_name)
+            return_value = method()
+        except AttributeError:
+            self.print_error(self.bad_command)
+            return_value = False
         return return_value
