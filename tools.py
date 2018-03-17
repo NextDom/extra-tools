@@ -9,8 +9,9 @@ from pprint import pprint
 from libs.WizardMenu import WizardMenu
 
 # Gestion des accents pour python 2
-reload(sys)
-sys.setdefaultencoding('utf8')
+if sys.version_info[0] < 3:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
 
 def show_help():
     """Affiche l'aide
