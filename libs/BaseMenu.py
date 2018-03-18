@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Classe mère des menus
+"""
 import os
 import sys
 
@@ -22,23 +24,26 @@ class BaseMenu(object):
         Initialise la commande sed pour être compatible avec Mac OS X
         """
         if 'darwin' in sys.platform:
-            self.sed_replace_pattern = "sed -i '' 's/{}/{}/g' {} 2> /dev/null"
+            BaseMenu.sed_replace_pattern = "sed -i '' 's/{}/{}/g' {} 2> /dev/null"
 
-    def print_error(self, msg):
+    @staticmethod
+    def print_error(msg):
         """Affiche un message d'erreur
         :params msg: Message à afficher
         :type msg:   str
         """
         print('/!\\ ' + msg)
 
-    def print_success(self, msg):
+    @staticmethod
+    def print_success(msg):
         """Affiche un message de confirmation
         :params msg: Message à afficher
         :type msg:   str
         """
         print('v ' + msg)
 
-    def is_string(self, obj):
+    @staticmethod
+    def is_string(obj):
         """Test si une variable est une chaine de caractères
         :params obj: Objet à tester
         :return:     True si l'object est une chaine de caractères
@@ -47,7 +52,7 @@ class BaseMenu(object):
         str_type = str
 
         if sys.version_info[0] < 3:
-            str_type = basestring #pylint: disable=undefined-variable
+            str_type = basestring  # pylint: disable=undefined-variable
         return isinstance(obj, str_type)
 
     def show_menu(self, menu, show_cancel=True):
@@ -81,7 +86,7 @@ class BaseMenu(object):
         while loop:
             self.show_menu(menu, show_cancel)
             try:
-                raw_user_choice = self.get_user_input(self.choice_prompt)
+                raw_user_choice = BaseMenu.get_user_input(self.choice_prompt)
                 user_choice = int(raw_user_choice)
             except NameError:
                 user_choice = 9999
@@ -104,7 +109,8 @@ class BaseMenu(object):
                 self.print_error(self.bad_choice)
         return user_choice
 
-    def get_user_input(self, msg):
+    @staticmethod
+    def get_user_input(msg):
         """Obtenir une entrée d'un utilisateur
         Compatible Python 2 et 3
         :params msg: Message à afficher
@@ -114,12 +120,13 @@ class BaseMenu(object):
         """
         result = None
         if sys.version_info[0] < 3:
-            result = raw_input(msg) #pylint: disable=undefined-variable
+            result = raw_input(msg)  # pylint: disable=undefined-variable
         else:
             result = input(msg)
         return result
 
-    def ask_y_n(self, question, default='o'):
+    @staticmethod
+    def ask_y_n(question, default='o'):
         """Afficher une question dont la réponse est oui ou non
         :param question: Question à afficher
         :param default:  Réponse par défaut. o par défaut
@@ -131,12 +138,14 @@ class BaseMenu(object):
         choices = 'O/n'
         if default != 'o':
             choices = 'o/N'
-        choice = self.get_user_input('%s [%s] : ' % (question, choices)).lower()
+        choice = BaseMenu.get_user_input(
+            '%s [%s] : ' % (question, choices)).lower()
         if choice == default or choice == '':
             return default
         return choice
 
-    def ask_with_default(self, question, default):
+    @staticmethod
+    def ask_with_default(question, default):
         """Affiche une question avec une réponse par défaut
         :param question: Question à afficher
         :param default:  Réponse par défaut
@@ -145,7 +154,7 @@ class BaseMenu(object):
         :return:         Réponse de l'utilisateur
         :rtype:          str
         """
-        answer = self.get_user_input('%s [%s] : ' % (question, default))
+        answer = BaseMenu.get_user_input('%s [%s] : ' % (question, default))
         if answer == '':
             answer = default
         return answer
@@ -161,7 +170,8 @@ class BaseMenu(object):
             else:
                 self.launch(user_choice + 1)
 
-    def sed_replace(self, regexp, replacement, target_file):
+    @staticmethod
+    def sed_replace(regexp, replacement, target_file):
         """Exécute la commande sed sur un fichier
         :params regexp:      Expression régulière
         :params replacement: Chaîne de remplacement
@@ -170,7 +180,7 @@ class BaseMenu(object):
         :type replacement:   str
         :type target_file:   str
         """
-        os.system(self.sed_replace_pattern.format(
+        os.system(BaseMenu.sed_replace_pattern.format(
             regexp,
             replacement,
             target_file))
@@ -184,10 +194,13 @@ class BaseMenu(object):
         """
         return_value = None
         method_name = 'action_' + str(number)
-        try:
-            method = getattr(self, method_name)
-            return_value = method()
-        except AttributeError:
-            self.print_error(self.bad_command)
-            return_value = False
+        # DEBUG
+        method = getattr(self, method_name)
+        return_value = method()
+        #        try:
+        #            method = getattr(self, method_name)
+        #            return_value = method()
+        #        except AttributeError:
+        #            self.print_error(self.bad_command)
+        #            return_value = False
         return return_value

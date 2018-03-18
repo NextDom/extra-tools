@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Menu des informations
+"""
 import os
 import sys
 
@@ -90,7 +92,7 @@ class InfoMenu(BaseMenu):
         :type new_value:   str
         """
         self.sed_replace(
-            '\("' + key + '"[ ]\{0,1\}: "\).*\("\)',
+            '\\("' + key + '"[ ]\\{0,1\\}: "\\).*\\("\\)',
             '\\1' + new_value + '\\2',
             os.path.join(self.plugin_path,
                          'plugin_info',

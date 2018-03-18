@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Menu principal de l'outil.
+"""
 
 import os
 import sys
@@ -9,7 +12,8 @@ from .InfoMenu import InfoMenu
 
 
 class RootMenu(BaseMenu):
-    """Menu principal de l'outil.
+    """
+    Menu principal de l'outil.
     """
     title = 'Outil de gestion d\'un plugin'
     menu = ['Modifier l\'identifiant du plugin',
@@ -118,7 +122,8 @@ class RootMenu(BaseMenu):
                          new_name.capitalize(),
                          target_file)
 
-    def rename_item(self, path, item, old_name, new_name):
+    @staticmethod
+    def rename_item(path, item, old_name, new_name):
         """Renomme un élément si besoin
         :param path:     Chemin courant
         :param item:     Fichier à tester

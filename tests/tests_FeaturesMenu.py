@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Tests pour la classe FeaturesMenu
+"""
 import os
 import shutil
 import tempfile
