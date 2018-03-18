@@ -3,12 +3,10 @@
 import os
 import shutil
 import tempfile
-from libs.Tools import Tools
 import unittest
 from unittest import mock
 from unittest.mock import patch
-
-import tools
+from libs.Tools import Tools
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \
@@ -84,7 +82,6 @@ class TestTools(unittest.TestCase):
 
     def test_get_plugins_in_dir_with_no_one(self):
         # Création de fichiers temporaires
-        plugin_dir = self.test_dir + os.sep + 'plugin_dir'
         os.mkdir(self.test_dir + os.sep + 'useless_dir')
         result = self.tools.get_plugins_in_dir(self.test_dir)
         self.assertEqual(result, [])
