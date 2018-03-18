@@ -83,8 +83,7 @@ class TestWizardMenu(unittest.TestCase):
         self.plugin_data['core_path'] = self.plugin_data['core_path'].replace(
             'plugin-PluginName', self.test_dir)
         self.plugin_data['desktop_path'] = self.plugin_data[
-            'desktop_path'].replace(
-            'plugin-PluginName', self.test_dir)
+            'desktop_path'].replace('plugin-PluginName', self.test_dir)
         self.plugin_data['plugin_info_path'] = self.plugin_data[
             'plugin_info_path'].replace('plugin-PluginName', self.test_dir)
         os.mkdir(self.test_dir + os.sep + 'plugin_info')
@@ -162,28 +161,28 @@ class TestWizardMenu(unittest.TestCase):
     @patch('builtins.open')
     def test_create_folder_struct(self, mocked_open, mocked_mkdir):
         self.wizard_menu.create_folder_struct(PLUGIN_CONFIGURATION)
-        mkdir_calls = [call('plugin-PluginName'),
-                       call('plugin-PluginName' + os.sep + 'core'),
-                       call('plugin-PluginName' + os.sep + 'desktop'),
-                       call('plugin-PluginName' + os.sep + 'docs'),
-                       call('plugin-PluginName' + os.sep + 'plugin_info'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'css'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'js'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'modal'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'php'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'core' + os.sep + 'ajax'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'core' + os.sep + 'class'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'core' + os.sep + 'php'),
-                       call(
-                           'plugin-PluginName' + os.sep + 'docs' + os.sep + 'fr_FR')
-                       ]
+        mkdir_calls = [
+            call('plugin-PluginName'),
+            call('plugin-PluginName' + os.sep + 'core'),
+            call('plugin-PluginName' + os.sep + 'desktop'),
+            call('plugin-PluginName' + os.sep + 'docs'),
+            call('plugin-PluginName' + os.sep + 'plugin_info'),
+            call(
+                'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'css'),
+            call(
+                'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'js'),
+            call(
+                'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'modal'),
+            call(
+                'plugin-PluginName' + os.sep + 'desktop' + os.sep + 'php'),
+            call(
+                'plugin-PluginName' + os.sep + 'core' + os.sep + 'ajax'),
+            call(
+                'plugin-PluginName' + os.sep + 'core' + os.sep + 'class'),
+            call(
+                'plugin-PluginName' + os.sep + 'core' + os.sep + 'php'),
+            call(
+                'plugin-PluginName' + os.sep + 'docs' + os.sep + 'fr_FR')]
         mocked_mkdir.assert_has_calls(mkdir_calls)
         open_calls = [call('plugin-PluginName' + os.sep + 'LICENSE', 'w'),
                       call().close()]

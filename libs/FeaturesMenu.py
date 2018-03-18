@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Menu des fonctioannlités
+"""
 import os
 import sys
 
@@ -109,7 +111,8 @@ class FeaturesMenu(BaseMenu):
             self.print_error('Le fichier n\'existe pas')
         return result
 
-    def check_class(self, class_file_path, class_name):
+    @staticmethod
+    def check_class(class_file_path, class_name):
         """Test si la classe existe
         :params class_file_path: Répertoire de la classe
         :params class_name:      Nom de la classe
@@ -127,7 +130,8 @@ class FeaturesMenu(BaseMenu):
             pass
         return result
 
-    def check_if_method_exists(self, class_file_path, method_name):
+    @staticmethod
+    def check_if_method_exists(class_file_path, method_name):
         """Test si la classe existe
         :params class_file_path: Répertoire de la classe
         :params method_name:     Nom de la méthode
@@ -157,7 +161,8 @@ class FeaturesMenu(BaseMenu):
             self.print_success('La classe ' + class_name +
                                ' n\'a pas pu être créée')
 
-    def write_class(self, file_path, class_name, extends=None):
+    @staticmethod
+    def write_class(file_path, class_name, extends=None):
         """Ajoute une classe à un fichier PHP
         :params file_path:  Chemin du fichier devant contenir la classe
         :params class_name: Nom de la classe à créer
@@ -180,7 +185,8 @@ class FeaturesMenu(BaseMenu):
             result = True
         return result
 
-    def write_method_in_class(self, method_data):
+    @staticmethod
+    def write_method_in_class(method_data):
         """Ecrit la méthode à la classe
         :params method_data: Données de la méthode
         :type method_data:   MethodData

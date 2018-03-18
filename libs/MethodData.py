@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+Classe contenant les informations d'une méthode
+"""
 
 
 class MethodData:
-    """Classe contenant les informations d'une méthode
+    """
+    Classe contenant les informations d'une méthode
     """
     class_file_path = ''
     class_name = ''

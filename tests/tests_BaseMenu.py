@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import os
 import shutil
 import tempfile
 import unittest
-
 from unittest.mock import patch
-
 from libs.BaseMenu import BaseMenu
 
 SIMPLE_MENU = ['First choice',
@@ -37,28 +34,33 @@ class TestBaseMenu(unittest.TestCase):
         self.assertFalse(self.base_menu.is_string({'ok': 'ok'}))
 
     @patch('builtins.input', side_effect=[1])
+    # pylint: disable=unused-argument
     def test_get_menu_choice_good_choice(self, side_effect):
         result = self.base_menu.get_menu_choice(SIMPLE_MENU)
         self.assertEqual(result, 0)
 
     @patch('builtins.input', side_effect=[7, 0])
+    # pylint: disable=unused-argument
     def test_get_menu_choice_bad_choice(self, side_effect):
         # Test un mauvais choix puis quitte
         result = self.base_menu.get_menu_choice(SIMPLE_MENU)
         self.assertEqual(result, -1)
 
     @patch('builtins.input', side_effect=['A', 0])
+    # pylint: disable=unused-argument
     def test_get_menu_choice_bad_input(self, side_effect):
         # Test un mauvais caractère puis quitte
         result = self.base_menu.get_menu_choice(SIMPLE_MENU)
         self.assertEqual(result, -1)
 
     @patch('builtins.input', side_effect=[0])
+    # pylint: disable=unused-argument
     def test_get_menu_choice_cancel_with_choice(self, side_effect):
         result = self.base_menu.get_menu_choice(SIMPLE_MENU)
         self.assertEqual(result, -1)
 
     @patch('builtins.input', side_effect=[''])
+    # pylint: disable=unused-argument
     def test_get_menu_choice_cancel_without_choice(self, side_effect):
         result = self.base_menu.get_menu_choice(SIMPLE_MENU)
         self.assertEqual(result, -1)

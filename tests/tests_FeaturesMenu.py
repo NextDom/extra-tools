@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import os
 import shutil
 import tempfile
@@ -25,14 +24,14 @@ class TestFonctionnalitiesMenu(unittest.TestCase):
         self.class_file_path = self.test_dir + os.sep + 'class.php'
         self.no_file_path = self.test_dir + os.sep + 'no_file.php'
         with open(self.class_file_path, 'w') as class_file:
-            class_file.write('<?php\n\n');
-            class_file.write('class TestClass\n{\n');
-            class_file.write('public function testMethod()\n{\n}\n');
-            class_file.write('}\n');
+            class_file.write('<?php\n\n')
+            class_file.write('class TestClass\n{\n')
+            class_file.write('public function testMethod()\n{\n}\n')
+            class_file.write('}\n')
         with open(self.empty_class_file_path, 'w') as class_file:
-            class_file.write('<?php\n\n');
-            class_file.write('class EmptyClass\n{\n');
-            class_file.write('}\n');
+            class_file.write('<?php\n\n')
+            class_file.write('class EmptyClass\n{\n')
+            class_file.write('}\n')
         self.method_data = MethodData()
         self.method_data.class_name = 'TestClass'
         self.method_data.method_name = 'testMethod'

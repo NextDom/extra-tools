@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+"""
+Classe du menu de l'assistant
+"""
 import os
 import sys
 
@@ -7,19 +9,11 @@ from .BaseMenu import BaseMenu
 from .InfoMenu import InfoMenu
 from .RootMenu import RootMenu
 
-PHP_INCLUDE_CORE_3 = "" \
-     "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
-PHP_INCLUDE_CORE_4 = "" \
-     "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
-PHP_HEADER = "<?php\n\n"
-PHP_CHECK_USER_CONNECT = "" \
-     "include_file('core', 'authentification', 'php');\n\n" \
-     "if (!isConnect('admin')) {\n" \
-     "    throw new Exception('{{401 - Refused access}}');\n" \
-     "}\n"
-
 
 class WizardMenu(BaseMenu):
+    """
+    Classe du menu de l'assistant
+    """
     plugins_list = []
     actions = []
     plugin_template_repo = \
@@ -29,6 +23,16 @@ class WizardMenu(BaseMenu):
         'https://jeedom.github.io/plugin-%s/#language#/changelog'
     default_documentation_url = \
         'https://jeedom.github.io/plugin-%s/#language#/'
+    php_include_core_3 = "" \
+                         "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
+    php_include_core_4 = "" \
+                         "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
+    php_header = "<?php\n\n"
+    php_check_user_connect = "" \
+                             "include_file('core', 'authentification', 'php');\n\n" \
+                             "if (!isConnect('admin')) {\n" \
+                             "    throw new Exception('{{401 - Refused access}}');\n" \
+                             "}\n"
 
     def __init__(self, plugins_list):
         """Constructeur
@@ -70,15 +74,21 @@ class WizardMenu(BaseMenu):
             if user_choice == -1:
                 loop = False
             else:
-                try:
-                    return_value = self.actions[user_choice][0](
-                        self.actions[user_choice][1])
-                except AttributeError:
-                    self.print_error(self.bad_command)
-                    return_value = False
+                # DEBUG
+                if user_choice[1] is None:
+                    return_value = self.actions[user_choice][0]()
+                else:
+                    return_value = self.actions[user_choice][0](self.actions[user_choice][1])
+
+#                try:
+#                    return_value = self.actions[user_choice][0](
+#                        self.actions[user_choice][1])
+#                except AttributeError:
+#                    self.print_error(self.bad_command)
+#                    return_value = False
         return return_value
 
-    def start_wizard(self, data):
+    def start_wizard(self):
         """Lance l'assistant
         :params data: Inutilisé
         """
@@ -92,7 +102,7 @@ class WizardMenu(BaseMenu):
             self.gen_core_php(plugin_data)
             self.start_tools(['plugin-' + plugin_data['id'], plugin_data['id']])
 
-    def git_template(self, data):
+    def git_template(self):
         """Télécharge une copie du plugin Template
         :params data: Inutilisé
         """
@@ -104,7 +114,8 @@ class WizardMenu(BaseMenu):
             self.print_error('Le plugin plugin-template est déjà téléchargé.')
         self.start_tools(['plugin-template', 'template'])
 
-    def start_tools(self, plugin_data):
+    @staticmethod
+    def start_tools(plugin_data):
         """Lance l'outil
         :params plugin_data: Tableau contenant le chemin et le nom du plugin
         :type plugin_data:   List[str]
@@ -176,7 +187,8 @@ class WizardMenu(BaseMenu):
 
         return data
 
-    def create_folder_struct(self, plugin_data):
+    @staticmethod
+    def create_folder_struct(plugin_data):
         """Créé la structure de répertoires
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -255,7 +267,8 @@ class WizardMenu(BaseMenu):
             dest.write('\n}\n')
             dest.close()
 
-    def gen_installation_php(self, plugin_data):
+    @staticmethod
+    def gen_installation_php(plugin_data):
         """Ecrit la classe d'installation du plugin dans plugin_info
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -265,12 +278,13 @@ class WizardMenu(BaseMenu):
         with open(plugin_data['plugin_info_path'] + 'installation.php',
                   'w') as dest:
             print('coucou')
-            dest.write(PHP_HEADER + PHP_INCLUDE_CORE_3)
+            dest.write(WizardMenu.php_header + WizardMenu.php_include_core_3)
             for func in funcs:
                 dest.write('function ' + plugin_data['id'] +
                            '_' + func + '()\n{\n\n}\n\n')
 
-    def gen_configuration(self, plugin_data):
+    @staticmethod
+    def gen_configuration(plugin_data):
         """Ecrit le formulaire de configuration du plugin dans plugin_info
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -278,9 +292,9 @@ class WizardMenu(BaseMenu):
         if plugin_data['configuration']:
             with open(plugin_data['plugin_info_path'] + 'configuration.php',
                       'w') as dest:
-                dest.write(PHP_HEADER)
-                dest.write(PHP_INCLUDE_CORE_3)
-                dest.write(PHP_CHECK_USER_CONNECT)
+                dest.write(WizardMenu.php_header)
+                dest.write(WizardMenu.php_include_core_3)
+                dest.write(WizardMenu.php_check_user_connect)
                 dest.write("?>\n")
                 dest.write('<form class="form-horizontal">\n  <fieldset>\n')
                 for item in plugin_data['configuration']:
@@ -299,7 +313,8 @@ class WizardMenu(BaseMenu):
                                '' % (item['code']))
                 dest.write('  </fieldset>\n</form>\n')
 
-    def gen_desktop_php(self, plugin_data):
+    @staticmethod
+    def gen_desktop_php(plugin_data):
         """Ecrit le fichier PHP du desktop pour le rendu
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -308,10 +323,11 @@ class WizardMenu(BaseMenu):
             'id'] + '.php',
                   'w') as dest:
             dest.write('<?php\n')
-            dest.write(PHP_CHECK_USER_CONNECT + '\n')
+            dest.write(WizardMenu.php_check_user_connect + '\n')
             dest.close()
 
-    def gen_core_php(self, plugin_data):
+    @staticmethod
+    def gen_core_php(plugin_data):
         """Ecrit le fichier PHP du core
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -319,7 +335,7 @@ class WizardMenu(BaseMenu):
         with open(plugin_data['core_path'] + 'class' + os.sep + plugin_data[
             'id'] + '.class.php',
                   'w') as dest:
-            dest.write(PHP_HEADER + PHP_INCLUDE_CORE_4)
+            dest.write(WizardMenu.php_header+WizardMenu.php_include_core_4)
             dest.write(''
                        'class %s extends eqLogic\n{\n\n'
                        '    /*************** Attributs ***************/\n\n'
