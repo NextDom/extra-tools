@@ -14,12 +14,11 @@ if sys.version_info[0] < 3:
     sys.setdefaultencoding('utf8') #pylint: disable=no-member
 
 if __name__ == '__main__':
-    tools = Tools()
     # Point de d'entrée en mode CLI
-    readed_plugin_name = tools.parse_args(sys.argv)
-    if readed_plugin_name is not None:
+    readed_args = Tools.parse_args(sys.argv)
+    if readed_args is not None:
         plugins_list = []
-        if readed_plugin_name == '':
-            plugins_list = tools.get_plugins_in_dir('.')
+        if readed_args == '':
+            plugins_list = Tools.get_plugins_in_dir('.')
         wizard_menu = WizardMenu(plugins_list)
         wizard_menu.start()

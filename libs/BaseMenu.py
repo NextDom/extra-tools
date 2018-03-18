@@ -6,6 +6,7 @@ import os
 import sys
 
 
+# noinspection PyUnresolvedReferences
 class BaseMenu(object):
     """Classe mère des menus
     Fournit les méthodes nécessaire à l'affichage des menus et des actions

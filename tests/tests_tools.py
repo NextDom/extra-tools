@@ -5,7 +5,9 @@ import shutil
 import tempfile
 import unittest
 from unittest import mock
+
 from unittest.mock import patch
+
 from libs.Tools import Tools
 
 INFO_JSON_CONTENT = "{" + \

@@ -23,16 +23,17 @@ class WizardMenu(BaseMenu):
         'https://jeedom.github.io/plugin-%s/#language#/changelog'
     default_documentation_url = \
         'https://jeedom.github.io/plugin-%s/#language#/'
-    php_include_core_3 = "" \
-                         "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
-    php_include_core_4 = "" \
-                         "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';\n\n"
+    php_include_core_3 = \
+        "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
+    php_include_core_4 = \
+        "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php" \
+        "';\n\n"
     php_header = "<?php\n\n"
-    php_check_user_connect = "" \
-                             "include_file('core', 'authentification', 'php');\n\n" \
-                             "if (!isConnect('admin')) {\n" \
-                             "    throw new Exception('{{401 - Refused access}}');\n" \
-                             "}\n"
+    php_check_user_connect = \
+        "include_file('core', 'authentification', 'php');\n\n" \
+        "if (!isConnect('admin')) {\n" \
+        "    throw new Exception('{{401 - Refused access}}');\n" \
+        "}\n"
 
     def __init__(self, plugins_list):
         """Constructeur
@@ -78,14 +79,15 @@ class WizardMenu(BaseMenu):
                 if self.actions[user_choice][1] is None:
                     return_value = self.actions[user_choice][0]()
                 else:
-                    return_value = self.actions[user_choice][0](self.actions[user_choice][1])
+                    return_value = self.actions[user_choice][0](
+                        self.actions[user_choice][1])
 
-#                try:
-#                    return_value = self.actions[user_choice][0](
-#                        self.actions[user_choice][1])
-#                except AttributeError:
-#                    self.print_error(self.bad_command)
-#                    return_value = False
+        #                try:
+        #                    return_value = self.actions[user_choice][0](
+        #                        self.actions[user_choice][1])
+        #                except AttributeError:
+        #                    self.print_error(self.bad_command)
+        #                    return_value = False
         return return_value
 
     def start_wizard(self):
@@ -180,8 +182,9 @@ class WizardMenu(BaseMenu):
 
             # Generate shortcuts
             plugin_path = 'plugin-' + data['id']
-            data['plugin_info_path'] = plugin_path + os.sep + \
-                                       'plugin_info' + os.sep
+            data[
+                'plugin_info_path'] = plugin_path + os.sep + 'plugin_info' + \
+                                      os.sep
             data['core_path'] = plugin_path + os.sep + 'core' + os.sep
             data['desktop_path'] = plugin_path + os.sep + 'desktop' + os.sep
 
@@ -335,7 +338,7 @@ class WizardMenu(BaseMenu):
         with open(plugin_data['core_path'] + 'class' + os.sep + plugin_data[
             'id'] + '.class.php',
                   'w') as dest:
-            dest.write(WizardMenu.php_header+WizardMenu.php_include_core_4)
+            dest.write(WizardMenu.php_header + WizardMenu.php_include_core_4)
             dest.write(''
                        'class %s extends eqLogic\n{\n\n'
                        '    /*************** Attributs ***************/\n\n'

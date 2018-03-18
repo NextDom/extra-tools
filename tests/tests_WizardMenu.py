@@ -4,7 +4,6 @@ import os
 import shutil
 import tempfile
 import unittest
-
 from unittest.mock import call
 from unittest.mock import patch
 
@@ -51,22 +50,24 @@ WIZARD_CONFIGURATION = ['Plugin Name',
                         0,
                         'fr_FR']
 
-PLUGIN_CONFIGURATION = {'author': '',
-                        'category': 'weather',
-                        'configuration': [
-                            {'code': 'name', 'label': 'Name', 'type': 'text'},
-                            {'code': 'valid', 'label': 'Valid ?',
-                             'type': 'checkbox'}],
-                        'core_path': 'plugin-PluginName' + os.sep + 'core' + os.sep,
-                        'description': '',
-                        'desktop_path': 'plugin-PluginName' + os.sep + 'desktop' + os.sep,
-                        'documentation_language': 'fr_FR',
-                        'id': 'PluginName',
-                        'license': 'GPL',
-                        'name': 'Plugin Name',
-                        'plugin_info_path': 'plugin-PluginName' + os.sep + 'plugin_info' + os.sep,
-                        'require': '3.0',
-                        'version': '1.0'}
+PLUGIN_CONFIGURATION = {
+    'author': '',
+    'category': 'weather',
+    'configuration': [
+        {'code': 'name', 'label': 'Name', 'type': 'text'},
+        {'code': 'valid', 'label': 'Valid ?',
+         'type': 'checkbox'}],
+    'core_path': 'plugin-PluginName' + os.sep + 'core' + os.sep,
+    'description': '',
+    'desktop_path': 'plugin-PluginName' + os.sep + 'desktop' + os.sep,
+    'documentation_language': 'fr_FR',
+    'id': 'PluginName',
+    'license': 'GPL',
+    'name': 'Plugin Name',
+    'plugin_info_path': 'plugin-PluginName' + os.sep + 'plugin_info' + os.sep,
+    'require': '3.0',
+    'version': '1.0'
+}
 
 
 class TestWizardMenu(unittest.TestCase):

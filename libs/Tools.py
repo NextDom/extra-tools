@@ -21,12 +21,16 @@ class Tools(object):
         print('  --help :      Affiche de menu.')
         print('  PLUGIN-NAME : Indiquer le nom du plugin à modifier.')
 
-    def parse_args(self, argv):
+    @staticmethod
+    def parse_args(argv):
         """Analyse les arguments
+        :params argv: Arguments
+        :type argv:   list
+        :return:      Liste ou None si le programme doit quitter
         """
         result = ''
         if '--help' in argv or len(argv) > 2:
-            self.show_help()
+            Tools.show_help()
             result = None
         elif len(argv) > 1:
             result = argv[1]
@@ -60,7 +64,8 @@ class Tools(object):
             pass
         return result
 
-    def get_plugins_in_dir(self, path):
+    @staticmethod
+    def get_plugins_in_dir(path):
         """Obtenir la liste des plugins dans un répertoire
         :param path: Répertoire parent
         :return:     Liste des plugins
@@ -70,8 +75,8 @@ class Tools(object):
         for item in os.listdir(path):
             item_path = path + os.sep + item
             if os.path.isdir(item_path):
-                if self.is_plugin_dir(item_path):
-                    plugin = self.get_plugin_data(item_path)
+                if Tools.is_plugin_dir(item_path):
+                    plugin = Tools.get_plugin_data(item_path)
                     if plugin is not None:
                         result.append(plugin)
         return result

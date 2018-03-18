@@ -3,13 +3,16 @@ import os
 import shutil
 import tempfile
 import unittest
+
 from unittest.mock import patch
+
 from libs.BaseMenu import BaseMenu
 
 SIMPLE_MENU = ['First choice',
                'Second choice']
 
 
+# noinspection PyUnusedLocal
 class TestBaseMenu(unittest.TestCase):
     test_dir = None
     base_menu = None
@@ -34,7 +37,6 @@ class TestBaseMenu(unittest.TestCase):
         self.assertFalse(self.base_menu.is_string({'ok': 'ok'}))
 
     @patch('builtins.input', side_effect=[1])
-    # pylint: disable=unused-argument
     def test_get_menu_choice_good_choice(self, side_effect):
         result = self.base_menu.get_menu_choice(SIMPLE_MENU)
         self.assertEqual(result, 0)
