@@ -4,14 +4,13 @@
 import json
 import os
 import sys
-from pprint import pprint
 
 from libs.WizardMenu import WizardMenu
 
 # Gestion des accents pour python 2
 if sys.version_info[0] < 3:
-    reload(sys)
-    sys.setdefaultencoding('utf8')
+    reload(sys) #pylint: disable=undefined-variable
+    sys.setdefaultencoding('utf8') #pylint: disable=no-member
 
 def show_help():
     """Affiche l'aide
@@ -35,11 +34,20 @@ def parse_args(argv):
 
 
 def is_plugin_dir(path):
+    """Test si le répertoire contient un plugin
+    :param path: Chemin à tester
+    :return:     True si c'est un plugin
+    """
     info_path = os.path.join(path, 'plugin_info', 'info.json')
     return os.path.exists(info_path)
 
 
 def get_plugin_data(path):
+    """Lire les informations du plugin
+    :param path: Chemin du plugin
+    :return:     Informations du plugin
+    :rtype:      dict
+    """
     result = None
     info_path = os.path.join(path, 'plugin_info', 'info.json')
     try:
@@ -53,6 +61,11 @@ def get_plugin_data(path):
 
 
 def get_plugins_in_dir(path):
+    """Obtenir la liste des plugins dans un répertoire
+    :param path: Répertoire parent
+    :return:     Liste des plugins
+    :rtype:      list
+    """
     result = []
     for item in os.listdir(path):
         item_path = path+os.sep+item

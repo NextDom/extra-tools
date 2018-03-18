@@ -47,7 +47,7 @@ class BaseMenu(object):
         str_type = str
 
         if sys.version_info[0] < 3:
-            str_type = basestring
+            str_type = basestring #pylint: disable=undefined-variable
         return isinstance(obj, str_type)
 
     def show_menu(self, menu, show_cancel=True):
@@ -114,7 +114,7 @@ class BaseMenu(object):
         """
         result = None
         if sys.version_info[0] < 3:
-            result = raw_input(msg)
+            result = raw_input(msg) #pylint: disable=undefined-variable
         else:
             result = input(msg)
         return result
