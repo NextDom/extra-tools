@@ -226,12 +226,12 @@ class BaseMenu(object):
         return_value = None
         method_name = 'action_' + str(number)
         # DEBUG
-        method = getattr(self, method_name)
-        return_value = method()
-        #        try:
-        #            method = getattr(self, method_name)
-        #            return_value = method()
-        #        except AttributeError:
-        #            self.print_error(self.bad_command)
-        #            return_value = False
+        #method = getattr(self, method_name)
+        #return_value = method()
+        try:
+            method = getattr(self, method_name)
+            return_value = method()
+        except AttributeError:
+            self.print_error(self.bad_command)
+            return_value = False
         return return_value
