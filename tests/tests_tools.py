@@ -5,7 +5,6 @@ import shutil
 import tempfile
 import unittest
 from unittest import mock
-
 from unittest.mock import patch
 
 from libs.Tools import Tools
@@ -60,8 +59,10 @@ class TestTools(unittest.TestCase):
     @patch('builtins.open', new_callable=mock.mock_open,
            read_data=INFO_JSON_CONTENT)
     def test_get_plugin_data_good_data(self, mock_file):
-        result = self.tools.get_plugin_data('PluginIdPath')
-        self.assertEqual(result, ['PluginIdPath', 'PluginId'])
+        result = self.tools.get_plugin_data(
+            self.test_dir + os.sep + 'PluginIdPath')
+        self.assertEqual(result, [self.test_dir + os.sep + 'PluginIdPath',
+                                  'PluginId'])
 
     @patch('builtins.open', new_callable=mock.mock_open,
            read_data="")

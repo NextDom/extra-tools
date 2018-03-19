@@ -15,7 +15,8 @@ class FeaturesMenu(BaseMenu):
     title = 'Ajouter des fonctionnalités'
     menu = ['Ajouter la classe générale',
             'Ajouter la classe des commandes',
-            'Ajouter une méthode cron']
+            'Ajouter une méthode cron',
+            'Ajouter la réponse aux requêtes Ajax']
     plugin_name = ''
     plugin_path = ''
 
@@ -87,28 +88,61 @@ class FeaturesMenu(BaseMenu):
             method_data.method_name = crons[keys[choice]]
             method_data.method_is_static = True
             method_data.method_comment = keys[choice]
-            if self.add_method(method_data):
+            if FeaturesMenu.add_method(method_data):
                 self.print_success('La méthode ' + method_data.method_name +
                                    ' a été ajoutée')
 
-    def add_method(self, method_data):
+    def action_4(self):
+        """Créer la classe de gestion des requêtes Ajax
+        """
+        directory_path = os.path.join(self.plugin_path,
+                                      'core',
+                                      'ajax')
+        class_file_path = os.path.join(self.plugin_path,
+                                       'core',
+                                       'ajax',
+                                       self.plugin_name + '.ajax.php')
+        add_content = True
+        if not os.path.exists(directory_path):
+            os.mkdir(directory_path)
+        if os.path.exists(class_file_path):
+            if BaseMenu.is_content_in_file(class_file_path, 'ajax::init()'):
+                self.print_error('Le fichier existe déjà')
+                add_content = False
+        if add_content:
+            with open(class_file_path, 'a') as dest:
+                dest.write(BaseMenu.php_header)
+                dest.write('try {\n')
+                for line in BaseMenu.php_check_user_connect.split('\n'):
+                    dest.write('    ' + line + '\n')
+                dest.write('\n    ajax::init();\n')
+                dest.write(
+                    "    throw new \\Exception(__('Aucune méthode "
+                    "correspondante à : ', __FILE__) . init('action'));\n/*   "
+                    "  * *********Catch exeption*************** */\n} catch ("
+                    "\\Exception $e) {\n    ajax::error(displayException($e), "
+                    "$e->getCode());\n}")
+
+    @staticmethod
+    def add_method(method_data):
         """Ajoute la méthode à la classe
         :params method_data: Données de la méthode
         :type method_data:   MethodData
         """
         result = False
         if os.path.exists(method_data.class_file_path):
-            if self.check_class(method_data.class_file_path,
-                                method_data.class_name):
-                if not self.check_if_method_exists(method_data.class_file_path,
-                                                   method_data.class_name):
-                    result = self.write_method_in_class(method_data)
+            if FeaturesMenu.check_class(method_data.class_file_path,
+                                        method_data.class_name):
+                if not FeaturesMenu.check_if_method_exists(
+                        method_data.class_file_path,
+                        method_data.class_name):
+                    result = FeaturesMenu.write_method_in_class(method_data)
                 else:
-                    self.print_error('La méthode existe déjà')
+                    BaseMenu.print_error('La méthode existe déjà')
             else:
-                self.print_error('La classe n\'existe pas')
+                BaseMenu.print_error('La classe n\'existe pas')
         else:
-            self.print_error('Le fichier n\'existe pas')
+            BaseMenu.print_error('Le fichier n\'existe pas')
         return result
 
     @staticmethod
@@ -198,7 +232,8 @@ class FeaturesMenu(BaseMenu):
         content = None
         class_declaration = 'class ' + method_data.class_name
         try:
-            with open(method_data.class_file_path, 'r') as class_file_content:
+            with open(method_data.class_file_path,
+                      'r') as class_file_content:
                 content = class_file_content.readlines()
             # Recherche de la dernière accolade de la classe
             for line in content:
@@ -217,7 +252,8 @@ class FeaturesMenu(BaseMenu):
                             method_added = True
                 output.append(line)
             # Réécrit le fichier
-            with open(method_data.class_file_path, 'w') as class_file_content:
+            with open(method_data.class_file_path,
+                      'w') as class_file_content:
                 for line in output:
                     class_file_content.write(line)
         except FileNotFoundError:

@@ -72,8 +72,9 @@ class Tools(object):
         :rtype:      list
         """
         result = []
-        for item in os.listdir(path):
-            item_path = path + os.sep + item
+        abspath = os.path.abspath(path)
+        for item in os.listdir(abspath):
+            item_path = abspath + os.sep + item
             if os.path.isdir(item_path):
                 if Tools.is_plugin_dir(item_path):
                     plugin = Tools.get_plugin_data(item_path)

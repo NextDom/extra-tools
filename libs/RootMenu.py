@@ -42,7 +42,7 @@ class RootMenu(BaseMenu):
         Modifie le nom des répertoires, des fichiers ainsi que le contenu
         des fichiers.
         """
-        if self.plugin_path in os.listdir('.'):
+        if os.path.exists(self.plugin_path):
             new_name = self.get_user_input('Nouveau nom du plugin : ')
             if 'plugin-' + new_name not in os.listdir('.'):
                 # Renomme le répertoire racine du plugin

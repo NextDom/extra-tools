@@ -23,17 +23,6 @@ class WizardMenu(BaseMenu):
         'https://jeedom.github.io/plugin-%s/#language#/changelog'
     default_documentation_url = \
         'https://jeedom.github.io/plugin-%s/#language#/'
-    php_include_core_3 = \
-        "require_once dirname(__FILE__).'/../../../core/php/core.inc.php';\n\n"
-    php_include_core_4 = \
-        "require_once dirname(__FILE__).'/../../../../core/php/core.inc.php" \
-        "';\n\n"
-    php_header = "<?php\n\n"
-    php_check_user_connect = \
-        "include_file('core', 'authentification', 'php');\n\n" \
-        "if (!isConnect('admin')) {\n" \
-        "    throw new Exception('{{401 - Refused access}}');\n" \
-        "}\n"
 
     def __init__(self, plugins_list):
         """Constructeur
@@ -81,13 +70,17 @@ class WizardMenu(BaseMenu):
                 else:
                     return_value = self.actions[user_choice][0](
                         self.actions[user_choice][1])
-
-        #                try:
-        #                    return_value = self.actions[user_choice][0](
-        #                        self.actions[user_choice][1])
-        #                except AttributeError:
-        #                    self.print_error(self.bad_command)
-        #                    return_value = False
+                """
+                try:
+                    if self.actions[user_choice][1] is None:
+                        return_value = self.actions[user_choice][0]()
+                    else:
+                        return_value = self.actions[user_choice][0](
+                            self.actions[user_choice][1])
+                except AttributeError:
+                    self.print_error(self.bad_command)
+                    return_value = False
+                """
         return return_value
 
     def start_wizard(self):
@@ -281,7 +274,7 @@ class WizardMenu(BaseMenu):
         with open(plugin_data['plugin_info_path'] + 'installation.php',
                   'w') as dest:
             print('coucou')
-            dest.write(WizardMenu.php_header + WizardMenu.php_include_core_3)
+            dest.write(BaseMenu.php_header + BaseMenu.php_include_core_3)
             for func in funcs:
                 dest.write('function ' + plugin_data['id'] +
                            '_' + func + '()\n{\n\n}\n\n')
@@ -295,9 +288,9 @@ class WizardMenu(BaseMenu):
         if plugin_data['configuration']:
             with open(plugin_data['plugin_info_path'] + 'configuration.php',
                       'w') as dest:
-                dest.write(WizardMenu.php_header)
-                dest.write(WizardMenu.php_include_core_3)
-                dest.write(WizardMenu.php_check_user_connect)
+                dest.write(BaseMenu.php_header)
+                dest.write(BaseMenu.php_include_core_3)
+                dest.write(BaseMenu.php_check_user_connect)
                 dest.write("?>\n")
                 dest.write('<form class="form-horizontal">\n  <fieldset>\n')
                 for item in plugin_data['configuration']:
@@ -326,7 +319,7 @@ class WizardMenu(BaseMenu):
             'id'] + '.php',
                   'w') as dest:
             dest.write('<?php\n')
-            dest.write(WizardMenu.php_check_user_connect + '\n')
+            dest.write(BaseMenu.php_check_user_connect + '\n')
             dest.close()
 
     @staticmethod
@@ -338,7 +331,7 @@ class WizardMenu(BaseMenu):
         with open(plugin_data['core_path'] + 'class' + os.sep + plugin_data[
             'id'] + '.class.php',
                   'w') as dest:
-            dest.write(WizardMenu.php_header + WizardMenu.php_include_core_4)
+            dest.write(BaseMenu.php_header + BaseMenu.php_include_core_4)
             dest.write(''
                        'class %s extends eqLogic\n{\n\n'
                        '    /*************** Attributs ***************/\n\n'

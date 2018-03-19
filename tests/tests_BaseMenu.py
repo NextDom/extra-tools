@@ -3,7 +3,6 @@ import os
 import shutil
 import tempfile
 import unittest
-
 from unittest.mock import patch
 
 from libs.BaseMenu import BaseMenu
@@ -25,16 +24,16 @@ class TestBaseMenu(unittest.TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_is_string_with_string(self):
-        self.assertTrue(self.base_menu.is_string('a small string'))
+        self.assertTrue(BaseMenu.is_string('a small string'))
 
     def test_is_string_with_int(self):
-        self.assertFalse(self.base_menu.is_string(2))
+        self.assertFalse(BaseMenu.is_string(2))
 
     def test_is_string_with_list(self):
-        self.assertFalse(self.base_menu.is_string(['A string']))
+        self.assertFalse(BaseMenu.is_string(['A string']))
 
     def test_is_string_with_dict(self):
-        self.assertFalse(self.base_menu.is_string({'ok': 'ok'}))
+        self.assertFalse(BaseMenu.is_string({'ok': 'ok'}))
 
     @patch('builtins.input', side_effect=[1])
     def test_get_menu_choice_good_choice(self, side_effect):
@@ -79,49 +78,69 @@ class TestBaseMenu(unittest.TestCase):
 
     @patch('builtins.input', side_effect=['o'])
     def test_ask_y_n_answer_y(self, side_effect):
-        result = self.base_menu.ask_y_n('Question')
+        result = BaseMenu.ask_y_n('Question')
         self.assertEqual(result, 'o')
 
     @patch('builtins.input', side_effect=['n'])
     def test_ask_y_n_answer_n(self, side_effect):
-        result = self.base_menu.ask_y_n('Question')
+        result = BaseMenu.ask_y_n('Question')
         self.assertEqual(result, 'n')
 
     @patch('builtins.input', side_effect=[''])
     def test_ask_y_n_without_answer(self, side_effect):
-        result = self.base_menu.ask_y_n('Question')
+        result = BaseMenu.ask_y_n('Question')
         self.assertEqual(result, 'o')
 
     @patch('builtins.input', side_effect=[''])
     def test_ask_y_n_without_answer_default_n(self, side_effect):
-        result = self.base_menu.ask_y_n('Question', 'n')
+        result = BaseMenu.ask_y_n('Question', 'n')
         self.assertEqual(result, 'n')
 
     @patch('builtins.input', side_effect=['Another answer'])
     def test_ask_with_default_with_other_answer(self, side_effect):
-        result = self.base_menu.ask_with_default('Question', 'First answer')
+        result = BaseMenu.ask_with_default('Question', 'First answer')
         self.assertEqual(result, 'Another answer')
 
     @patch('builtins.input', side_effect=[''])
     def test_ask_with_default_without_answer(self, side_effect):
-        result = self.base_menu.ask_with_default('Question', 'First answer')
+        result = BaseMenu.ask_with_default('Question', 'First answer')
         self.assertEqual(result, 'First answer')
+
+    def test_is_content_in_file_without_file(self):
+        file_to_test = self.test_dir + os.sep + 'FileNotFound'
+        result = BaseMenu.is_content_in_file(file_to_test, 'test string')
+        self.assertFalse(result)
+
+    def test_is_content_in_file_without_the_content(self):
+        file_to_test = self.test_dir + os.sep + 'WithoutTheContent'
+        with open(file_to_test, 'w') as dest:
+            dest.write('Nothing in this file')
+        result = BaseMenu.is_content_in_file(file_to_test, 'content')
+        self.assertFalse(result)
+
+    def test_is_content_in_file_without_content(self):
+        file_to_test = self.test_dir + os.sep + 'WithContent'
+        with open(file_to_test, 'w') as dest:
+            dest.write('Small content in a file')
+        result = BaseMenu.is_content_in_file(file_to_test, 'content')
+        self.assertTrue(result)
 
     def test_sed_replace_with_match(self):
         sed_file_path = self.test_dir + os.sep + 'sed_test'
         with open(sed_file_path, 'w') as sed_file:
             sed_file.write('AABBBCCCC')
-        self.base_menu.sed_replace('BBB', 'DDDDD', sed_file_path)
+        BaseMenu.sed_replace('BBB', 'DDDDD', sed_file_path)
         file_content = ''
         with open(sed_file_path, 'r') as sed_file:
             file_content = sed_file.read()
         self.assertIn('AADDDDDCCCC', file_content)
 
+
     def test_sed_replace_without_match(self):
         sed_file_path = self.test_dir + os.sep + 'sed_test'
         with open(sed_file_path, 'w') as sed_file:
             sed_file.write('AABBBCCCC')
-        self.base_menu.sed_replace('ZZZ', 'DDDDD', sed_file_path)
+        BaseMenu.sed_replace('ZZZ', 'DDDDD', sed_file_path)
         file_content = ''
         with open(sed_file_path, 'r') as sed_file:
             file_content = sed_file.read()
