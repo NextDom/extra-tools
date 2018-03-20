@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Menu des fonctioannlités
+Menu des fonctionnalités
 """
 import os
 import sys
@@ -22,6 +22,10 @@ class FeaturesMenu(BaseMenu):
 
     def __init__(self, plugin_path, plugin_name):
         """Constructeur
+        :param plugin_path: Répertoire du plugin
+        :param plugin_name: Nom du plugin
+        :type plugin_path:  str
+        :type plugin_name:  str
         """
         if sys.version_info[0] < 3:
             super(FeaturesMenu, self).__init__()
