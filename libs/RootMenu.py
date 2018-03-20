@@ -8,6 +8,7 @@ import sys
 
 from .BaseMenu import BaseMenu
 from .FeaturesMenu import FeaturesMenu
+from .I18nMenu import I18nMenu
 from .InfoMenu import InfoMenu
 
 
@@ -18,7 +19,8 @@ class RootMenu(BaseMenu):
     title = 'Outil de gestion d\'un plugin'
     menu = ['Modifier l\'identifiant du plugin',
             'Modifier les informations du plugin',
-            'Ajouter des fonctionnalités']
+            'Ajouter des fonctionnalités',
+            'Gestion des traductions']
     plugin_path = ''
     plugin_name = ''
 
@@ -71,9 +73,14 @@ class RootMenu(BaseMenu):
     def action_3(self):
         """Lance le menu de modification des informations
         """
-        fonctionnalities_menu = FeaturesMenu(self.plugin_path,
-                                             self.plugin_name)
-        fonctionnalities_menu.start()
+        features_menu = FeaturesMenu(self.plugin_path, self.plugin_name)
+        features_menu.start()
+
+    def action_4(self):
+        """Lance le menu de gestion des traductions
+        """
+        i18n_menu = I18nMenu(self.plugin_path, self.plugin_name)
+        i18n_menu.start()
 
     def rename_plugin(self, current_path, old_name, new_name):
         """Remplace les occurences dans les noms des fichiers, les répertoires,
