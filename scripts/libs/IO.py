@@ -150,3 +150,23 @@ class IO(object):
         if answer == '':
             answer = default
         return answer
+
+    @staticmethod
+    def is_content_in_file(file_path, content):
+        """Test si un fichier contient une chaine de caractères
+        :param file_path: Chemin du fichier
+        :param content:   Contenu à tester
+        :type file_path:  str
+        :type content:    str
+        :return:          True si le contenu a été trouvé
+        :rtype:           bool
+        """
+        result = False
+        try:
+            with open(file_path, 'r') as file_content:
+                if content in file_content.read():
+                    result = True
+        except FileNotFoundError:
+            pass
+        return result
+

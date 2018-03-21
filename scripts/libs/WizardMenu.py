@@ -3,12 +3,12 @@
 Classe du menu de l'assistant
 """
 import os
-import sys
 
 from .BaseMenu import BaseMenu
 from .RootMenu import RootMenu
 from .IO import IO
 from .File import File
+
 
 class WizardMenu(BaseMenu):
     """

@@ -4,13 +4,13 @@ Menu principal de l'outil.
 """
 
 import os
-import sys
 
 from .BaseMenu import BaseMenu
 from .FeaturesMenu import FeaturesMenu
 from .I18nMenu import I18nMenu
 from .InfoMenu import InfoMenu
 from .IO import IO
+
 
 class RootMenu(BaseMenu):
     """
