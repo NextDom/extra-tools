@@ -1,0 +1,22 @@
+{
+  "plugin_template_repo": "https://github.com/Jeedom-Plugins-Extra/plugin-template.git",
+  "default_package_name": "Exemple",
+  "default_changelog_url": "https://jeedom.github.io/plugin-%s/#language#/changelog",
+  "default_documentation_url": "https://jeedom.github.io/plugin-%s/#language#/",
+  "jeedom_categories": [
+        "security",
+        "automation protocol",
+        "programming",
+        "organization",
+        "weather",
+        "communication",
+        "devicecommunication",
+        "multimedia",
+        "wellness",
+        "monitoring",
+        "health",
+        "nature",
+        "automatisation",
+        "energy"
+    ]
+}

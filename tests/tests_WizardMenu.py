@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import call
 from unittest.mock import patch
 
-from libs.WizardMenu import WizardMenu
+from libs import WizardMenu
 
 WIZARD_ANSWERS = ['Plugin Name',
                   'PluginName',

@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from libs.BaseMenu import BaseMenu
+from scripts.libs.BaseMenu import BaseMenu
 
 SIMPLE_MENU = ['First choice',
                'Second choice']

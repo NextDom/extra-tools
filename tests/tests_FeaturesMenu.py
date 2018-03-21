@@ -4,8 +4,8 @@ import shutil
 import tempfile
 import unittest
 
-from libs.FeaturesMenu import FeaturesMenu
-from libs.MethodData import MethodData
+from scripts.libs.FeaturesMenu import FeaturesMenu
+from scripts.libs.MethodData import MethodData
 
 
 class TestFonctionnalitiesMenu(unittest.TestCase):

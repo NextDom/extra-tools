@@ -4,7 +4,7 @@ import shutil
 import tempfile
 import unittest
 
-from libs.I18nMenu import I18nMenu
+from scripts.libs.I18nMenu import I18nMenu
 
 
 class TestI18nMenu(unittest.TestCase):

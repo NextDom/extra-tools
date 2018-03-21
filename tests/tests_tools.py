@@ -7,7 +7,7 @@ import unittest
 from unittest import mock
 from unittest.mock import patch
 
-from libs.Tools import Tools
+from libs import Tools
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \

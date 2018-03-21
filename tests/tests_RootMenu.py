@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import call
 from unittest.mock import patch
 
-from libs.RootMenu import RootMenu
+from scripts.libs.RootMenu import RootMenu
 
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'

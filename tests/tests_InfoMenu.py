@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-from libs.InfoMenu import InfoMenu
+from libs import InfoMenu
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \

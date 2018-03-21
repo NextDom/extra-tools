@@ -5,8 +5,8 @@ Initialise l'outil pour les plugins
 """
 import sys
 
-from libs.Tools import Tools
-from libs.WizardMenu import WizardMenu
+from scripts.libs.Tools import Tools
+from scripts.libs.WizardMenu import WizardMenu
 
 # Gestion des accents pour python 2
 if sys.version_info[0] < 3:
