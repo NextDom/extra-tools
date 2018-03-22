@@ -3,11 +3,10 @@
 Menu des informations
 """
 import os
-import sys
 
 from .BaseMenu import BaseMenu
 from .IO import IO
-from .File import File
+
 
 class InfoMenu(BaseMenu):
     """Classe du menu permettant de modifier les informations du plugin.
@@ -36,28 +35,31 @@ class InfoMenu(BaseMenu):
         """Modifier le nom affiché dans les menus
         """
         name = IO.get_user_input('Nouveau nom : ')
-        os.system('./scripts/replace_info_json.py "' + self.plugin_path + '" name "'+name+'"')
+        os.system(
+            './scripts/replace_info_json.py "' + self.plugin_path + '" name '
+                                                                    '"' +
+            name + '"')
 
     def action_2(self):
         """Modifier la description
         """
         description = IO.get_user_input('Nouvelle description : ')
         os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                  '" description "'+description+'"')
+                  '" description "' + description + '"')
 
     def action_3(self):
         """Modifier la licence
         """
         licence = IO.get_user_input('Nouvelle licence : ')
         os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                  '" licence "'+licence+'"')
+                  '" licence "' + licence + '"')
 
     def action_4(self):
         """Modifier l'auteur
         """
         author = IO.get_user_input('Nouvel auteur : ')
         os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                  '" author "'+author+'"')
+                  '" author "' + author + '"')
 
     def action_5(self):
         """Modifier la catégorie
@@ -65,4 +67,4 @@ class InfoMenu(BaseMenu):
         category = IO.get_menu_choice(self.categories, 'Choix de la catégorie')
         if category >= 0:
             os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                      '" category "'+self.categories[category]+'"')
+                      '" category "' + self.categories[category] + '"')

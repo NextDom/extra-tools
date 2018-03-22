@@ -14,6 +14,7 @@ class MethodData:
     method_visibility = 'public'
     method_is_static = False
     method_comment = ''
+    method_params = ''
 
     def get_method_declaration(self):
         """Obtenir la déclaration de la classe dans le fichier
@@ -29,5 +30,8 @@ class MethodData:
         output += '    ' + self.method_visibility + ' '
         if self.method_is_static:
             output += 'static '
-        output += 'function ' + self.method_name + '()\n    {\n\n    }\n'
+        output += 'function ' + self.method_name + '('
+        if self.method_params != '':
+            output += self.method_params
+        output += ')\n    {\n\n    }\n'
         return output

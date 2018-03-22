@@ -8,8 +8,8 @@ import os
 from .BaseMenu import BaseMenu
 from .FeaturesMenu import FeaturesMenu
 from .I18nMenu import I18nMenu
-from .InfoMenu import InfoMenu
 from .IO import IO
+from .InfoMenu import InfoMenu
 
 
 class RootMenu(BaseMenu):
@@ -42,7 +42,7 @@ class RootMenu(BaseMenu):
         """
         new_name = IO.get_user_input('Nouveau nom du plugin : ')
         os.system('./scripts/rename_plugin.py "' + self.plugin_path + '" "' +
-                  self.plugin_name+'" "'+new_name+'"')
+                  self.plugin_name + '" "' + new_name + '"')
         self.plugin_name = new_name
         self.plugin_path = 'plugin-' + new_name
 

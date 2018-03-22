@@ -143,7 +143,7 @@ class I18nMenu(BaseMenu):
             else:
                 dump = json.dumps(json_data, sort_keys=True, indent=4)
                 dump = dump.encode('utf-8').decode('unicode-escape')
-            dest.write(dump+'\n')
+            dest.write(dump + '\n')
             result = True
         return result
 
@@ -216,7 +216,6 @@ class I18nMenu(BaseMenu):
                         })
         return result
 
-
     @staticmethod
     def scan_file_for_strings(file_path):
         """
@@ -233,7 +232,6 @@ class I18nMenu(BaseMenu):
             result.extend(re.findall('__\\(\'(.*?)\'', readed_content))
         result.extend(re.findall('__\\("(.*?)"', readed_content))
         return result
-
 
     @staticmethod
     def is_valid_i18n_name(name):

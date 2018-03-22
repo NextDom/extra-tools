@@ -5,9 +5,9 @@ Classe du menu de l'assistant
 import os
 
 from .BaseMenu import BaseMenu
-from .RootMenu import RootMenu
-from .IO import IO
 from .File import File
+from .IO import IO
+from .RootMenu import RootMenu
 
 
 class WizardMenu(BaseMenu):
@@ -58,15 +58,15 @@ class WizardMenu(BaseMenu):
                 else:
                     return_value = self.actions[user_choice][0](
                         self.actions[user_choice][1])
-#                try:
-#                    if self.actions[user_choice][1] is None:
-#                        return_value = self.actions[user_choice][0]()
-#                    else:
-#                        return_value = self.actions[user_choice][0](
-#                            self.actions[user_choice][1])
-#                except AttributeError:
-#                    IO.print_error(self.bad_command)
-#                    return_value = False
+        #                try:
+        #                    if self.actions[user_choice][1] is None:
+        #                        return_value = self.actions[user_choice][0]()
+        #                    else:
+        #                        return_value = self.actions[user_choice][0](
+        #                            self.actions[user_choice][1])
+        #                except AttributeError:
+        #                    IO.print_error(self.bad_command)
+        #                    return_value = False
         return return_value
 
     def start_wizard(self):

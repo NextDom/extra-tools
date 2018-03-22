@@ -179,9 +179,8 @@ def gen_installation_php(plugin_data, templates_path):
     :type plugin_data:  dict
     """
     target_file = plugin_data['plugin_info_path'] + 'install.php'
-    os.system(
-        'cp ' + templates_path + os.sep + 'wizard_install.php ' + target_file)
-    File.replace_in_file(target_file, 'PluginName', plugin_data['id'])
+    File.copy_and_replace(templates_path + os.sep + 'wizard_install.php',
+                          target_file, 'PluginName', plugin_data['id'])
 
 
 def gen_configuration(plugin_data, templates_path):

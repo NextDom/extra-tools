@@ -57,3 +57,7 @@ class File(object):
                          new_name.capitalize(),
                          target_file)
 
+    @staticmethod
+    def copy_and_replace(src_file, dest_file, old_name, new_name):
+        os.system('cp ' + src_file + ' ' + dest_file)
+        File.replace_in_file(dest_file, old_name, new_name)

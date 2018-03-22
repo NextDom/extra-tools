@@ -116,7 +116,6 @@ class IO(object):
                 IO.print_error(IO.bad_choice)
         return user_choice
 
-
     @staticmethod
     def ask_y_n(question, default='o'):
         """Afficher une question dont la réponse est oui ou non
@@ -169,4 +168,3 @@ class IO(object):
         except FileNotFoundError:
             pass
         return result
-

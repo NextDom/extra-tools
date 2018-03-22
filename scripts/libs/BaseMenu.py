@@ -3,8 +3,6 @@
 Classe mère des menus
 """
 
-import sys
-
 from .IO import IO
 
 
