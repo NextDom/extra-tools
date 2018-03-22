@@ -35,36 +35,35 @@ class InfoMenu(BaseMenu):
         """Modifier le nom affiché dans les menus
         """
         name = IO.get_user_input('Nouveau nom : ')
-        os.system(
-            './scripts/replace_info_json.py "' + self.plugin_path + '" name '
-                                                                    '"' +
-            name + '"')
+        BaseMenu.start_script('replace_info_json.py',
+                              [self.plugin_name, 'name', name])
 
     def action_2(self):
         """Modifier la description
         """
         description = IO.get_user_input('Nouvelle description : ')
-        os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                  '" description "' + description + '"')
+        BaseMenu.start_script('replace_info_json.py',
+                              [self.plugin_name, 'description', description])
 
     def action_3(self):
         """Modifier la licence
         """
         licence = IO.get_user_input('Nouvelle licence : ')
-        os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                  '" licence "' + licence + '"')
+        BaseMenu.start_script('replace_info_json.py',
+                              [self.plugin_name, 'licence', licence])
 
     def action_4(self):
         """Modifier l'auteur
         """
         author = IO.get_user_input('Nouvel auteur : ')
-        os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                  '" author "' + author + '"')
+        BaseMenu.start_script('replace_info_json.py',
+                              [self.plugin_name, 'author', author])
 
     def action_5(self):
         """Modifier la catégorie
         """
         category = IO.get_menu_choice(self.categories, 'Choix de la catégorie')
         if category >= 0:
-            os.system('./scripts/replace_info_json.py "' + self.plugin_path +
-                      '" category "' + self.categories[category] + '"')
+            BaseMenu.start_script('replace_info_json.py',
+                                  [self.plugin_name, 'category',
+                                   self.categories[category]])

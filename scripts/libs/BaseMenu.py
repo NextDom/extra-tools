@@ -3,6 +3,8 @@
 Classe mère des menus
 """
 
+import os
+
 from .IO import IO
 
 
@@ -46,3 +48,11 @@ class BaseMenu(object):
         #    self.print_error(self.bad_command)
         #    return_value = False
         return return_value
+
+    @staticmethod
+    def start_script(script_name, params):
+        cmd = './scripts/'+script_name
+        # TROUVER LA VRAIE FONCTION QUI VA BIEN
+        for param in params:
+            cmd += ' '+param
+        os.system(cmd)

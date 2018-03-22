@@ -10,6 +10,10 @@ class IO(object):
     cancel_menu = 'Sortir'
     choice_prompt = 'Choix : '
     bad_choice = 'Mauvais choix'
+    red_color = '\033[31m'
+    yellow_color = '\033[93m'
+    green_color = '\033[92m'
+    end_color = '\033[0m'
 
     @staticmethod
     def print_error(msg):
@@ -17,7 +21,8 @@ class IO(object):
         :params msg: Message à afficher
         :type msg:   str
         """
-        print('/!\\ ' + msg)
+        print(IO.red_color + '/' + IO.yellow_color + '!' + IO.red_color + '\\' +
+              IO.end_color + ' ' + msg)
 
     @staticmethod
     def print_success(msg):
@@ -25,7 +30,7 @@ class IO(object):
         :params msg: Message à afficher
         :type msg:   str
         """
-        print('v ' + msg)
+        print(IO.green_color + 'v' + IO.end_color + ' ' + msg)
 
     @staticmethod
     def is_string(obj):
@@ -149,22 +154,3 @@ class IO(object):
         if answer == '':
             answer = default
         return answer
-
-    @staticmethod
-    def is_content_in_file(file_path, content):
-        """Test si un fichier contient une chaine de caractères
-        :param file_path: Chemin du fichier
-        :param content:   Contenu à tester
-        :type file_path:  str
-        :type content:    str
-        :return:          True si le contenu a été trouvé
-        :rtype:           bool
-        """
-        result = False
-        try:
-            with open(file_path, 'r') as file_content:
-                if content in file_content.read():
-                    result = True
-        except FileNotFoundError:
-            pass
-        return result

@@ -2,7 +2,6 @@
 """
 Menu des fonctionnalités
 """
-import os
 import sys
 
 from .BaseMenu import BaseMenu
@@ -37,48 +36,24 @@ class FeaturesMenu(BaseMenu):
     def action_1(self):
         """Créer la classe principale
         """
-        os.system('./scripts/add_core_class.py ' + self.plugin_path + ' '
-                                                                      '' +
-                  self.plugin_name)
+        BaseMenu.start_script('add_core_class.py', [self.plugin_path, self.plugin_name])
 
     def action_2(self):
         """Créer la classe de gestion des commandes
         """
-        os.system('./scripts/add_cmd_class.py ' + self.plugin_path + ' '
-                                                                     '' +
-                  self.plugin_name)
+        BaseMenu.start_script('add_cmd_class.py', [self.plugin_path,
+                                                    self.plugin_name])
 
     def action_3(self):
-        """Modifier le nom affiché dans les menus
+        """Ajouter une tâche cron au plugin
         """
-        crons = {
-            'Toutes les minutes': 'cron',
-            'Toutes les 5 minutes': 'cron5',
-            'Toutes les 15 minutes': 'cron15',
-            'Toutes les 30 minutes': 'cron30',
-            'Toutes les heures': 'cronHourly',
-            'Tous les jours': 'cronDaily'
-        }
-        keys = crons.keys()
-        choice = self.get_menu_choice(keys)
-        if choice >= 0:
-            method_data = MethodData()
-            method_data.class_file_path = os.path.join(
-                self.plugin_path,
-                'core',
-                'class',
-                self.plugin_name + '.class.php')
-            method_data.class_name = self.plugin_name
-            method_data.method_name = crons[keys[choice]]
-            method_data.method_is_static = True
-            method_data.method_comment = keys[choice]
-            if FeaturesMenu.add_method(method_data):
-                self.print_success('La méthode ' + method_data.method_name +
-                                   ' a été ajoutée')
+        BaseMenu.start_script('add_cron.py', [self.plugin_name])
+
 
     def action_4(self):
         """Créer la classe de gestion des requêtes Ajax
         """
+
         directory_path = os.path.join(self.plugin_path,
                                       'core',
                                       'ajax')
