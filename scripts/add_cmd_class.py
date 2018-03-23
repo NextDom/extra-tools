@@ -7,20 +7,27 @@ Ajoute la classe cmd d'un plugin
 import os
 import sys
 
-from libs.File import File
-from libs.IO import IO
-from libs.MethodData import MethodData
-from libs.PHPFile import PHPFile
+from libs.File import File  # pylint: disable= import-error
+from libs.IO import IO  # pylint: disable= import-error
+from libs.MethodData import MethodData  # pylint: disable= import-error
+from libs.PHPFile import PHPFile  # pylint: disable= import-error
 
 
-def add_cmd_class(path, plugin_name):
+def add_cmd_class(plugin_path, plugin_name):
+    """
+    Ajoute la classe cmd d'un plugin
+    :param plugin_path: Chemin du plugin
+    :param plugin_name: Nom du plugin
+    :type plugin_path:  str
+    :type plugin_name:  str
+    """
     templates_cmd_file = os.path.join(os.path.dirname(__file__), 'templates',
                                       'feature_cmd_class.php')
-    target_core_file = os.path.join(path, 'core', 'class',
+    target_core_file = os.path.join(plugin_path, 'core', 'class',
                                     plugin_name + '.class.php')
-    target_cmd_file = os.path.join(path, 'core', 'class',
+    target_cmd_file = os.path.join(plugin_path, 'core', 'class',
                                    plugin_name + 'Cmd.class.php')
-    if is_core_class_exists(path, plugin_name, target_core_file):
+    if is_core_class_exists(plugin_path, plugin_name, target_core_file):
         separated = IO.ask_y_n('Utiliser des fichiers séparés ?')
         if separated == 'o':
             insert_require_in_core(target_core_file, plugin_name)
@@ -39,6 +46,17 @@ def add_cmd_class(path, plugin_name):
 
 
 def is_core_class_exists(path, plugin_name, core_file):
+    """
+    Test si le fichier core du plugin existe.
+    :param path:        Chemin du plugin
+    :param plugin_name: Nom du plugin
+    :param core_file:   Chemin du fichier core
+    :type path:         str
+    :type plugin_name:  str
+    :type core_file:    str
+    :return:            True si le fichier de la classe a été créée
+    :rtype:             bool
+    """
     result = False
     if os.path.exists(core_file):
         if PHPFile.check_class(core_file, plugin_name):
@@ -53,10 +71,13 @@ def is_core_class_exists(path, plugin_name, core_file):
 
 
 def insert_require_in_core(core_file, plugin_name):
-    PHPFile.add_line_under(core_file,
-                           'require_once dirname(__FILE__)',
-                           'require_once \'./' + plugin_name +
-                           'Cmd.class.php\';\n')
+    """
+    Ajoute l'inclusion du fichier
+    :param core_file:   Chemin du fichier core
+    :param plugin_name: Nom du plugin
+    """
+    File.add_line_under(core_file, 'require_once dirname(__FILE__)',
+                        'require_once \'./' + plugin_name + 'Cmd.class.php\';\n')
 
 
 def usage():

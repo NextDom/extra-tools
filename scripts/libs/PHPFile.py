@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Librairie pour la gestion des entrées sorties
+Librairie pour la gestion des fichiers PHP
 """
 
 import os
@@ -9,22 +9,9 @@ from .IO import IO
 
 
 class PHPFile(object):
-    @staticmethod
-    def add_line_under(core_file, needle, line_to_add):
-        result = False
-        lines = []
-        with open(core_file, 'r') as core_file_content:
-            lines = core_file_content.readlines()
-        output = []
-        for line in lines:
-            output.append(line)
-            if needle in line and not result:
-                output.append(line_to_add)
-                result = True
-        with open(core_file, 'w') as core_file_content:
-            for line in output:
-                core_file_content.write(line)
-        return result
+    """
+    Librairie pour la gestion des fichiers PHP
+    """
 
     @staticmethod
     def add_method(method_data):

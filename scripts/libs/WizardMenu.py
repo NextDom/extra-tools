@@ -28,7 +28,7 @@ class WizardMenu(BaseMenu):
         self.plugins_list = plugins_list
         self.menu = []
         self.menu.append('Démarrer l\'assistant')
-        self.actions.append([self.start_wizard, None])
+        self.actions.append([WizardMenu.start_wizard, None])
         # Recherche si le plugin template existe déjà
         add_template_download = True
         for plugin in self.plugins_list:
@@ -69,7 +69,8 @@ class WizardMenu(BaseMenu):
         #                    return_value = False
         return return_value
 
-    def start_wizard(self):
+    @staticmethod
+    def start_wizard():
         """Lance l'assistant
         """
         os.system('./scripts/wizard.py')

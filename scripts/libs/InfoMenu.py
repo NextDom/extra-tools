@@ -6,6 +6,7 @@ import os
 
 from .BaseMenu import BaseMenu
 from .IO import IO
+from .File import File
 
 
 class InfoMenu(BaseMenu):
@@ -62,8 +63,9 @@ class InfoMenu(BaseMenu):
     def action_5(self):
         """Modifier la catégorie
         """
-        category = IO.get_menu_choice(self.categories, 'Choix de la catégorie')
+        config = File.read_config_data()
+        category = IO.get_menu_choice(config['jeedom_categories'], 'Choix de la catégorie')
         if category >= 0:
             BaseMenu.start_script('replace_info_json.py',
                                   [self.plugin_name, 'category',
-                                   self.categories[category]])
+                                   config['jeedom_categories'][category]])

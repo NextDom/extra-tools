@@ -7,9 +7,19 @@ import sys
 
 
 class IO(object):
+    """
+    Librairie pour la gestion des entrées sorties
+    """
+
+    # Message afficher pour sortir du menu
     cancel_menu = 'Sortir'
+    # Message affiché lors d'un choix
     choice_prompt = 'Choix : '
+    # Message affiché lors d'un mauvais choix
     bad_choice = 'Mauvais choix'
+    ############################
+    # Couleur pour l'affichage #
+    ############################
     red_color = '\033[31m'
     yellow_color = '\033[93m'
     green_color = '\033[92m'

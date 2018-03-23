@@ -7,8 +7,8 @@ Remplace une information dans le fichier d'information du plugin
 import os
 import sys
 
-from .libs.File import File
-from .libs.IO import IO
+from libs.File import File #pylint: disable= import-error
+from libs.IO import IO #pylint: disable= import-error
 
 
 def replace_info_json(plugin_path, key, new_value):

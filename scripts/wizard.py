@@ -6,8 +6,8 @@ Assistant pour la création d'un plugin
 
 import os
 
-from libs.File import File
-from libs.IO import IO
+from libs.File import File #pylint: disable= import-error
+from libs.IO import IO #pylint: disable= import-error
 
 
 def start_wizard():

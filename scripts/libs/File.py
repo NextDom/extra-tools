@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Librairie pour la gestion des entrées sorties
+Librairie pour la gestion des fichiers
 """
 
 import json
@@ -11,8 +11,17 @@ from .IO import IO
 
 
 class File(object):
+    """
+    Librairie pour la gestion des fichiers
+    """
+
     @staticmethod
     def read_config_data():
+        """
+        Lit la configuration pour les outils
+        :return: Configuration des outils
+        :rtype:  dict
+        """
         data = {}
         config_path = os.path.join(os.path.dirname(__file__), 'config.json')
         try:
@@ -59,6 +68,13 @@ class File(object):
 
     @staticmethod
     def copy_and_replace(src_file, dest_file, old_name, new_name):
+        """
+        Copie un fichier d'une source à une destination et remplaces les occurences du nom du plugin
+        :param src_file:  Fichier source
+        :param dest_file: Fichier destination
+        :param old_name:  Ancien nom du plugin
+        :param new_name:  Nouveau nom du plugin
+        """
         os.system('cp ' + src_file + ' ' + dest_file)
         File.replace_in_file(dest_file, old_name, new_name)
 
@@ -79,4 +95,28 @@ class File(object):
                     result = True
         except FileNotFoundError:
             pass
+        return result
+
+    @staticmethod
+    def add_line_under(path_file, needle, line_to_add):
+        """
+        Ajoute une ligne après que le champ needle est été trouvé
+        :param path_file:   Chemin du fichier à traiter
+        :param needle:      Elément à rechercher
+        :param line_to_add: Contenu de la ligne à ajouter
+        :return:
+        """
+        result = False
+        lines = []
+        with open(path_file, 'r') as core_file_content:
+            lines = core_file_content.readlines()
+        output = []
+        for line in lines:
+            output.append(line)
+            if needle in line and not result:
+                output.append(line_to_add)
+                result = True
+        with open(path_file, 'w') as core_file_content:
+            for line in output:
+                core_file_content.write(line)
         return result

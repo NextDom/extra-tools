@@ -1,18 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Ajoute la classe principale d'un plugin
+Ajoute une tâche cron au plugin
 """
 
 import os
 import sys
 
-from libs.IO import IO
-from libs.MethodData import MethodData
-from libs.PHPFile import PHPFile
+from libs.IO import IO #pylint: disable= import-error
+from libs.MethodData import MethodData #pylint: disable= import-error
+from libs.PHPFile import PHPFile #pylint: disable= import-error
 
 
 def add_cron(plugin_path, plugin_name):
+    """
+    Ajoute une tâche cron au plugin
+    :param plugin_path: Chemin du plugin
+    :param plugin_name: Nom du plugin
+    :type plugin_name:  str
+    :type plugin_name:  str
+    :return:
+    """
     core_file_path = os.path.join(plugin_path, 'core', 'class', plugin_name +
                                   '.class.php')
 
