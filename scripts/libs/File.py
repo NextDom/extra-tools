@@ -69,7 +69,8 @@ class File(object):
     @staticmethod
     def copy_and_replace(src_file, dest_file, old_name, new_name):
         """
-        Copie un fichier d'une source à une destination et remplaces les occurences du nom du plugin
+        Copie un fichier d'une source à une destination et remplaces les
+        occurences du nom du plugin
         :param src_file:  Fichier source
         :param dest_file: Fichier destination
         :param old_name:  Ancien nom du plugin
@@ -119,4 +120,28 @@ class File(object):
         with open(path_file, 'w') as core_file_content:
             for line in output:
                 core_file_content.write(line)
+        return result
+
+    @staticmethod
+    def write_json_file(file_path, json_data):
+        """
+        Ecrit le fichier au format JSON
+        :param file_path: Chemin du fichier
+        :param json_data: Données à écrire
+        :type file_path:  str
+        :type json_data:  dict
+        :return:          True si l'écriture à réussie
+        :rtype:           bool
+        """
+        result = False
+        with open(file_path, 'w') as dest:
+            if sys.version_info[0] < 3:
+                dump = json.dumps(json_data, sort_keys=True, indent=4,
+                                  ensure_ascii=False)
+                dump = dump.encode('utf-8').decode('string-escape')
+            else:
+                dump = json.dumps(json_data, sort_keys=True, indent=4)
+                dump = dump.encode('utf-8').decode('unicode-escape')
+            dest.write(dump + '\n')
+            result = True
         return result

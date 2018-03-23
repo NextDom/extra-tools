@@ -7,7 +7,12 @@ Ajoute une langue au plugin
 import os
 import sys
 
-from libs.Jeedom import Jeedom #pylint: disable= import-error
+from libs.Jeedom import Jeedom  # pylint: disable= import-error
+
+# Gestion des accents pour python 2
+if sys.version_info[0] < 3:
+    reload(sys)  # pylint: disable=undefined-variable
+    sys.setdefaultencoding('utf8')  # pylint: disable=no-member
 
 
 def add_language(plugin_path, plugin_name):
@@ -18,11 +23,11 @@ def add_language(plugin_path, plugin_name):
     :type plugin_path:  str
     :type plugin_name:  str
     """
-    i18n_path = Jeedom.get_i18n_path()
+    i18n_path = Jeedom.get_i18n_path(plugin_path)
     if not os.path.exists(i18n_path):
         Jeedom.ask_for_i18n_folder_creation(i18n_path)
     if os.path.exists(i18n_path):
-        Jeedom.add_language(plugin_path, plugin_name)
+        Jeedom.add_language(plugin_path)
 
 
 def usage():

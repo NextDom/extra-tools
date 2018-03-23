@@ -77,7 +77,8 @@ def insert_require_in_core(core_file, plugin_name):
     :param plugin_name: Nom du plugin
     """
     File.add_line_under(core_file, 'require_once dirname(__FILE__)',
-                        'require_once \'./' + plugin_name + 'Cmd.class.php\';\n')
+                        'require_once \'./' + plugin_name +
+                        'Cmd.class.php\';\n')
 
 
 def usage():

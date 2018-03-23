@@ -3,13 +3,12 @@
 Librairie pour la gestion des informations spécifiques à Jeedom
 """
 
-import json
 import os
 import re
-import sys
+from pprint import pprint
 
-from .IO import IO
 from .File import File
+from .IO import IO
 
 
 class Jeedom(object):
@@ -31,7 +30,7 @@ class Jeedom(object):
                 os.mkdir(i18n_path)
 
     @staticmethod
-    def add_language(plugin_path, plugin_name):
+    def add_language(plugin_path):
         """
         Ajout un language
         :param i18n_path: Chemin du répertoire des traductions
@@ -60,9 +59,9 @@ class Jeedom(object):
                 IO.print_error('La langue doit être au format fr_FR.')
         if language != '':
             scan_data = Jeedom.scan_for_strings(plugin_path)
-            json_data = Jeedom.merge_i18n_json(plugin_path, plugin_name, {}, scan_data)
-            Jeedom.write_json_file(i18n_path + os.sep + language + '.json',
-                                     json_data)
+            json_data = Jeedom.merge_i18n_json(plugin_path, {}, scan_data)
+            File.write_json_file(i18n_path + os.sep + language + '.json',
+                                 json_data)
             IO.print_success('La langue ' + language + ' a été ajoutée')
 
     @staticmethod
@@ -75,62 +74,39 @@ class Jeedom(object):
         return os.path.join(plugin_path, 'core', 'i18n')
 
     @staticmethod
-    def write_json_file(file_path, json_data):
-        """
-        Ecrit le fichier au format JSON
-        :param file_path: Chemin du fichier
-        :param json_data: Données à écrire
-        :type file_path:  str
-        :type json_data:  dict
-        :return:          True si l'écriture à réussie
-        :rtype:           bool
-        """
-        result = False
-        with open(file_path, 'w') as dest:
-            if sys.version_info[0] < 3:
-                dump = json.dumps(json_data, sort_keys=True, indent=4,
-                                  ensure_ascii=False)
-                dump = dump.encode('utf-8').decode('string-escape')
-            else:
-                dump = json.dumps(json_data, sort_keys=True, indent=4)
-                dump = dump.encode('utf-8').decode('unicode-escape')
-            dest.write(dump + '\n')
-            result = True
-        return result
-
-    @staticmethod
-    def merge_i18n_json(plugin_path, plugin_name, base_json, scan_data):
+    def merge_i18n_json(plugin_path, base_json, scan_data):
         """
         Fusionne les anciennes données avec les nouvelles
         :param base_json: Données présentes
         :param scan_data: Données scannées
         :type base_json:  dict
-        :type scan_data:  dict
+        :type scan_data:  List(dict)
         :return:          Données fusionnées
         :rtype:           dict
         """
         for data in scan_data:
-            file_path = Jeedom.transform_path_to_i18n_path(data['file_path'], plugin_path, plugin_name)
+            file_path = Jeedom.transform_path_to_i18n_path(plugin_path,
+                                                           data['file_path'])
             # Python décode les \\ à la lecture du JSON
-            key_file_path = file_path.replace('\\', '')
+#            key_file_path = file_path.replace('\\', '')
             # Décode l'unicode si besoin
-            if not isinstance(key_file_path, str):
-                key_file_path = key_file_path.encode('ascii')
+            if not isinstance(file_path, str):
+                file_path = file_path.encode('ascii')
 
             # Création du dictionnaire vide
-            if key_file_path not in base_json.keys():
-                base_json[key_file_path] = {}
+            if file_path not in base_json.keys():
+                base_json[file_path] = {}
 
             # Ajoute les éléments
             for item in data['items']:
-                if item not in base_json[key_file_path].keys():
-                    base_json[key_file_path][item] = item
+                if item not in base_json[file_path].keys():
+                    base_json[file_path][item] = item
             # Renomme la clé pour Jeedom
-            base_json[file_path] = base_json.pop(key_file_path)
+            base_json[file_path] = base_json.pop(file_path)
         return base_json
 
     @staticmethod
-    def transform_path_to_i18n_path(path, plugin_path, plugin_name):
+    def transform_path_to_i18n_path(plugin_path, file_path):
         """
         Transforme le chemin pour qu'il soit compatible avec Jeedom
         :param path: Chemin à convertir
@@ -138,8 +114,11 @@ class Jeedom(object):
         :return:     Chemin converti
         :rtype:      str
         """
-        normal_path = 'plugins' + os.sep + plugin_name + \
-                      path.replace(plugin_path, '')
+        file_path_striped = file_path.replace(plugin_path, '')
+        normal_path = 'plugins' + os.sep + os.path.basename(plugin_path) + \
+                      os.sep + file_path_striped
+        # En fonction du path fournit, il peut y avoir des doublons
+        normal_path = normal_path.replace('//', '/')
         return normal_path.replace('/', '\\/')
 
     @staticmethod

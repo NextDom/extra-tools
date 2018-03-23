@@ -2,12 +2,10 @@
 """
 Menu de l'internationalisation
 """
-import json
-import os
 import sys
 
 from .BaseMenu import BaseMenu
-from .Jeedom import Jeedom
+
 
 class I18nMenu(BaseMenu):
     """
@@ -39,10 +37,12 @@ class I18nMenu(BaseMenu):
         :return: True si une langue a été rajoutée
         :rtype:  bool
         """
-        BaseMenu.start_script('add_language', [self.plugin_path, self.plugin_name])
+        BaseMenu.start_script('add_language',
+                              [self.plugin_path, self.plugin_name])
 
     def action_2(self):
         """
         Met à jour les traductions
         """
-        BaseMenu.start_script('update_languages', [self.plugin_path, self.plugin_name])
+        BaseMenu.start_script('update_languages',
+                              [self.plugin_path, self.plugin_name])

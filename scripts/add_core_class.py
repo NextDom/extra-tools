@@ -7,8 +7,8 @@ Ajoute la classe core d'un plugin
 import os
 import sys
 
-from libs.File import File #pylint: disable= import-error
-from libs.IO import IO #pylint: disable= import-error
+from libs.File import File  # pylint: disable= import-error
+from libs.IO import IO  # pylint: disable= import-error
 
 
 def add_core_class(plugin_path, plugin_name):

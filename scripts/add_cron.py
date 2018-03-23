@@ -7,9 +7,9 @@ Ajoute une tâche cron au plugin
 import os
 import sys
 
-from libs.IO import IO #pylint: disable= import-error
-from libs.MethodData import MethodData #pylint: disable= import-error
-from libs.PHPFile import PHPFile #pylint: disable= import-error
+from libs.IO import IO  # pylint: disable= import-error
+from libs.MethodData import MethodData  # pylint: disable= import-error
+from libs.PHPFile import PHPFile  # pylint: disable= import-error
 
 
 def add_cron(plugin_path, plugin_name):

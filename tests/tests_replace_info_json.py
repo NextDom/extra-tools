@@ -5,7 +5,9 @@ import shutil
 import tempfile
 import unittest
 
-from libs import InfoMenu
+from scripts.libs.MethodData import MethodData
+from scripts.libs.PHPFile import PHPFile
+
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \
@@ -13,11 +15,12 @@ INFO_JSON_CONTENT = "{" + \
                     "\"data\": \"useless\"" + \
                     "}"
 
+COMMAND = './scripts/replace_info_json.py %s > /dev/null 2>&1'
 
-class TestTools(unittest.TestCase):
+# noinspection PyUnusedLocal
+class TestBaseMenu(unittest.TestCase):
     test_dir = None
-    test_json = None
-    info_menu = None
+    base_menu = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
@@ -25,20 +28,19 @@ class TestTools(unittest.TestCase):
         self.test_json = os.path.join(self.test_dir, 'plugin_info', 'info.json')
         with open(self.test_json, 'w') as file_content:
             file_content.write(INFO_JSON_CONTENT)
-        self.info_menu = InfoMenu(self.test_dir, None)
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-    def test_replace_info_key_found(self):
-        self.info_menu.replace_info('data', 'useful')
+    def test_with_key(self):
+        os.system(COMMAND % self.test_dir+' data useful')
         content = ''
         with open(self.test_json, 'r') as file_content:
             content = file_content.read()
         self.assertIn(INFO_JSON_CONTENT.replace('useless', 'useful'), content)
 
-    def test_replace_info_key_not_found(self):
-        self.info_menu.replace_info('nothing', 'useful')
+    def test_without_key(self):
+        os.system(COMMAND % self.test_dir+' nothing useful')
         content = ''
         with open(self.test_json, 'r') as file_content:
             content = file_content.read()

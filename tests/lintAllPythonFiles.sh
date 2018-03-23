@@ -13,7 +13,7 @@ do
     echo "Check $file with pylint"
     python3 -m pylint --rcfile=tests/.pylintrc $file
 done
-exit()
+
 # Tests des tests
 for file in `find tests/ -name "*.py" ! -name "__init__.py"`;
 do

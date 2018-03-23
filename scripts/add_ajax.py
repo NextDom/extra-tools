@@ -6,8 +6,9 @@ Ajoute la classe pour traiter les requêtes AJAX
 
 import os
 import sys
+from pprint import pprint
 
-from libs.IO import IO #pylint: disable= import-error
+from libs.IO import IO  # pylint: disable= import-error
 
 
 def add_ajax(plugin_path, plugin_name):
@@ -20,15 +21,23 @@ def add_ajax(plugin_path, plugin_name):
     """
     templates_cmd_file = os.path.join(os.path.dirname(__file__), 'templates',
                                       'feature_ajax.php')
-    ajax_path = os.path.join(plugin_path + os.sep, 'core', 'ajax')
+    ajax_path = os.path.join(plugin_path, 'core', 'ajax')
     ajax_file_path = ajax_path + os.sep + plugin_name + '.php'
+    pprint(os.listdir(plugin_path))
+    pprint(os.listdir(plugin_path + '/core'))
     if not os.path.exists(ajax_path):
         os.mkdir(ajax_path)
+    pprint(os.listdir(plugin_path + '/core'))
     if os.path.exists(ajax_file_path):
-        IO.print_error('Le fichier existe déjà')
+        with open(ajax_file_path) as ajax_content:
+            if 'ajax::init' in ajax_content.read():
+                IO.print_error('Le fichier existe déjà')
+            else:
+                os.system('cat ' + templates_cmd_file + ' >> ' + ajax_file_path)
     else:
         os.system('cp ' + templates_cmd_file + ' ' + ajax_file_path)
         IO.print_success('Le fichier a été créé')
+        pprint(os.listdir(plugin_path + '/core/ajax'))
 
 
 def usage():

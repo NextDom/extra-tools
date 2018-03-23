@@ -7,8 +7,8 @@ Renomme un plugin
 import os
 import sys
 
-from libs.File import File #pylint: disable= import-error
-from libs.IO import IO #pylint: disable= import-error
+from libs.File import File  # pylint: disable= import-error
+from libs.IO import IO  # pylint: disable= import-error
 
 
 def start_rename_plugin(path, old_name, new_name):
@@ -16,6 +16,9 @@ def start_rename_plugin(path, old_name, new_name):
     Modifie le nom des répertoires, des fichiers ainsi que le contenu
     des fichiers.
     """
+    print(path)
+    print(old_name)
+    print(new_name)
     path = os.path.abspath(path)
     new_path = os.path.abspath(path + os.sep + '..' + os.sep + 'plugin-' +
                                new_name)

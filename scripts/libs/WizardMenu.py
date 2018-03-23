@@ -53,20 +53,20 @@ class WizardMenu(BaseMenu):
                 loop = False
             else:
                 # DEBUG
-                if self.actions[user_choice][1] is None:
-                    return_value = self.actions[user_choice][0]()
-                else:
-                    return_value = self.actions[user_choice][0](
-                        self.actions[user_choice][1])
-        #                try:
-        #                    if self.actions[user_choice][1] is None:
-        #                        return_value = self.actions[user_choice][0]()
-        #                    else:
-        #                        return_value = self.actions[user_choice][0](
-        #                            self.actions[user_choice][1])
-        #                except AttributeError:
-        #                    IO.print_error(self.bad_command)
-        #                    return_value = False
+                # if self.actions[user_choice][1] is None:
+                #     return_value = self.actions[user_choice][0]()
+                # else:
+                #     return_value = self.actions[user_choice][0](
+                #     self.actions[user_choice][1])
+                try:
+                    if self.actions[user_choice][1] is None:
+                        return_value = self.actions[user_choice][0]()
+                    else:
+                        return_value = self.actions[user_choice][0](
+                            self.actions[user_choice][1])
+                except AttributeError:
+                    IO.print_error(self.bad_command)
+                    return_value = False
         return return_value
 
     @staticmethod
