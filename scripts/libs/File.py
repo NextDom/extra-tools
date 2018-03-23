@@ -62,7 +62,6 @@ class File(object):
         os.system('cp ' + src_file + ' ' + dest_file)
         File.replace_in_file(dest_file, old_name, new_name)
 
-
     @staticmethod
     def is_content_in_file(file_path, content):
         """Test si un fichier contient une chaine de caractères
@@ -81,4 +80,3 @@ class File(object):
         except FileNotFoundError:
             pass
         return result
-

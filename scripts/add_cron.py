@@ -11,6 +11,7 @@ from libs.IO import IO
 from libs.MethodData import MethodData
 from libs.PHPFile import PHPFile
 
+
 def add_cron(plugin_path, plugin_name):
     core_file_path = os.path.join(plugin_path, 'core', 'class', plugin_name +
                                   '.class.php')

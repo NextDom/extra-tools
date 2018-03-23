@@ -33,7 +33,7 @@ class PHPFile(object):
         :type method_data:   MethodData
         """
         result = False
-        if os.path .exists(method_data.class_file_path):
+        if os.path.exists(method_data.class_file_path):
             if PHPFile.check_class(method_data.class_file_path,
                                    method_data.class_name):
                 if not PHPFile.check_if_method_exists(
@@ -79,7 +79,7 @@ class PHPFile(object):
         """
         result = False
         with open(class_file_path) as file_content:
-            if method_name+'()' in file_content.read():
+            if method_name + '()' in file_content.read():
                 result = True
         return result
 

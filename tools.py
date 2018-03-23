@@ -10,8 +10,8 @@ from scripts.libs.WizardMenu import WizardMenu
 
 # Gestion des accents pour python 2
 if sys.version_info[0] < 3:
-    reload(sys) #pylint: disable=undefined-variable
-    sys.setdefaultencoding('utf8') #pylint: disable=no-member
+    reload(sys)  # pylint: disable=undefined-variable
+    sys.setdefaultencoding('utf8')  # pylint: disable=no-member
 
 if __name__ == '__main__':
     # Point de d'entrée en mode CLI

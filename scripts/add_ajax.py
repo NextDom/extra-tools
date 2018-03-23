@@ -8,9 +8,7 @@ import os
 import sys
 
 from libs.IO import IO
-from libs.File import File
 
-from libs.PHPFile import PHPFile
 
 def add_ajax(plugin_path, plugin_name):
     templates_cmd_file = os.path.join(os.path.dirname(__file__), 'templates',
@@ -23,7 +21,7 @@ def add_ajax(plugin_path, plugin_name):
     if os.path.exists(ajax_file_path):
         IO.print_error('Le fichier existe déjà')
     else:
-        os.system('cp '+templates_cmd_file+' '+ajax_file_path)
+        os.system('cp ' + templates_cmd_file + ' ' + ajax_file_path)
         IO.print_success('Le fichier a été créé')
 
 

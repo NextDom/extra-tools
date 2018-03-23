@@ -51,8 +51,8 @@ class BaseMenu(object):
 
     @staticmethod
     def start_script(script_name, params):
-        cmd = './scripts/'+script_name
+        cmd = './scripts/' + script_name
         # TROUVER LA VRAIE FONCTION QUI VA BIEN
         for param in params:
-            cmd += ' '+param
+            cmd += ' ' + param
         os.system(cmd)
