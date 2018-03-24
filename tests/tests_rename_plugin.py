@@ -8,14 +8,18 @@ import unittest
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
 TEST_FILE3_CONTENT = 'i test a file'
-COMMAND = './scripts/rename_plugin.py %s %s %s > /dev/null 2>&1'
+COMMAND = './scripts/rename_plugin.py %s %s %s '#> /dev/null 2>&1'
 
 
 # noinspection PyUnusedLocal
 class TestRenamePlugin(unittest.TestCase):
     test_dir = None
-    target_ajax_directory = None
-    target_ajax_file = None
+    plugin_dir = None
+    folder1 = None
+    folder2 = None
+    test_file1 = None
+    test_file2 = None
+    test_file3 = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
