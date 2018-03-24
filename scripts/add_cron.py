@@ -6,7 +6,6 @@ Ajoute une tâche cron au plugin
 
 import os
 import sys
-from pprint import pprint
 
 from libs.IO import IO  # pylint: disable= import-error
 from libs.MethodData import MethodData  # pylint: disable= import-error
@@ -26,30 +25,33 @@ def add_cron(plugin_path, plugin_name):
                                   '.class.php')
 
     print(core_file_path)
-    crons = {
-        'Toutes les minutes': 'cron',
-        'Toutes les 5 minutes': 'cron5',
-        'Toutes les 15 minutes': 'cron15',
-        'Toutes les 30 minutes': 'cron30',
-        'Toutes les heures': 'cronHourly',
-        'Tous les jours': 'cronDaily'
-    }
+    crons_titles = [
+        'Toutes les minutes',
+        'Toutes les 5 minutes',
+        'Toutes les 15 minutes',
+        'Toutes les 30 minutes',
+        'Toutes les heures',
+        'Tous les jours'
+    ]
+    crons_functions = [
+        'cron',
+        'cron5',
+        'cron15',
+        'cron30',
+        'cronHourly',
+        'cronDaily'
+    ]
 
-    keys = crons.keys()
-    pprint(keys)
-    choice = IO.get_menu_choice(keys, 'Choix de la récurrence')
+    choice = IO.get_menu_choice(crons_titles, 'Choix de la récurrence')
     if choice >= 0:
-        print(choice)
         method_data = MethodData()
         method_data.class_file_path = core_file_path
         method_data.class_name = plugin_name
-        method_data.method_name = crons[keys[choice]]
+        method_data.method_name = crons_functions[choice]
         method_data.method_is_static = True
-        method_data.method_comment = keys[choice]
-        pprint(keys[choice])
+        method_data.method_comment = crons_titles[choice]
         os.system('cat '+core_file_path)
         if PHPFile.add_method(method_data):
-            print('Add')
             IO.print_success('La méthode ' + method_data.method_name +
                              ' a été ajoutée')
 
