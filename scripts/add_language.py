@@ -15,7 +15,7 @@ if sys.version_info[0] < 3:
     sys.setdefaultencoding('utf8')  # pylint: disable=no-member
 
 
-def add_language(plugin_path, plugin_name):
+def add_language(plugin_path):
     """
     Ajoute la classe pour traiter les requêtes AJAX
     :param plugin_path: Chemin du plugin
@@ -34,11 +34,11 @@ def usage():
     """
     Affichage de l'utilisation du script
     """
-    print(sys.argv[0] + ' chemin nom_du_plugin')
+    print(sys.argv[0] + ' chemin')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 2:
         usage()
     else:
-        add_language(sys.argv[1], sys.argv[2])
+        add_language(sys.argv[1])

@@ -18,7 +18,7 @@ if sys.version_info[0] < 3:
     sys.setdefaultencoding('utf8')  # pylint: disable=no-member
 
 
-def update_languages(plugin_path, plugin_name):
+def update_languages(plugin_path):
     """
     Ajoute la classe pour traiter les requêtes AJAX
     :param plugin_path: Chemin du plugin
@@ -43,7 +43,7 @@ def update_languages(plugin_path, plugin_name):
                 # Json retire le \ avant les / à la lecture
                 parsed_json_data = {}
                 for key in json_data.keys():
-                    parsed_json_data[key.replace('/', '\/')] = json_data[key]
+                    parsed_json_data[key.replace('/', '\\/')] = json_data[key]
                 File.write_json_file(i18n_path + os.sep + i18n,
                                      parsed_json_data)
         else:
@@ -56,11 +56,11 @@ def usage():
     """
     Affichage de l'utilisation du script
     """
-    print(sys.argv[0] + ' chemin nom_du_plugin')
+    print(sys.argv[0] + ' chemin')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 2:
         usage()
     else:
-        update_languages(sys.argv[1], sys.argv[2])
+        update_languages(sys.argv[1])

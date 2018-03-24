@@ -39,8 +39,8 @@ class BaseMenu(object):
         return_value = None
         method_name = 'action_' + str(number)
         # DEBUG
-        #method = getattr(self, method_name)
-        #return_value = method()
+        # method = getattr(self, method_name)
+        # return_value = method()
         try:
             method = getattr(self, method_name)
             return_value = method()

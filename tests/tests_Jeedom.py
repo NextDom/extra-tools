@@ -4,7 +4,6 @@ import os
 import shutil
 import tempfile
 import unittest
-from pprint import pprint
 
 from scripts.libs.Jeedom import Jeedom
 

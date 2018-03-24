@@ -5,14 +5,13 @@ Librairie pour la gestion des informations spécifiques à Jeedom
 
 import os
 import re
-from pprint import pprint
 
 from .File import File
 from .IO import IO
 
 
 class Jeedom(object):
-    """
+    """s
     Librairie pour la gestion des informations spécifiques à Jeedom
     """
 
@@ -88,7 +87,7 @@ class Jeedom(object):
             file_path = Jeedom.transform_path_to_i18n_path(plugin_path,
                                                            data['file_path'])
             # Python décode les \\ à la lecture du JSON
-#            key_file_path = file_path.replace('\\', '')
+            #            key_file_path = file_path.replace('\\', '')
             # Décode l'unicode si besoin
             if not isinstance(file_path, str):
                 file_path = file_path.encode('ascii')

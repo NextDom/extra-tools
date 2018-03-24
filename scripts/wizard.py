@@ -143,7 +143,7 @@ def gen_info_json(plugin_data, config):
     with open(plugin_data['plugin_info_path'] + 'info.json', 'w') as dest:
         dest.write(
             '{\n'
-            '  "id" : "%s",\n'
+            '  "id": "%s",\n'
             '  "name": "%s",\n'
             '  "licence": "%s",\n'
             '  "require": "%s",\n'

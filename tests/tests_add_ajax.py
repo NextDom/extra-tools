@@ -5,10 +5,6 @@ import shutil
 import tempfile
 import unittest
 
-from scripts.libs.MethodData import MethodData
-from scripts.libs.PHPFile import PHPFile
-
-
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \
                     "\"name\": \"PluginName\"," + \
@@ -16,6 +12,7 @@ INFO_JSON_CONTENT = "{" + \
                     "}"
 
 COMMAND = './scripts/add_ajax.py %s > /dev/null 2>&1'
+
 
 # noinspection PyUnusedLocal
 class TestAddAjax(unittest.TestCase):
@@ -27,7 +24,7 @@ class TestAddAjax(unittest.TestCase):
         self.test_dir = tempfile.mkdtemp()
         self.target_ajax_directory = os.path.join(self.test_dir, 'core', 'ajax')
         self.target_ajax_file = os.path.join(self.test_dir, 'core', 'ajax',
-                                      'TestPlugin.php')
+                                             'TestPlugin.php')
         os.mkdir(self.test_dir + os.sep + 'core')
         os.mkdir(self.target_ajax_directory)
 
@@ -37,7 +34,7 @@ class TestAddAjax(unittest.TestCase):
     def test_file_without_directory(self):
         os.rmdir(self.target_ajax_directory)
 
-        os.system(COMMAND % self.test_dir+' TestPlugin')
+        os.system(COMMAND % self.test_dir + ' TestPlugin')
         self.assertTrue(os.path.exists(self.target_ajax_file))
 
     def test_file_with_content_file(self):
@@ -45,7 +42,7 @@ class TestAddAjax(unittest.TestCase):
                                       'TestPlugin.ajax.php')
         with open(test_file_path, 'w') as test_dest:
             test_dest.write('ajax::init();')
-        os.system(COMMAND % self.test_dir+' TestPlugin')
+        os.system(COMMAND % self.test_dir + ' TestPlugin')
         content = ''
         with open(test_file_path, 'r') as test_dest:
             content = test_dest.read()
@@ -55,7 +52,7 @@ class TestAddAjax(unittest.TestCase):
     def test_without_file(self):
         test_file_path = os.path.join(self.test_dir, 'core', 'ajax',
                                       'TestPlugin.php')
-        os.system(COMMAND % self.test_dir+' TestPlugin')
+        os.system(COMMAND % self.test_dir + ' TestPlugin')
         content = ''
         with open(test_file_path, 'r') as test_dest:
             content = test_dest.read()
@@ -68,7 +65,7 @@ class TestAddAjax(unittest.TestCase):
                                       'TestPlugin.php')
         with open(test_file_path, 'w') as test_dest:
             test_dest.write('Test content')
-        os.system(COMMAND % self.test_dir+' TestPlugin')
+        os.system(COMMAND % self.test_dir + ' TestPlugin')
         content = ''
         with open(test_file_path, 'r') as test_dest:
             content = test_dest.read()

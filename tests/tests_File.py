@@ -4,7 +4,6 @@ import os
 import shutil
 import tempfile
 import unittest
-from unittest.mock import patch
 
 from scripts.libs.File import File
 
@@ -121,4 +120,3 @@ class TestFile(unittest.TestCase):
         with open(test_file_path, 'r') as test_file:
             content = test_file.read()
         self.assertEqual(content, to_compare)
-

@@ -5,7 +5,6 @@ import shutil
 import tempfile
 import unittest
 
-
 COMMAND = './scripts/add_cmd_class.py %s %s > /dev/null 2>&1'
 
 
@@ -27,18 +26,18 @@ class TestAddCmdClass(unittest.TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_without_core_class_and_separate_files(self):
-        os.system('printf "o\no\n" |'+COMMAND % (self.plugin_dir, 'Test'))
+        os.system('printf "o\no\n" |' + COMMAND % (self.plugin_dir, 'Test'))
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
-                                        'Test.class.php'))
+                                       'Test.class.php'))
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
             self.assertIn('require_once \'./TestCmd', test_file.read())
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
-                                        'TestCmd.class.php'))
+                                       'TestCmd.class.php'))
 
     def test_without_core_class_and_one_file(self):
-        os.system('printf "o\nn\n" |'+COMMAND % (self.plugin_dir, 'Test'))
+        os.system('printf "o\nn\n" |' + COMMAND % (self.plugin_dir, 'Test'))
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
-                                        'Test.class.php'))
+                                       'Test.class.php'))
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
             test_file_content = test_file.read()
             self.assertNotIn('require_once \'./TestCmd', test_file_content)
@@ -48,19 +47,18 @@ class TestAddCmdClass(unittest.TestCase):
         with open(self.class_dir + os.sep + 'Test.class.php', 'w') as test_file:
             test_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\n\n}\n')
-        os.system('printf "o\n" |'+COMMAND % (self.plugin_dir, 'Test'))
+        os.system('printf "o\n" |' + COMMAND % (self.plugin_dir, 'Test'))
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
             self.assertIn('require_once \'./TestCmd', test_file.read())
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
-                                        'TestCmd.class.php'))
+                                       'TestCmd.class.php'))
 
     def test_with_core_class_and_one_file(self):
         with open(self.class_dir + os.sep + 'Test.class.php', 'w') as test_file:
             test_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\n\n}\n')
-        os.system('printf "n\n" |'+COMMAND % (self.plugin_dir, 'Test'))
+        os.system('printf "n\n" |' + COMMAND % (self.plugin_dir, 'Test'))
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
             test_file_content = test_file.read()
             self.assertNotIn('require_once \'./TestCmd', test_file_content)
             self.assertIn('TestCmd', test_file_content)
-

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
 import shutil
 import tempfile
 import unittest
@@ -105,4 +104,3 @@ class TestIO(unittest.TestCase):
     def test_ask_with_default_without_answer(self, side_effect):
         result = IO.ask_with_default('Question', 'First answer')
         self.assertEqual(result, 'First answer')
-
