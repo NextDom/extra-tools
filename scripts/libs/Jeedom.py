@@ -32,10 +32,10 @@ class Jeedom(object):
     def add_language(plugin_path):
         """
         Ajout un language
-        :param i18n_path: Chemin du répertoire des traductions
-        :type i18n_path:  str
-        :return:          True si la traduction a été rajoutée
-        :rtype:           bool
+        :param plugin_path: Chemin du plugin
+        :type plugin_path:  str
+        :return:            True si la traduction a été rajoutée
+        :rtype:             bool
         """
         i18n_path = Jeedom.get_i18n_path(plugin_path)
         i18n_list = os.listdir(i18n_path)
@@ -50,7 +50,7 @@ class Jeedom(object):
             if language == '':
                 loop = False
             elif Jeedom.is_valid_i18n_name(language):
-                if language in os.listdir(i18n_path):
+                if language+'.json' in os.listdir(i18n_path):
                     IO.print_error(language + ' existe déjà.')
                 else:
                     loop = False

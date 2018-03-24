@@ -1,3 +1,4 @@
 [report]
 omit = 
 	*__init__*
+        tests/tests_*

@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from scripts.libs.Jeedom import Jeedom
 
@@ -12,6 +13,7 @@ from scripts.libs.Jeedom import Jeedom
 class TestJeedom(unittest.TestCase):
     test_dir = None
     plugin_dir = None
+    core_dir = None
     file_to_test1_path = None
     file_to_test2_path = None
     file_to_test3_path = None
@@ -19,16 +21,16 @@ class TestJeedom(unittest.TestCase):
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
         self.plugin_dir = self.test_dir + os.sep + 'PluginName'
+        self.core_dir = self.plugin_dir + os.sep + 'core'
         os.mkdir(self.plugin_dir)
-        os.mkdir(self.plugin_dir + os.sep + 'core')
+        os.mkdir(self.core_dir)
         os.mkdir(self.plugin_dir + os.sep + 'desktop')
         os.mkdir(os.path.join(self.plugin_dir, 'desktop', 'php'))
         self.file_to_test1_path = self.plugin_dir + os.sep + 'file_to_test1.php'
         with open(self.file_to_test1_path, 'w') as file_to_test:
             file_to_test.write('A superb multi-line\ncontent\nwithout ' \
                                'things to translate, but\nonly useless text.')
-        self.file_to_test2_path = os.path.join(self.plugin_dir, 'core',
-                                               'file_to_test2.php')
+        self.file_to_test2_path = self.core_dir + os.sep + 'file_to_test2.php'
         with open(self.file_to_test2_path, 'w') as file_to_test:
             file_to_test.write('A {{superb}} multi-line\ncontent\nwitho ' \
                                'things to {{translate}}, and\n useless text.')
@@ -50,7 +52,7 @@ class TestJeedom(unittest.TestCase):
 
     def test_get_18n_path(self):
         result = Jeedom.get_i18n_path(self.plugin_dir)
-        self.assertEqual(os.path.join(self.plugin_dir, 'core', 'i18n'), result)
+        self.assertEqual(self.core_dir + os.sep + 'i18n', result)
 
     def test_is_valid_18n_name_valid_good(self):
         result = Jeedom.is_valid_i18n_name('fr_FR')
@@ -124,3 +126,43 @@ class TestJeedom(unittest.TestCase):
         self.assertIn('plugins\\/PluginName\\/core\\/file2.php', result.keys())
         self.assertIn('Bim', result[
             'plugins\\/PluginName\\/core\\/file2.php'].keys())
+
+    @patch('builtins.input', side_effect=['o'])
+    def test_ask_for_i18n_folder_creation_y(self, side_effect):
+        i18n_path = self.test_dir + os.sep + 'i18n'
+        Jeedom.ask_for_i18n_folder_creation(i18n_path)
+        self.assertTrue(os.path.exists(i18n_path))
+
+    @patch('builtins.input', side_effect=['n'])
+    def test_ask_for_i18n_folder_creation_n(self, side_effect):
+        i18n_path = self.test_dir + os.sep + 'i18n'
+        Jeedom.ask_for_i18n_folder_creation(i18n_path)
+        self.assertFalse(os.path.exists(i18n_path))
+
+    @patch('builtins.input', side_effect=['fr_FR'])
+    def test_add_language(self, side_effect):
+        i18n_path = self.core_dir + os.sep + 'i18n'
+        os.mkdir(i18n_path)
+        Jeedom.add_language(self.plugin_dir)
+        self.assertTrue(os.path.exists(i18n_path + os.sep + 'fr_FR.json'))
+
+    @patch('builtins.input', side_effect=['fr_FR', 'ee_EE'])
+    def test_add_language_already_exists(self, side_effect):
+        i18n_path = self.core_dir + os.sep + 'i18n'
+        os.mkdir(i18n_path)
+        open(i18n_path + os.sep + 'fr_FR.json', 'a').close()
+        Jeedom.add_language(self.plugin_dir)
+        self.assertTrue(os.path.exists(i18n_path + os.sep + 'fr_FR.json'))
+        self.assertTrue(os.path.exists(i18n_path + os.sep + 'ee_EE.json'))
+
+    @patch('builtins.input', side_effect=['fr', 'french', 'FR', 'FR_FR',
+                                          'en_US'])
+    def test_add_language_with_misstakes(self, side_effect):
+        i18n_path = self.core_dir + os.sep + 'i18n'
+        os.mkdir(i18n_path)
+        Jeedom.add_language(self.plugin_dir)
+        self.assertFalse(os.path.exists(i18n_path + os.sep + 'fr.json'))
+        self.assertFalse(os.path.exists(i18n_path + os.sep + 'french.json'))
+        self.assertFalse(os.path.exists(i18n_path + os.sep + 'FR.json'))
+        self.assertFalse(os.path.exists(i18n_path + os.sep + 'FR_FR.json'))
+        self.assertTrue(os.path.exists(i18n_path + os.sep + 'en_US.json'))

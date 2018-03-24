@@ -34,6 +34,13 @@ class TestFile(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
+    def test_read_config_data(self):
+        config = File.read_config_data()
+        config_file_path = os.path.join('scripts', 'libs', 'config.json')
+        with open(config_file_path, 'r') as content:
+            self.assertIn('"default_package_name": "' + config[
+                'default_package_name'] + '"', content.read())
+
     def test_is_content_in_file_without_file(self):
         file_to_test = self.test_dir + os.sep + 'FileNotFound'
         result = File.is_content_in_file(file_to_test, 'test string')
@@ -109,6 +116,13 @@ class TestFile(unittest.TestCase):
         self.assertIn('i newname a file',
                       content)
 
+    def test_copy_and_replace(self):
+        dest = self.test_dir + os.sep + 'dest_test'
+        File.copy_and_replace(self.test_file1, dest, 'Test', 'Replace')
+        with open(dest, 'r') as content:
+            self.assertIn('Replace\nSomething\nREPLACE\nSomewhere\nreplace',
+                             content.read())
+
     def test_write_json_file(self):
         data = {
             '\\/coucou\\/': 'Plouf',
@@ -122,3 +136,13 @@ class TestFile(unittest.TestCase):
         with open(test_file_path, 'r') as test_file:
             content = test_file.read()
         self.assertEqual(content, to_compare)
+
+    def test_add_line_under_with_line(self):
+        File.add_line_under(self.test_file2, 'Useless', 'Added')
+        with open(self.test_file2, 'r') as content:
+            self.assertIn('A\nUseless\nAdded\nFile', content.read())
+
+    def test_add_line_under_without_line(self):
+        File.add_line_under(self.test_file2, 'Useful', 'Added')
+        with open(self.test_file2, 'r') as content:
+            self.assertIn('A\nUseless\nFile', content.read())

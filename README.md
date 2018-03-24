@@ -1,4 +1,4 @@
-![Travis Status](https://travis-ci.org/Jeedom-Plugins-Extra/extra-tools.svg?branch=develop)
+[![Build Status](https://travis-ci.org/Jeedom-Plugins-Extra/extra-tools.svg?branch=develop)](https://travis-ci.org/Jeedom-Plugins-Extra/extra-tools)
 
 # Extra-tools
 

@@ -9,6 +9,7 @@ matrix:
         - ./tests/lintAllPythonFiles.sh
         - python3 -m unittest discover tests -b
         - coverage run -m unittest discover tests -b
+        - coverage report -m
       after_success:
         - coveralls
     - language: php

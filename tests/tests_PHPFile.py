@@ -43,6 +43,31 @@ class TestPHPFile(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
+    def test_add_method_without_file(self):
+        self.method_data.class_file_path = self.test_dir + os.sep + 'no_file'
+        self.assertFalse(PHPFile.add_method(self.method_data))
+
+    def test_add_method_with_empty_file(self):
+        self.method_data.class_file_path = self.test_dir + os.sep + 'empty_file'
+        open(self.method_data.class_file_path, 'a').close()
+        self.assertFalse(PHPFile.add_method(self.method_data))
+
+    def test_add_method_with_method_in_file(self):
+        self.method_data.class_file_path = self.test_dir + os.sep + 'test_file'
+        with open(self.method_data.class_file_path, 'a') as test_file:
+            test_file.write('testMethod()')
+            test_file.close()
+        self.assertFalse(PHPFile.add_method(self.method_data))
+
+    def test_add_method_with_method_in_file(self):
+        self.method_data.class_file_path = self.test_dir + os.sep + 'test_file'
+        with open(self.method_data.class_file_path, 'a') as test_file:
+            test_file.write('class TestPlugin {\n\n}')
+            test_file.close()
+        self.assertTrue(PHPFile.add_method(self.method_data))
+        with open(self.method_data.class_file_path, 'r') as test_file:
+            self.assertIn('function testMethod()', test_file.read())
+
     def test_check_class_with_empty_file(self):
         result = PHPFile.check_class(self.empty_file_path, 'TestPlugin')
         self.assertFalse(result)
