@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-COMMAND = './scripts/add_cron.py %s %s > /dev/null 2>&1'
+COMMAND = './scripts/add_cron.py %s %s '#> /dev/null 2>&1'
 
 
 # noinspection PyUnusedLocal
