@@ -6,7 +6,6 @@ matrix:
         - pip install pylint
       script:
         - cd ${TRAVIS_BUILD_DIR}
-        - python3 -m unittest tests/tests_rename_plugin.py
         - ./tests/lintAllPythonFiles.sh
         - python3 -m unittest discover tests -b
     - language: php

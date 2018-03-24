@@ -76,7 +76,7 @@ class TestRenamePlugin(unittest.TestCase):
         folder2 = plugin_dir + os.sep + 'newnameFolder'
         test_file1 = folder1 + os.sep + 'Content'
         test_file2 = folder1 + os.sep + 'newnameContent'
-        test_file3 = folder2 + os.sep + 'Newnamecontent'
+        test_file3 = folder2 + os.sep + 'newnamecontent'
 
         self.assertTrue(os.path.exists(plugin_dir))
         self.assertTrue(os.path.exists(test_file1))
