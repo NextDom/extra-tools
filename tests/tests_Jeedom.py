@@ -10,7 +10,7 @@ from scripts.libs.Jeedom import Jeedom
 
 
 # noinspection PyUnusedLocal
-class TestBaseMenu(unittest.TestCase):
+class TestJeedom(unittest.TestCase):
     test_dir = None
     base_menu = None
 

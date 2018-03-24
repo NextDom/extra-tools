@@ -14,7 +14,7 @@ TEST_FILE3_CONTENT = 'i test a file'
 
 
 # noinspection PyUnusedLocal
-class TestBaseMenu(unittest.TestCase):
+class TestFile(unittest.TestCase):
     test_dir = None
     base_menu = None
 

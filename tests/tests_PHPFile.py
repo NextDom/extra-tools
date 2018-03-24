@@ -10,7 +10,7 @@ from scripts.libs.PHPFile import PHPFile
 
 
 # noinspection PyUnusedLocal
-class TestBaseMenu(unittest.TestCase):
+class TestPHPFile(unittest.TestCase):
     test_dir = None
     base_menu = None
 

@@ -18,7 +18,7 @@ INFO_JSON_CONTENT = "{" + \
 COMMAND = './scripts/add_ajax.py %s > /dev/null 2>&1'
 
 # noinspection PyUnusedLocal
-class TestBaseMenu(unittest.TestCase):
+class TestAddAjax(unittest.TestCase):
     test_dir = None
     target_ajax_directory = None
     target_ajax_file = None

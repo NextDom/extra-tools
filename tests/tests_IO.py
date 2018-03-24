@@ -13,7 +13,7 @@ SIMPLE_MENU = ['First choice',
 
 
 # noinspection PyUnusedLocal
-class TestBaseMenu(unittest.TestCase):
+class TestIO(unittest.TestCase):
     test_dir = None
     base_menu = None
 

@@ -18,7 +18,7 @@ INFO_JSON_CONTENT = "{" + \
 COMMAND = './scripts/replace_info_json.py %s > /dev/null 2>&1'
 
 # noinspection PyUnusedLocal
-class TestBaseMenu(unittest.TestCase):
+class TestReplaceInfo(unittest.TestCase):
     test_dir = None
     base_menu = None
 
