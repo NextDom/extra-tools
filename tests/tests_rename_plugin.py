@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 import unittest
+from pprint import pprint
 
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
@@ -52,10 +53,14 @@ class TestRenamePlugin(unittest.TestCase):
         test_file2 = folder1 + os.sep + 'newnameContent'
         test_file3 = folder2 + os.sep + 'NewNamecontent'
 
+        print('Folder 1')
+        pprint(os.listdir(folder1))
+        print('Folder 2')
+        pprint(os.listdir(folder1))
         self.assertTrue(os.path.exists(plugin_dir))
-        self.assertTrue(os.path.exists(folder1 + os.sep + 'Content'))
-        self.assertTrue(os.path.exists(folder1 + os.sep + 'newnameContent'))
-        self.assertTrue(os.path.exists(folder2 + os.sep + 'NewNameContent'))
+        self.assertTrue(os.path.exists(test_file1))
+        self.assertTrue(os.path.exists(test_file2))
+        self.assertTrue(os.path.exists(test_file3))
         content = ''
         with open(test_file1, 'r') as file_content:
             content = file_content.read()
