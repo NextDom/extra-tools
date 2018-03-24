@@ -4,12 +4,11 @@ import os
 import shutil
 import tempfile
 import unittest
-from pprint import pprint
 
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
 TEST_FILE3_CONTENT = 'i test a file'
-COMMAND = './scripts/rename_plugin.py %s %s %s '#> /dev/null 2>&1'
+COMMAND = './scripts/rename_plugin.py %s %s %s > /dev/null 2>&1'
 
 
 # noinspection PyUnusedLocal
@@ -53,10 +52,6 @@ class TestRenamePlugin(unittest.TestCase):
         test_file2 = folder1 + os.sep + 'newnameContent'
         test_file3 = folder2 + os.sep + 'NewNamecontent'
 
-        print('Folder 1')
-        pprint(os.listdir(folder1))
-        print('Folder 2')
-        pprint(os.listdir(folder1))
         self.assertTrue(os.path.exists(plugin_dir))
         self.assertTrue(os.path.exists(test_file1))
         self.assertTrue(os.path.exists(test_file2))
@@ -84,9 +79,9 @@ class TestRenamePlugin(unittest.TestCase):
         test_file3 = folder2 + os.sep + 'Newnamecontent'
 
         self.assertTrue(os.path.exists(plugin_dir))
-        self.assertTrue(os.path.exists(folder1 + os.sep + 'Content'))
-        self.assertTrue(os.path.exists(folder1 + os.sep + 'newnameContent'))
-        self.assertTrue(os.path.exists(folder2 + os.sep + 'NewnameContent'))
+        self.assertTrue(os.path.exists(test_file1))
+        self.assertTrue(os.path.exists(test_file2))
+        self.assertTrue(os.path.exists(test_file3))
         with open(test_file1, 'r') as file_content:
             content = file_content.read()
         self.assertIn('newname\nSomething\nNEWNAME\nSomewhere\nnewname',

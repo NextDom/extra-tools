@@ -12,7 +12,11 @@ from scripts.libs.PHPFile import PHPFile
 # noinspection PyUnusedLocal
 class TestPHPFile(unittest.TestCase):
     test_dir = None
-    base_menu = None
+    empty_file_path = None
+    empty_class_file_path = None
+    class_file_path = None
+    no_file_path = None
+    method_data = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()

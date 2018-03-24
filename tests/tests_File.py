@@ -15,7 +15,9 @@ TEST_FILE3_CONTENT = 'i test a file'
 # noinspection PyUnusedLocal
 class TestFile(unittest.TestCase):
     test_dir = None
-    base_menu = None
+    test_file1 = None
+    test_file2 = None
+    test_file3 = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()

@@ -11,7 +11,10 @@ from scripts.libs.Jeedom import Jeedom
 # noinspection PyUnusedLocal
 class TestJeedom(unittest.TestCase):
     test_dir = None
-    base_menu = None
+    plugin_dir = None
+    file_to_test1_path = None
+    file_to_test2_path = None
+    file_to_test3_path = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()

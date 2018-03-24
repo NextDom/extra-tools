@@ -14,7 +14,6 @@ SIMPLE_MENU = ['First choice',
 # noinspection PyUnusedLocal
 class TestIO(unittest.TestCase):
     test_dir = None
-    base_menu = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()

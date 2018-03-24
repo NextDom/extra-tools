@@ -11,8 +11,8 @@ COMMAND = './scripts/add_language.py %s > /dev/null 2>&1'
 # noinspection PyUnusedLocal
 class TestAddLanguage(unittest.TestCase):
     test_dir = None
-    target_ajax_directory = None
-    target_ajax_file = None
+    plugin_dir = None
+    core_dir = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()

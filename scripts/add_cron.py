@@ -50,7 +50,7 @@ def add_cron(plugin_path, plugin_name):
         method_data.method_name = crons_functions[choice]
         method_data.method_is_static = True
         method_data.method_comment = crons_titles[choice]
-        os.system('cat '+core_file_path)
+        os.system('cat ' + core_file_path)
         if PHPFile.add_method(method_data):
             IO.print_success('La méthode ' + method_data.method_name +
                              ' a été ajoutée')
