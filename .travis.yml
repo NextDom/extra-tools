@@ -6,11 +6,13 @@ matrix:
         - pip install pylint
       script:
         - cd ${TRAVIS_BUILD_DIR}
+        - python3 -m unittest tests/tests_add_cron.py
         - ./tests/lintAllPythonFiles.sh
         - python3 -m unittest discover tests -b
     - language: php
       php: 5.6
-      before_script:
+      script:
+        - cd ${TRAVIS_BUILD_DIR}
         - find . -type f -name *.php | xargs -n1 php -l
     - language: markdown
       addons:
