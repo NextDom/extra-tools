@@ -22,8 +22,13 @@ def start_rename_plugin(path, old_name, new_name):
     path = os.path.abspath(path)
     new_path = os.path.abspath(path + os.sep + '..' + os.sep + 'plugin-' +
                                new_name)
+    print(new_path)
     if os.path.exists(path):
+        print('Exists')
         if 'plugin-' + new_name not in os.listdir('.'):
+            print('Rename')
+            print(path)
+            print(new_path)
             # Renomme le répertoire racine du plugin
             os.rename(path, new_path)
             # Renomme le contenu du plugin
