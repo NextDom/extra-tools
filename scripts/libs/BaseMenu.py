@@ -50,7 +50,7 @@ class BaseMenu(object):
         return return_value
 
     @staticmethod
-    def start_script(script_name, params):
+    def start_script(script_name, params=None):
         """
         Lance un script des outils
         :param script_name: Nom du script
@@ -59,5 +59,7 @@ class BaseMenu(object):
         :type params:       List(str)
         :return:
         """
-        cmd = './scripts/' + script_name + ' '.join(params)
+        cmd = './scripts/' + script_name + ' '
+        if params is not None:
+            cmd += ' '.join(params)
         os.system(cmd)
