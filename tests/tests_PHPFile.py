@@ -52,14 +52,14 @@ class TestPHPFile(unittest.TestCase):
         open(self.method_data.class_file_path, 'a').close()
         self.assertFalse(PHPFile.add_method(self.method_data))
 
-    def test_add_method_with_method_in_file(self):
+    def test_add_method_with_only_method_in_file(self):
         self.method_data.class_file_path = self.test_dir + os.sep + 'test_file'
         with open(self.method_data.class_file_path, 'a') as test_file:
             test_file.write('testMethod()')
             test_file.close()
         self.assertFalse(PHPFile.add_method(self.method_data))
 
-    def test_add_method_with_method_in_file(self):
+    def test_add_method_with_class_in_file(self):
         self.method_data.class_file_path = self.test_dir + os.sep + 'test_file'
         with open(self.method_data.class_file_path, 'a') as test_file:
             test_file.write('class TestPlugin {\n\n}')

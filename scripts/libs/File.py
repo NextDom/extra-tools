@@ -115,7 +115,7 @@ class File(object):
         for line in lines:
             output.append(line)
             if needle in line and not result:
-                output.append(line_to_add+'\n')
+                output.append(line_to_add + '\n')
                 result = True
         with open(path_file, 'w') as core_file_content:
             for line in output:

@@ -2,4 +2,5 @@
 disable=unused-argument,
         missing-docstring,
         too-many-public-methods,
-        invalid-name
+        invalid-name,
+        wrong-import-position

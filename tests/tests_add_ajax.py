@@ -2,16 +2,18 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import unittest
+
+sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
+from scripts.add_ajax import add_ajax
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \
                     "\"name\": \"PluginName\"," + \
                     "\"data\": \"useless\"" + \
                     "}"
-
-COMMAND = './scripts/add_ajax.py %s > /dev/null 2>&1'
 
 
 # noinspection PyUnusedLocal
@@ -34,7 +36,7 @@ class TestAddAjax(unittest.TestCase):
     def test_file_without_directory(self):
         os.rmdir(self.target_ajax_directory)
 
-        os.system(COMMAND % self.test_dir + ' TestPlugin')
+        add_ajax(self.test_dir, 'TestPlugin')
         self.assertTrue(os.path.exists(self.target_ajax_file))
 
     def test_file_with_content_file(self):
@@ -42,7 +44,7 @@ class TestAddAjax(unittest.TestCase):
                                       'TestPlugin.ajax.php')
         with open(test_file_path, 'w') as test_dest:
             test_dest.write('ajax::init();')
-        os.system(COMMAND % self.test_dir + ' TestPlugin')
+        add_ajax(self.test_dir, 'TestPlugin')
         content = ''
         with open(test_file_path, 'r') as test_dest:
             content = test_dest.read()
@@ -52,7 +54,7 @@ class TestAddAjax(unittest.TestCase):
     def test_without_file(self):
         test_file_path = os.path.join(self.test_dir, 'core', 'ajax',
                                       'TestPlugin.php')
-        os.system(COMMAND % self.test_dir + ' TestPlugin')
+        add_ajax(self.test_dir, 'TestPlugin')
         content = ''
         with open(test_file_path, 'r') as test_dest:
             content = test_dest.read()
@@ -65,7 +67,7 @@ class TestAddAjax(unittest.TestCase):
                                       'TestPlugin.php')
         with open(test_file_path, 'w') as test_dest:
             test_dest.write('Test content')
-        os.system(COMMAND % self.test_dir + ' TestPlugin')
+        add_ajax(self.test_dir, 'TestPlugin')
         content = ''
         with open(test_file_path, 'r') as test_dest:
             content = test_dest.read()

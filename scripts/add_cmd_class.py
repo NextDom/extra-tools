@@ -12,6 +12,10 @@ from libs.IO import IO  # pylint: disable= import-error
 from libs.MethodData import MethodData  # pylint: disable= import-error
 from libs.PHPFile import PHPFile  # pylint: disable= import-error
 
+# pylint: disable= wrong-import-position
+sys.path.insert(0, os.path.dirname(__file__))
+from add_core_class import add_core_class # pylint: disable= import-error
+
 
 def add_cmd_class(plugin_path, plugin_name):
     """
@@ -65,7 +69,9 @@ def is_core_class_exists(path, plugin_name, core_file):
         create = IO.ask_y_n('Le fichier de la classe principale n\'existe pas, '
                             'voulez-vous le créer ?')
         if create == 'o':
-            os.system('./scripts/add_core_class.py ' + path + ' ' + plugin_name)
+            add_core_class(path, plugin_name)
+            #            os.system('./scripts/add_core_class.py ' + path + ' ' +
+            # plugin_name)
             result = True
     return result
 

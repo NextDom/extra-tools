@@ -121,7 +121,7 @@ class TestFile(unittest.TestCase):
         File.copy_and_replace(self.test_file1, dest, 'Test', 'Replace')
         with open(dest, 'r') as content:
             self.assertIn('Replace\nSomething\nREPLACE\nSomewhere\nreplace',
-                             content.read())
+                          content.read())
 
     def test_write_json_file(self):
         data = {

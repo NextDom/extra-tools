@@ -2,8 +2,12 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import unittest
+
+sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
+from scripts.rename_plugin import rename_plugin
 
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
@@ -43,8 +47,7 @@ class TestRenamePlugin(unittest.TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_rename_folders_and_files_NewName(self):
-        os.system(COMMAND % (self.plugin_dir, 'Test', 'NewName'))
-
+        rename_plugin(self.plugin_dir, 'Test', 'NewName')
         plugin_dir = self.test_dir + os.sep + 'plugin-NewName'
         folder1 = plugin_dir + os.sep + 'Folder'
         folder2 = plugin_dir + os.sep + 'NewNameFolder'
@@ -69,7 +72,7 @@ class TestRenamePlugin(unittest.TestCase):
         self.assertIn('i newName a file', content)
 
     def test_rename_folders_and_files_newname(self):
-        os.system(COMMAND % (self.plugin_dir, 'Test', 'newname'))
+        rename_plugin(self.plugin_dir, 'Test', 'newname')
 
         plugin_dir = self.test_dir + os.sep + 'plugin-newname'
         folder1 = plugin_dir + os.sep + 'Folder'

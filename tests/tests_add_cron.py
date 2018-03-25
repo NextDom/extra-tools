@@ -2,10 +2,13 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
-COMMAND = './scripts/add_cron.py %s %s > /dev/null 2>&1'
+sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
+from scripts.add_cron import add_cron
 
 
 # noinspection PyUnusedLocal
@@ -27,31 +30,34 @@ class TestCron(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-    def test_without_cron_in_core_class(self):
+    @patch('builtins.input', side_effect=['1'])
+    def test_without_cron_in_core_class(self, side_effect):
         with open(self.core_file_path, 'w') as core_file:
             core_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\n\n}\n')
-        os.system('printf "1\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+        add_cron(self.plugin_dir, 'Test')
         with open(self.core_file_path, 'r') as core_file:
             self.assertIn('public static function cron(', core_file.read())
 
-    def test_with_cron_in_core_class(self):
+    @patch('builtins.input', side_effect=['2'])
+    def test_with_cron_in_core_class(self, side_effect):
         with open(self.core_file_path, 'w') as test_file:
             test_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\npublic static function '
                             'cron() {\n}\n}\n')
-        os.system('printf "2\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+        add_cron(self.plugin_dir, 'Test')
         with open(self.core_file_path, 'r') as test_file:
             test_file_content = test_file.read()
             self.assertIn('public static function cron()', test_file_content)
             self.assertIn('public static function cron5()', test_file_content)
 
-    def test_with_same_cron_in_core_class(self):
+    @patch('builtins.input', side_effect=['3'])
+    def test_with_same_cron_in_core_class(self, side_effect):
         with open(self.core_file_path, 'w') as test_file:
             test_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\npublic static function '
                             'cron() {\n}\n}\n')
-        os.system('printf "3\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+        add_cron(self.plugin_dir, 'Test')
         with open(self.core_file_path, 'r') as test_file:
             test_file_content = test_file.read()
             self.assertIn('public static function cron()', test_file_content)

@@ -2,17 +2,20 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
-COMMAND = './scripts/add_cmd_class.py %s %s > /dev/null 2>&1'
+sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
+from scripts.add_cmd_class import add_cmd_class
 
 
 # noinspection PyUnusedLocal
 class TestAddCmdClass(unittest.TestCase):
     test_dir = None
-    target_ajax_directory = None
-    target_ajax_file = None
+    plugin_dir = None
+    class_dir = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
@@ -25,8 +28,10 @@ class TestAddCmdClass(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-    def test_without_core_class_and_separate_files(self):
-        os.system('printf "o\no\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+    @patch('builtins.input', side_effect=['o', 'o'])
+    # pylint: disable=unused-argument
+    def test_without_core_class_and_separate_files(self, side_effect):
+        add_cmd_class(self.plugin_dir, 'Test')
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
                                        'Test.class.php'))
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
@@ -34,8 +39,10 @@ class TestAddCmdClass(unittest.TestCase):
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
                                        'TestCmd.class.php'))
 
-    def test_without_core_class_and_one_file(self):
-        os.system('printf "o\nn\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+    @patch('builtins.input', side_effect=['o', 'n'])
+    # pylint: disable=unused-argument
+    def test_without_core_class_and_one_file(self, side_effect):
+        add_cmd_class(self.plugin_dir, 'Test')
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
                                        'Test.class.php'))
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
@@ -43,21 +50,25 @@ class TestAddCmdClass(unittest.TestCase):
             self.assertNotIn('require_once \'./TestCmd', test_file_content)
             self.assertIn('TestCmd', test_file_content)
 
-    def test_with_core_class_and_separate_files(self):
+    @patch('builtins.input', side_effect=['o'])
+    # pylint: disable=unused-argument
+    def test_with_core_class_and_separate_files(self, side_effect):
         with open(self.class_dir + os.sep + 'Test.class.php', 'w') as test_file:
             test_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\n\n}\n')
-        os.system('printf "o\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+        add_cmd_class(self.plugin_dir, 'Test')
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
             self.assertIn('require_once \'./TestCmd', test_file.read())
         self.assertTrue(os.path.exists(self.class_dir + os.sep +
                                        'TestCmd.class.php'))
 
-    def test_with_core_class_and_one_file(self):
+    @patch('builtins.input', side_effect=['n'])
+    # pylint: disable=unused-argument
+    def test_with_core_class_and_one_file(self, side_effect):
         with open(self.class_dir + os.sep + 'Test.class.php', 'w') as test_file:
             test_file.write('require_once dirname(__FILE__)\nclass Test '
                             'extends eqLogic {\n\n}\n')
-        os.system('printf "n\n" |' + COMMAND % (self.plugin_dir, 'Test'))
+        add_cmd_class(self.plugin_dir, 'Test')
         with open(self.class_dir + os.sep + 'Test.class.php', 'r') as test_file:
             test_file_content = test_file.read()
             self.assertNotIn('require_once \'./TestCmd', test_file_content)

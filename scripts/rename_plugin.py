@@ -11,7 +11,7 @@ from libs.File import File  # pylint: disable= import-error
 from libs.IO import IO  # pylint: disable= import-error
 
 
-def start_rename_plugin(path, old_name, new_name):
+def rename_plugin(path, old_name, new_name):
     """Renomme le plugin
     Modifie le nom des répertoires, des fichiers ainsi que le contenu
     des fichiers.
@@ -32,7 +32,7 @@ def start_rename_plugin(path, old_name, new_name):
             # Renomme le répertoire racine du plugin
             os.rename(path, new_path)
             # Renomme le contenu du plugin
-            rename_plugin(new_path, old_name, new_name)
+            start_rename_plugin(new_path, old_name, new_name)
             IO.print_success('Le plugin ' + old_name + ' a été renommé en ' +
                              new_name)
         else:
@@ -42,7 +42,7 @@ def start_rename_plugin(path, old_name, new_name):
         IO.print_error('Le plugin ' + path + ' n\'a pas été trouvé')
 
 
-def rename_plugin(current_path, old_name, new_name):
+def start_rename_plugin(current_path, old_name, new_name):
     """Remplace les occurences dans les noms des fichiers, les répertoires,
     et au sein des fichiers
     :param current_path: Répertoire courant
@@ -65,9 +65,9 @@ def rename_plugin(current_path, old_name, new_name):
                                    old_name,
                                    new_name)
             if os.path.isdir(current_path + os.sep + item):
-                rename_plugin(current_path + os.sep + item,
-                              old_name,
-                              new_name)
+                start_rename_plugin(current_path + os.sep + item,
+                                    old_name,
+                                    new_name)
             else:
                 # Remplacement des occurences dans le fichier
                 File.replace_in_file(
@@ -118,4 +118,4 @@ if __name__ == '__main__':
     if len(sys.argv) != 4:
         usage()
     else:
-        start_rename_plugin(sys.argv[1], sys.argv[2], sys.argv[3])
+        rename_plugin(sys.argv[1], sys.argv[2], sys.argv[3])

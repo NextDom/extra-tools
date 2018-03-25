@@ -50,7 +50,7 @@ class Jeedom(object):
             if language == '':
                 loop = False
             elif Jeedom.is_valid_i18n_name(language):
-                if language+'.json' in os.listdir(i18n_path):
+                if language + '.json' in os.listdir(i18n_path):
                     IO.print_error(language + ' existe déjà.')
                 else:
                     loop = False

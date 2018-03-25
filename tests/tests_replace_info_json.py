@@ -2,16 +2,18 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import unittest
+
+sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
+from scripts.replace_info_json import replace_info_json
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \
                     "\"name\": \"PluginName\"," + \
                     "\"data\": \"useless\"" + \
                     "}"
-
-COMMAND = './scripts/replace_info_json.py %s > /dev/null 2>&1'
 
 
 # noinspection PyUnusedLocal
@@ -30,14 +32,14 @@ class TestReplaceInfo(unittest.TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_with_key(self):
-        os.system(COMMAND % self.test_dir + ' data useful')
+        replace_info_json(self.test_dir, 'data', 'useful')
         content = ''
         with open(self.test_json, 'r') as file_content:
             content = file_content.read()
         self.assertIn(INFO_JSON_CONTENT.replace('useless', 'useful'), content)
 
     def test_without_key(self):
-        os.system(COMMAND % self.test_dir + ' nothing useful')
+        replace_info_json(self.test_dir, 'nothing', 'useful')
         content = ''
         with open(self.test_json, 'r') as file_content:
             content = file_content.read()

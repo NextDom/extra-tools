@@ -2,10 +2,13 @@
 
 import os
 import shutil
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
-COMMAND = './scripts/add_language.py %s > /dev/null 2>&1'
+sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
+from scripts.add_language import add_language
 
 
 # noinspection PyUnusedLocal
@@ -28,9 +31,10 @@ class TestAddLanguage(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-    def test_add_simple_language(self):
+    @patch('builtins.input', side_effect=['fr_FR'])
+    def test_add_simple_language(self, side_effect):
         os.mkdir(self.core_dir + os.sep + 'i18n')
-        os.system('printf "fr_FR\n" |' + COMMAND % self.plugin_dir)
+        add_language(self.plugin_dir)
         dest_file_path = os.path.join(self.core_dir, 'i18n', 'fr_FR.json')
         self.assertTrue(os.path.exists(dest_file_path))
         with open(dest_file_path, 'r') as dest_file:
@@ -38,8 +42,9 @@ class TestAddLanguage(unittest.TestCase):
             self.assertIn('content', content)
             self.assertIn('translate', content)
 
-    def test_without_i18n_add_language(self):
-        os.system('printf "o\nfr_FR\n" |' + COMMAND % self.plugin_dir)
+    @patch('builtins.input', side_effect=['o', 'fr_FR'])
+    def test_without_i18n_add_language(self, side_effect):
+        add_language(self.plugin_dir)
         dest_file_path = os.path.join(self.core_dir, 'i18n', 'fr_FR.json')
         self.assertTrue(os.path.exists(dest_file_path))
         with open(dest_file_path, 'r') as dest_file:
