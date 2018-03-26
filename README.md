@@ -3,4 +3,10 @@
 
 # Extra-tools
 
-Outil de création et modification de plugins pour Jeedom
+Outil de création et modification de plugins pour Jeedom.
+
+## Documentation
+Vous trouverez la documentation [ici](https://github.com/Jeedom-Plugins-Extra/extra-tools/blob/master/docs/fr_FR/index.md).
+
+## Changelog
+Retrouvez les dernières modifications sur le [changelog](https://github.com/Jeedom-Plugins-Extra/extra-tools/blob/master/docs/fr_FR/changelog.md).
