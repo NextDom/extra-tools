@@ -32,7 +32,7 @@ class PHPFile(object):
             else:
                 IO.print_error('La classe n\'existe pas')
         else:
-            IO.print_error('Le fichier n\'existe pas')
+            IO.print_error('Le fichier global n\'existe pas')
         return result
 
     @staticmethod
