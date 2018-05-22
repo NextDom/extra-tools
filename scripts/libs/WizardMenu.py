@@ -32,10 +32,10 @@ class WizardMenu(BaseMenu):
         # Recherche si le plugin template existe déjà
         add_template_download = True
         for plugin in self.plugins_list:
-            if plugin[1] == 'template' or plugin[1] == 'Template':
+            if 'template' in plugin[1] or 'Template' in plugin[1]:
                 add_template_download = False
         if add_template_download:
-            self.menu.append('Télécharger le plugin Template')
+            self.menu.append('Télécharger le plugin ExtraTemplate')
             self.actions.append([self.git_template, None])
         # Ajout de la liste des plugins dans le répertoire
         for plugin in plugins_list:
