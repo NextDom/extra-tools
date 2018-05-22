@@ -77,16 +77,16 @@ class WizardMenu(BaseMenu):
         exit(0)
 
     def git_template(self):
-        """Télécharge une copie du plugin Template
+        """Télécharge une copie du plugin ExtraTemplate
         :params data: Inutilisé
         """
         config = File.read_config_data()
         sys_return = os.system('git clone ' + config['plugin_template_repo'] +
                                ' 2> /dev/null')
         if sys_return == 0:
-            IO.print_success('Le plugin plugin-template a été téléchargé')
+            IO.print_success('Le plugin plugin-ExtraTemplate a été téléchargé')
         else:
-            IO.print_error('Le plugin plugin-template est déjà téléchargé.')
+            IO.print_error('Le plugin plugin-ExtraTemplate est déjà téléchargé.')
         self.start_tools(['plugin-template', 'template'])
 
     @staticmethod
