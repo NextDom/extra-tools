@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Script pour la génération et la modification de plugins pour Jeedom.
+"""
 
 import json
 import os
@@ -38,8 +41,7 @@ config = {
 #################
 # Templates PHP #
 #################
-php_header = """\
-<?php
+php_header = """<?php
 
 /* This file is part of Jeedom.
  *
@@ -59,26 +61,26 @@ php_header = """\
 
 """
 
-feature_ajax = """\
+feature_ajax = """
 try {
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
     include_file('core', 'authentification', 'php');
 
     if (!isConnect('admin')) {
-        throw new \Exception(__('401 - Accès non autorisé', __FILE__));
+        throw new \\Exception(__('401 - Accès non autorisé', __FILE__));
     }
 
     ajax::init();
 
-    throw new \Exception(__('Aucune méthode correspondante à : ', __FILE__) . 
+    throw new \\Exception(__('Aucune méthode correspondante à : ', __FILE__) . 
     init('action'));
     /*     * *********Catch exeption*************** */
-} catch (\Exception $e) {
+} catch (\\Exception $e) {
     ajax::error(displayException($e), $e->getCode());
 }
 """
 
-feature_cmd_class = """\
+feature_cmd_class = """
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class PluginNameCmd extends cmd
@@ -90,7 +92,7 @@ class PluginNameCmd extends cmd
 }
 """
 
-feature_core_class = """\
+feature_core_class = """
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class PluginName extends eqLogic
@@ -99,7 +101,7 @@ class PluginName extends eqLogic
 }
 """
 
-wizard_configuration = """\
+wizard_configuration = """
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 include_file('core', 'authentification', 'php');
 if (!isConnect()) {
@@ -108,7 +110,7 @@ if (!isConnect()) {
 }
 """
 
-wizard_core_class = """\
+wizard_core_class = """
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 require_once 'PluginNameCmd.class.php';
@@ -214,7 +216,7 @@ class PluginName extends eqLogic
 }
 """
 
-wizard_core_cmd_class = """\
+wizard_core_cmd_class = """
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
@@ -241,13 +243,13 @@ class PluginNameCmd extends cmd
 }
 """
 
-wizard_desktop_php = """\
+wizard_desktop_php = """
 if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
 """
 
-wizard_install = """\
+wizard_install = """
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function PluginName_install() {
@@ -1501,7 +1503,7 @@ class WizardMenu(BaseMenu):
     plugins_list = []
     actions = []
 
-    def __init__(self, plugins_list):
+    def __init__(self, initial_plugins_list):
         """Constructeur
         Initialise le chemin vers le fichier qui stocke le nom du plugin.
         :params plugins_list:  Liste des plugins disponibles
@@ -1509,7 +1511,7 @@ class WizardMenu(BaseMenu):
         """
         # Configuration du menu
         # Premier choix : Assistant
-        self.plugins_list = plugins_list
+        self.plugins_list = initial_plugins_list
         self.menu = []
         self.menu.append('Démarrer l\'assistant')
         self.actions.append([self.start_wizard, None])
@@ -1558,15 +1560,16 @@ class WizardMenu(BaseMenu):
         """
         plugin_data = self.ask_plugin_informations()
         if plugin_data is not None:
-            self.create_folder_struct(plugin_data)
-            self.gen_info_json(plugin_data)
-            self.gen_installation_php(plugin_data)
-            self.gen_configuration(plugin_data)
-            self.gen_desktop_php(plugin_data)
-            self.gen_core_php(plugin_data)
+            WizardMenu.create_folder_struct(plugin_data)
+            WizardMenu.gen_info_json(plugin_data)
+            WizardMenu.gen_installation_php(plugin_data)
+            WizardMenu.gen_configuration(plugin_data)
+            WizardMenu.gen_desktop_php(plugin_data)
+            WizardMenu.gen_core_php(plugin_data)
         exit(0)
 
-    def ask_plugin_informations(self):
+    @staticmethod
+    def ask_plugin_informations():
         """Obtenir les informations pour le futur plugin.
         :return: Informations compilées
         :rtype:  dict
@@ -1632,7 +1635,8 @@ class WizardMenu(BaseMenu):
 
         return data
 
-    def create_folder_struct(self, plugin_data):
+    @staticmethod
+    def create_folder_struct(plugin_data):
         """Créé la structure de répertoires
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -1674,7 +1678,8 @@ class WizardMenu(BaseMenu):
         os.mkdir(plugin_dir + os.sep + 'docs' + os.sep +
                  plugin_data['documentation_language'])
 
-    def gen_info_json(self, plugin_data):
+    @staticmethod
+    def gen_info_json(plugin_data):
         """Ecrit le fichier d'information du plugin
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -1711,7 +1716,8 @@ class WizardMenu(BaseMenu):
             dest.write('\n}\n')
             dest.close()
 
-    def gen_installation_php(self, plugin_data):
+    @staticmethod
+    def gen_installation_php(plugin_data):
         """Ecrit la classe d'installation du plugin dans plugin_info
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -1721,7 +1727,8 @@ class WizardMenu(BaseMenu):
                                          'PluginName',
                                          plugin_data['id'])
 
-    def gen_configuration(self, plugin_data):
+    @staticmethod
+    def gen_configuration(plugin_data):
         """Ecrit le formulaire de configuration du plugin dans plugin_info
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -1747,7 +1754,8 @@ class WizardMenu(BaseMenu):
                                '' % (item['code']))
                 dest.write('  </fieldset>\n</form>\n')
 
-    def gen_desktop_php(self, plugin_data):
+    @staticmethod
+    def gen_desktop_php(plugin_data):
         """Ecrit le fichier PHP du desktop pour le rendu
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -1756,7 +1764,8 @@ class WizardMenu(BaseMenu):
                       plugin_data['id'] + '.php'
         File.create_php_file(wizard_desktop_php, target_file)
 
-    def gen_core_php(self, plugin_data):
+    @staticmethod
+    def gen_core_php(plugin_data):
         """Ecrit le fichier PHP du core
         :param plugin_data: Données du plugin
         :type plugin_data:  dict
@@ -1775,7 +1784,8 @@ class WizardMenu(BaseMenu):
                                          'PluginName',
                                          plugin_data['id'])
 
-    def git_extratemplate(self):
+    @staticmethod
+    def git_extratemplate():
         """Télécharge une copie du plugin ExtraTemplate
         :params data: Inutilisé
         """
@@ -1786,9 +1796,10 @@ class WizardMenu(BaseMenu):
         else:
             IO.print_error(
                 'Le plugin plugin-ExtraTemplate est déjà téléchargé.')
-        self.start_tools(['plugin-ExtraTemplate', 'ExtraTemplate'])
+        WizardMenu.start_tools(['plugin-ExtraTemplate', 'ExtraTemplate'])
 
-    def start_tools(self, plugin_data):
+    @staticmethod
+    def start_tools(plugin_data):
         """Lance l'outil
         :params plugin_data: Tableau contenant le chemin et le nom du plugin
         :type plugin_data:   List[str]
