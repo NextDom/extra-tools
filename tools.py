@@ -587,7 +587,8 @@ class Jeedom(object):
         :rtype:             bool
         """
         i18n_path = Jeedom.get_i18n_path(plugin_path)
-        i18n_list = os.listdir(i18n_path)
+        i18n_list = filter(lambda item: not item.startswith('.'),
+                           os.listdir(i18n_path))
         if i18n_list:
             print('Liste des traductions présentes : ')
             for i18n in i18n_list:
@@ -637,8 +638,6 @@ class Jeedom(object):
         for data in scan_data:
             file_path = Jeedom.transform_path_to_i18n_path(plugin_path,
                                                            data['file_path'])
-            # Python décode les \\ à la lecture du JSON
-            #            key_file_path = file_path.replace('\\', '')
             # Décode l'unicode si besoin
             if not isinstance(file_path, str):
                 file_path = file_path.encode('ascii')
@@ -671,7 +670,7 @@ class Jeedom(object):
                       os.sep + file_path_striped
         # En fonction du path fournit, il peut y avoir des doublons
         normal_path = normal_path.replace('//', '/')
-        return normal_path.replace('/', '\\/')
+        return normal_path #.replace('/', '\/')
 
     @staticmethod
     def scan_for_strings(path, result=None):
