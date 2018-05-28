@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import inspect
+import os
+import sys
 import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
 
-from scripts.libs.IO import IO
+current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+sys.path.insert(0, parent_dir)
+from tools import IO
+
 
 SIMPLE_MENU = ['First choice',
                'Second choice']

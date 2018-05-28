@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import inspect
 import os
 import shutil
 import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
-from scripts.rename_plugin import rename_plugin
+current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+sys.path.insert(0, parent_dir)
+from tools import RootMenu
 
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
@@ -21,9 +25,7 @@ class TestRenamePlugin(unittest.TestCase):
     plugin_dir = None
     folder1 = None
     folder2 = None
-    test_file1 = None
-    test_file2 = None
-    test_file3 = None
+    root_menu = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
@@ -31,23 +33,24 @@ class TestRenamePlugin(unittest.TestCase):
         os.mkdir(self.plugin_dir)
         self.folder1 = self.plugin_dir + os.sep + 'Folder'
         self.folder2 = self.plugin_dir + os.sep + 'TestFolder'
-        self.test_file1 = self.folder1 + os.sep + 'Content'
-        self.test_file2 = self.folder1 + os.sep + 'testContent'
-        self.test_file3 = self.folder2 + os.sep + 'Testcontent'
+        test_file1 = self.folder1 + os.sep + 'Content'
+        test_file2 = self.folder1 + os.sep + 'testContent'
+        test_file3 = self.folder2 + os.sep + 'Testcontent'
+        self.root_menu = RootMenu(self.plugin_dir, 'Test')
         os.mkdir(self.folder1)
         os.mkdir(self.folder2)
-        with open(self.test_file1, 'w') as dest_file:
+        with open(test_file1, 'w') as dest_file:
             dest_file.write(TEST_FILE1_CONTENT)
-        with open(self.test_file2, 'w') as dest_file:
+        with open(test_file2, 'w') as dest_file:
             dest_file.write(TEST_FILE2_CONTENT)
-        with open(self.test_file3, 'w') as dest_file:
+        with open(test_file3, 'w') as dest_file:
             dest_file.write(TEST_FILE3_CONTENT)
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
     def test_rename_folders_and_files_NewName(self):
-        rename_plugin(self.plugin_dir, 'Test', 'NewName')
+        self.root_menu.rename_plugin('NewName')
         plugin_dir = self.test_dir + os.sep + 'plugin-NewName'
         folder1 = plugin_dir + os.sep + 'Folder'
         folder2 = plugin_dir + os.sep + 'NewNameFolder'
@@ -72,7 +75,7 @@ class TestRenamePlugin(unittest.TestCase):
         self.assertIn('i newName a file', content)
 
     def test_rename_folders_and_files_newname(self):
-        rename_plugin(self.plugin_dir, 'Test', 'newname')
+        self.root_menu.rename_plugin('newname')
 
         plugin_dir = self.test_dir + os.sep + 'plugin-newname'
         folder1 = plugin_dir + os.sep + 'Folder'

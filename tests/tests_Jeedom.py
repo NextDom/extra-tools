@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import sys
+import inspect
 import os
 import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
 
-from scripts.libs.Jeedom import Jeedom
+current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+sys.path.insert(0, parent_dir)
+from tools import Jeedom
 
 
 # noinspection PyUnusedLocal
@@ -48,7 +54,7 @@ class TestJeedom(unittest.TestCase):
         result = Jeedom.transform_path_to_i18n_path(
             self.plugin_dir, self.file_to_test2_path)
         self.assertEqual(result,
-                         'plugins\\/PluginName\\/core\\/file_to_test2.php')
+                         'plugins/PluginName/core/file_to_test2.php')
 
     def test_get_18n_path(self):
         result = Jeedom.get_i18n_path(self.plugin_dir)
@@ -93,7 +99,7 @@ class TestJeedom(unittest.TestCase):
         self.assertEqual(3, len(result[1]['items']))
 
     def test_merge_i18n_json_with_initial_data(self):
-        initial_data = {'plugins\\/PluginName\\/file1.php': {'Item1': 'Item1'}}
+        initial_data = {'plugins/PluginName/file1.php': {'Item1': 'Item1'}}
         result_data = [{'file_path': 'file1.php',
                         'items': ['Item1', 'Item2']},
                        {
@@ -103,12 +109,12 @@ class TestJeedom(unittest.TestCase):
                                      'Boum']
                        }]
         result = Jeedom.merge_i18n_json('PluginName', initial_data, result_data)
-        self.assertIn('plugins\\/PluginName\\/file1.php', result.keys())
+        self.assertIn('plugins/PluginName/file1.php', result.keys())
         self.assertIn('Item2', result[
-            'plugins\\/PluginName\\/file1.php'].keys())
-        self.assertIn('plugins\\/PluginName\\/core\\/file2.php', result.keys())
+            'plugins/PluginName/file1.php'].keys())
+        self.assertIn('plugins/PluginName/core/file2.php', result.keys())
         self.assertIn('Bam', result[
-            'plugins\\/PluginName\\/core\\/file2.php'].keys())
+            'plugins/PluginName/core/file2.php'].keys())
 
     def test_merge_i18n_json_without_initial_data(self):
         result = Jeedom.merge_i18n_json(self.plugin_dir, {}, [
@@ -120,12 +126,12 @@ class TestJeedom(unittest.TestCase):
                 'file_path': 'core/file2.php',
                 'items': ['Bim', 'Bam', 'Boum']
             }])
-        self.assertIn('plugins\\/PluginName\\/file1.php', result.keys())
+        self.assertIn('plugins/PluginName/file1.php', result.keys())
         self.assertIn('Item1', result[
-            'plugins\\/PluginName\\/file1.php'].keys())
-        self.assertIn('plugins\\/PluginName\\/core\\/file2.php', result.keys())
+            'plugins/PluginName/file1.php'].keys())
+        self.assertIn('plugins/PluginName/core/file2.php', result.keys())
         self.assertIn('Bim', result[
-            'plugins\\/PluginName\\/core\\/file2.php'].keys())
+            'plugins/PluginName/core/file2.php'].keys())
 
     @patch('builtins.input', side_effect=['o'])
     def test_ask_for_i18n_folder_creation_y(self, side_effect):

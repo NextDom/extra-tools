@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import inspect
 import os
 import shutil
 import sys
 import tempfile
 import unittest
 
-sys.path.insert(0, os.path.dirname(__file__) + '/../scripts')
-from scripts.add_ajax import add_ajax
+current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+sys.path.insert(0, parent_dir)
+from tools import FeaturesMenu
 
 INFO_JSON_CONTENT = "{" + \
                     "\"id\": \"PluginId\"," + \
@@ -21,12 +25,14 @@ class TestAddAjax(unittest.TestCase):
     test_dir = None
     target_ajax_directory = None
     target_ajax_file = None
+    feature_menu = None
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
         self.target_ajax_directory = os.path.join(self.test_dir, 'core', 'ajax')
         self.target_ajax_file = os.path.join(self.test_dir, 'core', 'ajax',
-                                             'TestPlugin.php')
+                                             'TestPlugin.ajax.php')
+        self.feature_menu = FeaturesMenu(self.test_dir, 'TestPlugin')
         os.mkdir(self.test_dir + os.sep + 'core')
         os.mkdir(self.target_ajax_directory)
 
@@ -36,41 +42,36 @@ class TestAddAjax(unittest.TestCase):
     def test_file_without_directory(self):
         os.rmdir(self.target_ajax_directory)
 
-        add_ajax(self.test_dir, 'TestPlugin')
+        self.feature_menu.add_ajax()
+        self.assertTrue(os.path.exists(self.target_ajax_directory))
         self.assertTrue(os.path.exists(self.target_ajax_file))
 
-    def test_file_with_content_file(self):
-        test_file_path = os.path.join(self.test_dir, 'core', 'ajax',
-                                      'TestPlugin.ajax.php')
-        with open(test_file_path, 'w') as test_dest:
+    def test_file_with_good_content(self):
+        with open(self.target_ajax_file, 'w') as test_dest:
             test_dest.write('ajax::init();')
-        add_ajax(self.test_dir, 'TestPlugin')
+        self.feature_menu.add_ajax()
         content = ''
-        with open(test_file_path, 'r') as test_dest:
+        with open(self.target_ajax_file, 'r') as test_dest:
             content = test_dest.read()
         self.assertNotIn('<?php', content)
         self.assertNotIn('try', content)
 
     def test_without_file(self):
-        test_file_path = os.path.join(self.test_dir, 'core', 'ajax',
-                                      'TestPlugin.php')
-        add_ajax(self.test_dir, 'TestPlugin')
+        self.feature_menu.add_ajax()
         content = ''
-        with open(test_file_path, 'r') as test_dest:
+        with open(self.target_ajax_file, 'r') as test_dest:
             content = test_dest.read()
         self.assertIn('<?php', content)
         self.assertIn('try', content)
         self.assertIn('ajax::init()', content)
 
-    def test_without_good_content(self):
-        test_file_path = os.path.join(self.test_dir, 'core', 'ajax',
-                                      'TestPlugin.php')
-        with open(test_file_path, 'w') as test_dest:
+    def test_without_bad_content(self):
+        with open(self.target_ajax_file, 'w') as test_dest:
             test_dest.write('Test content')
-        add_ajax(self.test_dir, 'TestPlugin')
+            self.feature_menu.add_ajax()
         content = ''
-        with open(test_file_path, 'r') as test_dest:
+        with open(self.target_ajax_file, 'r') as test_dest:
             content = test_dest.read()
-        self.assertIn('<?php', content)
-        self.assertIn('try', content)
-        self.assertIn('ajax::init()', content)
+        self.assertNotIn('<?php', content)
+        self.assertNotIn('try', content)
+        self.assertNotIn('ajax::init()', content)

@@ -1386,7 +1386,7 @@ class RootMenu(BaseMenu):
         des fichiers.
         """
         new_name = IO.get_user_input('Nouveau nom du plugin : ')
-        self.rename_plugin(self.plugin_path, self.plugin_name, new_name)
+        self.rename_plugin(new_name)
         self.plugin_name = new_name
         self.plugin_path = 'plugin-' + new_name
 
@@ -1408,12 +1408,12 @@ class RootMenu(BaseMenu):
         i18n_menu = I18nMenu(self.plugin_path, self.plugin_name)
         i18n_menu.start()
 
-    def rename_plugin(self, path, old_name, new_name):
+    def rename_plugin(self, new_name):
         """Renomme le plugin
         Modifie le nom des répertoires, des fichiers ainsi que le contenu
         des fichiers.
         """
-        path = os.path.abspath(path)
+        path = os.path.abspath(self.plugin_path)
         new_path = os.path.abspath(path + os.sep + '..' + os.sep + 'plugin-' +
                                    new_name)
         if os.path.exists(path):
@@ -1421,9 +1421,9 @@ class RootMenu(BaseMenu):
                 # Renomme le répertoire racine du plugin
                 os.rename(path, new_path)
                 # Renomme le contenu du plugin
-                self.start_rename_plugin(new_path, old_name, new_name)
+                self.start_rename_plugin(new_path, self.plugin_name, new_name)
                 IO.print_success(
-                    'Le plugin ' + old_name + ' a été renommé en ' +
+                    'Le plugin ' + self.plugin_name + ' a été renommé en ' +
                     new_name)
             else:
                 IO.print_error('Le répertoire  plugin-' + new_name +
@@ -1514,7 +1514,7 @@ class WizardMenu(BaseMenu):
         self.plugins_list = initial_plugins_list
         self.menu = []
         self.menu.append('Démarrer l\'assistant')
-        self.actions.append([self.start_wizard, None])
+        self.actions.append([WizardMenu.start_wizard, None])
         # Recherche si le plugin template existe déjà
         add_template_download = True
         for plugin in self.plugins_list:
@@ -1522,11 +1522,11 @@ class WizardMenu(BaseMenu):
                 add_template_download = False
         if add_template_download:
             self.menu.append('Télécharger le plugin ExtraTemplate')
-            self.actions.append([self.git_extratemplate, None])
+            self.actions.append([WizardMenu.git_extratemplate, None])
         # Ajout de la liste des plugins dans le répertoire
         for plugin in plugins_list:
             self.menu.append('Modifier le plugin ' + plugin[1])
-            self.actions.append([self.start_tools, plugin])
+            self.actions.append([WizardMenu.start_tools, plugin])
 
     def start(self):
         """Démarre l'affichage du menu
@@ -1555,10 +1555,11 @@ class WizardMenu(BaseMenu):
                     return_value = False
         return return_value
 
-    def start_wizard(self):
+    @staticmethod
+    def start_wizard():
         """Lance l'assistant
         """
-        plugin_data = self.ask_plugin_informations()
+        plugin_data = WizardMenu.ask_plugin_informations()
         if plugin_data is not None:
             WizardMenu.create_folder_struct(plugin_data)
             WizardMenu.gen_info_json(plugin_data)
@@ -1603,6 +1604,7 @@ class WizardMenu(BaseMenu):
             configuration = None
 
             if IO.ask_y_n('Générer la page de configuration ?', 'o') == 'o':
+                print('CONFIGURATION')
                 configuration = []
                 loop = True
                 menu = ['Champ texte',

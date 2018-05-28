@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import inspect
+import sys
 import os
 import shutil
 import tempfile
 import unittest
 
-from scripts.libs.MethodData import MethodData
-from scripts.libs.PHPFile import PHPFile
+current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+sys.path.insert(0, parent_dir)
+from tools import MethodData
+from tools import PHPFile
 
 
 # noinspection PyUnusedLocal
