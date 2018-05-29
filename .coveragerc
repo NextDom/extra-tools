@@ -2,4 +2,4 @@
 omit =
 	*__init__*
   tests/tests_*
-	/home/travis/virtualenv/python3.6.3/lib/python3.6/site.py
+	*site.py
