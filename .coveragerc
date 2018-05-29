@@ -3,3 +3,4 @@ omit =
 	*__init__*
         tests/tests_*
 	home/*
+	/home/*
