@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import inspect
 import os
 import shutil
+import sys
 import tempfile
 import unittest
 
-from scripts.libs.File import File
+current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
+current_dir = os.path.dirname(current_path)
+parent_dir = current_dir[:current_dir.rfind(os.path.sep)]
+sys.path.insert(0, parent_dir)
+from tools import File
 
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
@@ -33,13 +39,6 @@ class TestFile(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
-
-    def test_read_config_data(self):
-        config = File.read_config_data()
-        config_file_path = os.path.join('scripts', 'libs', 'config.json')
-        with open(config_file_path, 'r') as content:
-            self.assertIn('"default_package_name": "' + config[
-                'default_package_name'] + '"', content.read())
 
     def test_is_content_in_file_without_file(self):
         file_to_test = self.test_dir + os.sep + 'FileNotFound'
@@ -116,9 +115,12 @@ class TestFile(unittest.TestCase):
         self.assertIn('i newname a file',
                       content)
 
-    def test_copy_and_replace(self):
+    def test_create_php_file_and_replace(self):
         dest = self.test_dir + os.sep + 'dest_test'
-        File.copy_and_replace(self.test_file1, dest, 'Test', 'Replace')
+        File.create_php_file_and_replace(TEST_FILE1_CONTENT,
+                                         dest,
+                                         'Test',
+                                         'Replace')
         with open(dest, 'r') as content:
             self.assertIn('Replace\nSomething\nREPLACE\nSomewhere\nreplace',
                           content.read())
