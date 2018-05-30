@@ -16,6 +16,10 @@ from tools import WizardMenu
 
 # noinspection PyUnusedLocal
 class TestWizard(unittest.TestCase):
+
+    def tearDown(self):
+        shutil.rmtree('plugin-PluginName')
+
     @patch('builtins.input', side_effect=['Plugin Name',
                                           'PluginName',
                                           '',
@@ -43,7 +47,6 @@ class TestWizard(unittest.TestCase):
                 info_content = info.read()
                 self.assertIn('"id": "PluginName"', info_content)
                 self.assertIn('"name": "Plugin Name', info_content)
-            shutil.rmtree('plugin-PluginName')
 
 
 
@@ -70,7 +73,6 @@ class TestWizard(unittest.TestCase):
                 info_content = info.read()
                 self.assertIn('"licence": "AGPL"', info_content)
                 self.assertIn('"version": "1.0.0', info_content)
-            shutil.rmtree('plugin-PluginName')
 
     @patch('builtins.input', side_effect=['Plugin Name',
                                           'PluginName',
@@ -106,4 +108,3 @@ class TestWizard(unittest.TestCase):
                     '<input class="configKey form-control" type="checkbox" '
                     'data-l1key="valid" />',
                     config_content)
-            shutil.rmtree('plugin-PluginName')

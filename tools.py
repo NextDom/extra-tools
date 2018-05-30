@@ -1512,6 +1512,7 @@ class WizardMenu(BaseMenu):
         # Configuration du menu
         # Premier choix : Assistant
         self.plugins_list = initial_plugins_list
+        self.actions = []
         self.menu = []
         self.menu.append('Démarrer l\'assistant')
         self.actions.append([WizardMenu.start_wizard, None])
@@ -1524,7 +1525,7 @@ class WizardMenu(BaseMenu):
             self.menu.append('Télécharger le plugin ExtraTemplate')
             self.actions.append([WizardMenu.git_extratemplate, None])
         # Ajout de la liste des plugins dans le répertoire
-        for plugin in plugins_list:
+        for plugin in self.plugins_list:
             self.menu.append('Modifier le plugin ' + plugin[1])
             self.actions.append([WizardMenu.start_tools, plugin])
 
@@ -1604,7 +1605,6 @@ class WizardMenu(BaseMenu):
             configuration = None
 
             if IO.ask_y_n('Générer la page de configuration ?', 'o') == 'o':
-                print('CONFIGURATION')
                 configuration = []
                 loop = True
                 menu = ['Champ texte',
