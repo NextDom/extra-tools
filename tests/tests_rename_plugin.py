@@ -16,13 +16,13 @@ from tools import RootMenu
 TEST_FILE1_CONTENT = 'Test\nSomething\nTEST\nSomewhere\ntest'
 TEST_FILE2_CONTENT = 'A\nUseless\nFile'
 TEST_FILE3_CONTENT = 'i test a file'
-COMMAND = './scripts/rename_plugin.py %s %s %s > /dev/null 2>&1'
 
 
 # noinspection PyUnusedLocal
 class TestRenamePlugin(unittest.TestCase):
     test_dir = None
     plugin_dir = None
+    exists_dir = None
     folder1 = None
     folder2 = None
     root_menu = None
@@ -30,7 +30,9 @@ class TestRenamePlugin(unittest.TestCase):
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
         self.plugin_dir = self.test_dir + os.sep + 'plugin-Test'
+        self.exists_dir = self.test_dir + os.sep + 'plugin-Exists'
         os.mkdir(self.plugin_dir)
+        os.mkdir(self.exists_dir)
         self.folder1 = self.plugin_dir + os.sep + 'Folder'
         self.folder2 = self.plugin_dir + os.sep + 'TestFolder'
         test_file1 = self.folder1 + os.sep + 'Content'
@@ -50,7 +52,10 @@ class TestRenamePlugin(unittest.TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_rename_folders_and_files_NewName(self):
-        self.root_menu.rename_plugin('NewName')
+        result = self.root_menu.rename_plugin('NewName')
+
+        self.assertTrue(result)
+
         plugin_dir = self.test_dir + os.sep + 'plugin-NewName'
         folder1 = plugin_dir + os.sep + 'Folder'
         folder2 = plugin_dir + os.sep + 'NewNameFolder'
@@ -75,8 +80,9 @@ class TestRenamePlugin(unittest.TestCase):
         self.assertIn('i newName a file', content)
 
     def test_rename_folders_and_files_newname(self):
-        self.root_menu.rename_plugin('newname')
+        result = self.root_menu.rename_plugin('newname')
 
+        self.assertTrue(result)
         plugin_dir = self.test_dir + os.sep + 'plugin-newname'
         folder1 = plugin_dir + os.sep + 'Folder'
         folder2 = plugin_dir + os.sep + 'newnameFolder'
@@ -98,3 +104,23 @@ class TestRenamePlugin(unittest.TestCase):
         with open(test_file3, 'r') as file_content:
             content = file_content.read()
         self.assertIn('i newname a file', content)
+
+    def test_rename_already_exists(self):
+        test_file = self.exists_dir + os.sep + 'TestIt'
+        with open(test_file, 'w') as dest_file:
+            dest_file.write(TEST_FILE1_CONTENT)
+
+        result = self.root_menu.rename_plugin('Exists')
+        self.assertFalse(result)
+        self.assertTrue(os.path.exists(test_file))
+
+    def test_rename_not_found(self):
+        self.root_menu = RootMenu(self.test_dir+os.sep+'NotHere', 'NotHere')
+        test_file = self.exists_dir + os.sep + 'TestIt'
+        with open(test_file, 'w') as dest_file:
+            dest_file.write(TEST_FILE1_CONTENT)
+
+        result = self.root_menu.rename_plugin('NotThat')
+        self.assertFalse(result)
+        self.assertTrue(os.path.exists(test_file))
+

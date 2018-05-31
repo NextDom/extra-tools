@@ -1413,11 +1413,12 @@ class RootMenu(BaseMenu):
         Modifie le nom des répertoires, des fichiers ainsi que le contenu
         des fichiers.
         """
+        result = False
         path = os.path.abspath(self.plugin_path)
         new_path = os.path.abspath(path + os.sep + '..' + os.sep + 'plugin-' +
                                    new_name)
         if os.path.exists(path):
-            if 'plugin-' + new_name not in os.listdir('.'):
+            if not os.path.exists(new_path):
                 # Renomme le répertoire racine du plugin
                 os.rename(path, new_path)
                 # Renomme le contenu du plugin
@@ -1425,11 +1426,15 @@ class RootMenu(BaseMenu):
                 IO.print_success(
                     'Le plugin ' + self.plugin_name + ' a été renommé en ' +
                     new_name)
+                result = True
             else:
                 IO.print_error('Le répertoire  plugin-' + new_name +
                                ' existe déjà')
+                result = False
         else:
             IO.print_error('Le plugin ' + path + ' n\'a pas été trouvé')
+            result = False
+        return result
 
     def start_rename_plugin(self, current_path, old_name, new_name):
         """Remplace les occurences dans les noms des fichiers, les répertoires,
@@ -1506,8 +1511,8 @@ class WizardMenu(BaseMenu):
     def __init__(self, initial_plugins_list):
         """Constructeur
         Initialise le chemin vers le fichier qui stocke le nom du plugin.
-        :params plugins_list:  Liste des plugins disponibles
-        :type plugins_list:    List
+        :params initial_plugins_list: Liste des plugins disponibles
+        :type initial_plugins_list:   List
         """
         # Configuration du menu
         # Premier choix : Assistant

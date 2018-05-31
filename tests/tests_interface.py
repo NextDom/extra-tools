@@ -71,7 +71,8 @@ class TestInterface(unittest.TestCase):
                                           ''])
     def test_change_name(self, side_effect):
         self.wizard_menu.start()
-        with open('plugin-ExtraTemplate/plugin_info/info.json', 'r') as info_file:
+        with open('plugin-ExtraTemplate/plugin_info/info.json',
+                  'r') as info_file:
             content = info_file.read()
             self.assertIn('"name": "Test",', content)
 
@@ -98,7 +99,8 @@ class TestInterface(unittest.TestCase):
                                           ''])
     def test_change_license(self, side_effect):
         self.wizard_menu.start()
-        with open('plugin-ExtraTemplate/plugin_info/info.json', 'r') as info_file:
+        with open('plugin-ExtraTemplate/plugin_info/info.json',
+                  'r') as info_file:
             content = info_file.read()
             self.assertIn('"licence": "AGPL",', content)
 
@@ -111,7 +113,58 @@ class TestInterface(unittest.TestCase):
                                           ''])
     def test_change_author(self, side_effect):
         self.wizard_menu.start()
-        with open('plugin-ExtraTemplate/plugin_info/info.json', 'r') as info_file:
+        with open('plugin-ExtraTemplate/plugin_info/info.json',
+                  'r') as info_file:
             content = info_file.read()
             self.assertIn('"author": "Me",', content)
 
+    @patch('builtins.input', side_effect=['2',
+                                          '3',
+                                          '1',
+                                          '',
+                                          '',
+                                          ''])
+    def test_add_core(self, side_effect):
+        os.system('rm -fr plugin-ExtraTemplate/core/class/*.php')
+        self.wizard_menu.start()
+        self.assertTrue(os.path.exists(
+            'plugin-ExtraTemplate/core/class/ExtraTemplate.class.php'))
+
+    @patch('builtins.input', side_effect=['2',
+                                          '3',
+                                          '2',
+                                          'o',
+                                          '',
+                                          '',
+                                          ''])
+    def test_add_cmd_separate(self, side_effect):
+        os.system('rm -fr plugin-ExtraTemplate/core/class/ExtraTemplateCmd'
+                  '.class.php')
+        self.wizard_menu.start()
+        self.assertTrue(os.path.exists(
+            'plugin-ExtraTemplate/core/class/ExtraTemplate.class.php'))
+        self.assertTrue(os.path.exists(
+            'plugin-ExtraTemplate/core/class/ExtraTemplateCmd.class'
+            '.php'))
+        with open('plugin-ExtraTemplate/core/class/ExtraTemplateCmd.class.php',
+                  'r') as info_file:
+            content = info_file.read()
+            self.assertIn('ExtraTemplateCmd', content)
+
+    @patch('builtins.input', side_effect=['2',
+                                          '3',
+                                          '2',
+                                          'o',
+                                          'n',
+                                          '',
+                                          '',
+                                          ''])
+    def test_add_cmd_without_core(self, side_effect):
+        os.system('rm -fr plugin-ExtraTemplate/core/class/*.php')
+        self.wizard_menu.start()
+        self.assertTrue(os.path.exists(
+            'plugin-ExtraTemplate/core/class/ExtraTemplate.class.php'))
+        with open('plugin-ExtraTemplate/core/class/ExtraTemplate.class.php',
+                  'r') as info_file:
+            content = info_file.read()
+            self.assertIn('ExtraTemplateCmd', content)
