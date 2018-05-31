@@ -286,7 +286,7 @@ class File(object):
         :type target_file:   str
         """
         sed_replace_pattern = "sed -i'' 's/{}/{}/g' {} 2> /dev/null"
-        if 'darwin' in sys.platform:
+        if 'darwin' in sys.platform: # pragma: no cover
             sed_replace_pattern = "sed -i '' 's/{}/{}/g' {} 2> /dev/null"
 
         os.system(sed_replace_pattern.format(regexp, replacement, target_file))
@@ -390,7 +390,7 @@ class File(object):
         """
         result = False
         with open(file_path, 'w') as dest:
-            if sys.version_info[0] < 3:
+            if sys.version_info[0] < 3: # pragma: no cover
                 dump = json.dumps(json_data, sort_keys=True, indent=4,
                                   ensure_ascii=False)
                 dump = dump.encode('utf-8').decode('string-escape')
@@ -447,7 +447,7 @@ class IO(object):
         """
         str_type = str
 
-        if sys.version_info[0] < 3:
+        if sys.version_info[0] < 3: # pragma: no cover
             str_type = basestring  # pylint: disable=undefined-variable
         return isinstance(obj, str_type)
 
@@ -461,7 +461,7 @@ class IO(object):
         :rtype:      str
         """
         result = None
-        if sys.version_info[0] < 3:
+        if sys.version_info[0] < 3: # pragma: no cover
             result = raw_input(msg)  # pylint: disable=undefined-variable
         else:
             result = input(msg)
@@ -641,7 +641,7 @@ class Jeedom(object):
             file_path = Jeedom.transform_path_to_i18n_path(plugin_path,
                                                            data['file_path'])
             # Décode l'unicode si besoin
-            if not isinstance(file_path, str):
+            if not isinstance(file_path, str): # pragma: no cover
                 file_path = file_path.encode('ascii')
 
             # Création du dictionnaire vide
@@ -1048,7 +1048,7 @@ class FeaturesMenu(BaseMenu):
         :type plugin_path:  str
         :type plugin_name:  str
         """
-        if sys.version_info[0] < 3:
+        if sys.version_info[0] < 3: # pragma: no cover
             super(FeaturesMenu, self).__init__()
         else:
             super().__init__()
@@ -1837,9 +1837,9 @@ def start():
 
 
 # Gestion des accents pour python 2
-if sys.version_info[0] < 3:
+if sys.version_info[0] < 3: # pragma: no cover
     reload(sys)  # pylint: disable=undefined-variable
     sys.setdefaultencoding('utf8')  # pylint: disable=no-member
 
 if __name__ == '__main__':
-    start()
+    start() # pragma: no cover
