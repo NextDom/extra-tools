@@ -672,7 +672,7 @@ class Jeedom(object):
                       os.sep + file_path_striped
         # En fonction du path fournit, il peut y avoir des doublons
         normal_path = normal_path.replace('//', '/')
-        return normal_path #.replace('/', '\/')
+        return normal_path  # .replace('/', '\/')
 
     @staticmethod
     def scan_for_strings(path, result=None):
@@ -1801,7 +1801,8 @@ class WizardMenu(BaseMenu):
                 'git clone ' + config['plugin_template_repo'] +
                 ' 2> /dev/null')
             if sys_return == 0:
-                IO.print_success('Le plugin plugin-ExtraTemplate a été téléchargé')
+                IO.print_success(
+                    'Le plugin plugin-ExtraTemplate a été téléchargé')
             else:
                 IO.print_error('Erreur dans le téléchargement de '
                                'plugin-ExtraTemplate.')
@@ -1822,7 +1823,10 @@ class WizardMenu(BaseMenu):
 
 
 def start():
-    # Point de d'entrée en mode CLI
+    """
+    Point de d'entrée en mode CLI
+    """
+
     readed_args = Tools.parse_args(sys.argv)
     if readed_args is not None:
         plugins_list = []

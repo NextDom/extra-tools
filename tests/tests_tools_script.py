@@ -2,11 +2,9 @@
 
 import inspect
 import os
-import sys
 import shutil
-import tempfile
+import sys
 import unittest
-from unittest import mock
 from unittest.mock import patch
 
 current_path = os.path.abspath(inspect.getsourcefile(lambda: 0))
@@ -25,4 +23,3 @@ class TestToolsScript(unittest.TestCase):
         tools.start()
         self.assertTrue(os.path.exists('plugin-ExtraTemplate'))
         shutil.rmtree('plugin-ExtraTemplate')
-

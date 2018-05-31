@@ -123,4 +123,3 @@ class TestRenamePlugin(unittest.TestCase):
         result = self.root_menu.rename_plugin('NotThat')
         self.assertFalse(result)
         self.assertTrue(os.path.exists(test_file))
-

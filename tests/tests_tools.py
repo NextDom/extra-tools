@@ -94,4 +94,3 @@ class TestTools(unittest.TestCase):
         os.mkdir(self.test_dir + os.sep + 'useless_dir')
         result = self.tools.get_plugins_in_dir(self.test_dir)
         self.assertEqual(result, [])
-

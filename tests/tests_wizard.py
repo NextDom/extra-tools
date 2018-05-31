@@ -121,7 +121,7 @@ class TestWizard(unittest.TestCase):
 
     @patch('builtins.input', side_effect=['0',
                                           '0'])
-    def test_git_extratemplate(self, side_effect):
+    def test_git_extratemplate_exists(self, side_effect):
         os.system('mkdir plugin-ExtraTemplate')
         WizardMenu.git_extratemplate()
         self.assertFalse(os.path.exists('plugin-ExtraTemplate/plugin_info'))
