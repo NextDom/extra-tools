@@ -1796,13 +1796,19 @@ class WizardMenu(BaseMenu):
         """Télécharge une copie du plugin ExtraTemplate
         :params data: Inutilisé
         """
-        sys_return = os.system('git clone ' + config['plugin_template_repo'] +
-                               ' 2> /dev/null')
-        if sys_return == 0:
-            IO.print_success('Le plugin plugin-ExtraTemplate a été téléchargé')
+        if not os.path.exists('plugin-ExtraTemplate'):
+            sys_return = os.system(
+                'git clone ' + config['plugin_template_repo'] +
+                ' 2> /dev/null')
+            if sys_return == 0:
+                IO.print_success('Le plugin plugin-ExtraTemplate a été téléchargé')
+            else:
+                IO.print_error('Erreur dans le téléchargement de '
+                               'plugin-ExtraTemplate.')
         else:
             IO.print_error(
                 'Le plugin plugin-ExtraTemplate est déjà téléchargé.')
+
         WizardMenu.start_tools(['plugin-ExtraTemplate', 'ExtraTemplate'])
 
     @staticmethod
@@ -1815,12 +1821,7 @@ class WizardMenu(BaseMenu):
         root_menu.start()
 
 
-# Gestion des accents pour python 2
-if sys.version_info[0] < 3:
-    reload(sys)  # pylint: disable=undefined-variable
-    sys.setdefaultencoding('utf8')  # pylint: disable=no-member
-
-if __name__ == '__main__':
+def start():
     # Point de d'entrée en mode CLI
     readed_args = Tools.parse_args(sys.argv)
     if readed_args is not None:
@@ -1829,3 +1830,12 @@ if __name__ == '__main__':
             plugins_list = Tools.get_plugins_in_dir('.')
         wizard_menu = WizardMenu(plugins_list)
         wizard_menu.start()
+
+
+# Gestion des accents pour python 2
+if sys.version_info[0] < 3:
+    reload(sys)  # pylint: disable=undefined-variable
+    sys.setdefaultencoding('utf8')  # pylint: disable=no-member
+
+if __name__ == '__main__':
+    start()

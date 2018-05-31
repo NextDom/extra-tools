@@ -18,7 +18,8 @@ from tools import WizardMenu
 class TestWizard(unittest.TestCase):
 
     def tearDown(self):
-        shutil.rmtree('plugin-PluginName')
+        if os.path.exists('plugin-PluginName'):
+            shutil.rmtree('plugin-PluginName')
 
     @patch('builtins.input', side_effect=['Plugin Name',
                                           'PluginName',
@@ -48,8 +49,6 @@ class TestWizard(unittest.TestCase):
                 self.assertIn('"id": "PluginName"', info_content)
                 self.assertIn('"name": "Plugin Name', info_content)
 
-
-
     @patch('builtins.input', side_effect=['Plugin Name',
                                           'PluginName',
                                           'A small description',
@@ -66,8 +65,10 @@ class TestWizard(unittest.TestCase):
             plugin_dir = 'plugin-PluginName'
             info_json = os.path.join(plugin_dir, 'plugin_info', 'info.json')
             self.assertTrue(os.path.exists(os.path.join(plugin_dir, 'desktop',
-                                                        'php', 'PluginName.php')))
-            self.assertTrue(os.path.exists(os.path.join(plugin_dir, 'core', 'php')))
+                                                        'php',
+                                                        'PluginName.php')))
+            self.assertTrue(
+                os.path.exists(os.path.join(plugin_dir, 'core', 'php')))
             self.assertTrue(os.path.exists(info_json))
             with open(info_json, 'r') as info:
                 info_content = info.read()
@@ -95,16 +96,33 @@ class TestWizard(unittest.TestCase):
         with self.assertRaises(SystemExit):
             WizardMenu.start_wizard()
             plugin_dir = 'plugin-PluginName'
-            config = os.path.join(plugin_dir, 'plugin_info', 'configuration.php')
+            config = os.path.join(plugin_dir, 'plugin_info',
+                                  'configuration.php')
             self.assertTrue(os.path.exists(config))
             with open(config, 'r') as config_file:
                 config_content = config_file.read()
                 self.assertIn('{{Name}}', config_content)
                 self.assertIn(
-                    '<input class="configKey form-control" data-l1key="name" />',
+                    '<input class="configKey form-control" data-l1key="name" '
+                    '/>',
                     config_content)
                 self.assertIn('{{Valid ?}}', config_content)
                 self.assertIn(
                     '<input class="configKey form-control" type="checkbox" '
                     'data-l1key="valid" />',
                     config_content)
+
+    @patch('builtins.input', side_effect=['0',
+                                          '0'])
+    def test_git_extratemplate(self, side_effect):
+        WizardMenu.git_extratemplate()
+        self.assertTrue(os.path.exists('plugin-ExtraTemplate'))
+        shutil.rmtree('plugin-ExtraTemplate')
+
+    @patch('builtins.input', side_effect=['0',
+                                          '0'])
+    def test_git_extratemplate(self, side_effect):
+        os.system('mkdir plugin-ExtraTemplate')
+        WizardMenu.git_extratemplate()
+        self.assertFalse(os.path.exists('plugin-ExtraTemplate/plugin_info'))
+        shutil.rmtree('plugin-ExtraTemplate')

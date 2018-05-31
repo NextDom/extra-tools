@@ -119,6 +119,20 @@ class TestInterface(unittest.TestCase):
             self.assertIn('"author": "Me",', content)
 
     @patch('builtins.input', side_effect=['2',
+                                          '2',
+                                          '5',
+                                          '1',
+                                          '',
+                                          '',
+                                          ''])
+    def test_change_category(self, side_effect):
+        self.wizard_menu.start()
+        with open('plugin-ExtraTemplate/plugin_info/info.json',
+                  'r') as info_file:
+            content = info_file.read()
+            self.assertIn('"category": "security",', content)
+
+    @patch('builtins.input', side_effect=['2',
                                           '3',
                                           '1',
                                           '',
