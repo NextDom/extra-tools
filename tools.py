@@ -108,6 +108,7 @@ if (!isConnect()) {
     include_file('desktop', '404', 'php');
     die();
 }
+?>
 """
 
 wizard_core_class = """
